@@ -31,10 +31,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="tr">
+    <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 dark:bg-gray-900`}
       >
+        {/* Language Switcher */}
+        <div className="w-full flex justify-end items-center px-4 py-2">
+          {/* LanguageSwitcher eklenecek */}
+        </div>
         <Navigation />
         <main className="min-h-screen">
           {children}

@@ -3,16 +3,23 @@
 import Link from 'next/link';
 import { useState } from 'react';
 
+const LANGUAGES = [
+  { code: 'en', label: 'EN' },
+  { code: 'tr', label: 'TR' },
+  { code: 'de', label: 'DE' },
+];
+
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [lang, setLang] = useState('en');
 
   const menuItems = [
-    { name: 'Ana Sayfa', href: '/' },
+    { name: 'Home', href: '/' },
     { name: 'Java Core', href: '/java-core' },
-    { name: 'İleri Java', href: '/advanced-java' },
-    { name: 'DSA Çözümleri', href: '/dsa-solutions' },
-    { name: 'Algoritma Soruları', href: '/algorithm-problems' },
-    { name: 'Hakkında', href: '/about' },
+    { name: 'Advanced Java', href: '/advanced-java' },
+    { name: 'DSA Solutions', href: '/dsa-solutions' },
+    { name: 'Algorithm Problems', href: '/algorithm-problems' },
+    { name: 'About', href: '/about' },
   ];
 
   return (
@@ -40,7 +47,7 @@ export default function Navigation() {
           </div>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-1">
+          <div className="hidden md:flex items-center space-x-2">
             {menuItems.map((item, index) => (
               <Link
                 key={item.name}
@@ -52,6 +59,18 @@ export default function Navigation() {
                 <span className="absolute bottom-0 left-1/2 w-0 h-0.5 bg-gray-700 dark:bg-gray-300 group-hover:w-full group-hover:left-0 transition-all duration-300"></span>
               </Link>
             ))}
+            {/* Language Switcher */}
+            <div className="ml-4 flex items-center space-x-1 bg-[#23272f] rounded-lg px-2 py-1">
+              {LANGUAGES.map((lng) => (
+                <button
+                  key={lng.code}
+                  className={`px-2 py-1 rounded text-xs font-semibold transition-colors duration-150 ${lang === lng.code ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
+                  onClick={() => { setLang(lng.code); console.log('Language changed to', lng.code); }}
+                >
+                  {lng.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Mobile menu button */}
@@ -72,21 +91,33 @@ export default function Navigation() {
       </div>
 
       {/* Mobile Menu */}
-      <div className={`md:hidden transition-all duration-300 ease-in-out ${isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
-        <div className="px-4 py-2 space-y-1 glass border-t border-gray-200 dark:border-gray-700">
-          {menuItems.map((item, index) => (
-            <Link
-              key={item.name}
-              href={item.href}
-              className="block px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-all duration-200"
-              onClick={() => setIsMenuOpen(false)}
-              style={{ animationDelay: `${index * 50}ms` }}
-            >
-              {item.name}
-            </Link>
-          ))}
+      {isMenuOpen && (
+        <div className="md:hidden absolute top-16 left-0 w-full bg-[#23272f] shadow-lg z-40 animate-slide-in-left">
+          <div className="flex flex-col py-4">
+            {menuItems.map((item, index) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                className="px-6 py-3 text-gray-300 hover:text-white hover:bg-gray-700 transition-colors duration-200"
+              >
+                {item.name}
+              </Link>
+            ))}
+            {/* Mobile Language Switcher */}
+            <div className="flex items-center space-x-1 px-6 mt-2">
+              {LANGUAGES.map((lng) => (
+                <button
+                  key={lng.code}
+                  className={`px-2 py-1 rounded text-xs font-semibold transition-colors duration-150 ${lang === lng.code ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
+                  onClick={() => { setLang(lng.code); console.log('Language changed to', lng.code); }}
+                >
+                  {lng.label}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </nav>
   );
 } 
