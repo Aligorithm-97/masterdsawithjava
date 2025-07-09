@@ -11,9 +11,9 @@
   --muted: #6b7280;
   --card: #23272f;
   --card-hover: #23272f;
-  --success: #10b981;
-  --warning: #f59e0b;
-  --error: #ef4444;
+  --success: #6b7280;
+  --warning: #9ca3af;
+  --error: #6b7280;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -39,7 +39,8 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -70,7 +71,7 @@ pre {
   border-radius: 8px !important;
   padding: 1rem !important;
   overflow-x: auto !important;
-  font-family: var(--font-mono), 'Courier New', monospace !important;
+  font-family: var(--font-mono), "Courier New", monospace !important;
   font-size: 0.875rem !important;
   line-height: 1.5 !important;
 }
@@ -79,7 +80,7 @@ code {
   background: var(--accent) !important;
   padding: 0.125rem 0.25rem !important;
   border-radius: 4px !important;
-  font-family: var(--font-mono), 'Courier New', monospace !important;
+  font-family: var(--font-mono), "Courier New", monospace !important;
   font-size: 0.875em !important;
 }
 
@@ -90,7 +91,8 @@ table {
   margin: 1rem 0;
 }
 
-th, td {
+th,
+td {
   border: 1px solid var(--border);
   padding: 0.75rem;
   text-align: left;
@@ -136,13 +138,13 @@ a:hover {
 }
 
 .btn::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.08);
   transition: left 0.5s;
 }
 
@@ -153,13 +155,13 @@ a:hover {
 .btn-primary {
   background: var(--primary);
   color: white;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .btn-primary:hover {
   background: var(--primary-dark);
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .btn-secondary {
@@ -185,7 +187,7 @@ a:hover {
 }
 
 .card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -239,11 +241,12 @@ a:hover {
   to {
     opacity: 1;
     transform: translateX(0);
-  } 
+  }
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -302,13 +305,13 @@ a:hover {
 }
 
 .loading::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.08);
   animation: shimmer 1.5s infinite;
 }
 
@@ -359,18 +362,18 @@ a:hover {
 }
 
 .badge-success {
-  background: rgba(16, 185, 129, 0.1);
-  color: var(--success);
+  background: #23272f;
+  color: #bdbdbd;
 }
 
 .badge-warning {
-  background: rgba(245, 158, 11, 0.1);
-  color: var(--warning);
+  background: #23272f;
+  color: #bdbdbd;
 }
 
 .badge-error {
-  background: rgba(239, 68, 68, 0.1);
-  color: var(--error);
+  background: #23272f;
+  color: #bdbdbd;
 }
 
 /* Glass morphism effect */

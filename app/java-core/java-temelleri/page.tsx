@@ -1,9 +1,9 @@
-import Link from 'next/link';
+import Link from "next/link";
 
 export default function JavaTemelleriPage() {
   const lessons = [
     {
-      title: 'Java\'ya Giriş ve Kurulum',
+      title: "Java'ya Giriş ve Kurulum",
       content: `
         <h3>Java Nedir?</h3>
         <p>Java, Sun Microsystems tarafından 1995 yılında geliştirilen, platform bağımsız, nesne yönelimli bir programlama dilidir.</p>
@@ -29,10 +29,10 @@ export default function JavaTemelleriPage() {
           <pre><code>java -version
 javac -version</code></pre>
         </div>
-      `
+      `,
     },
     {
-      title: 'Değişkenler ve Veri Tipleri',
+      title: "Değişkenler ve Veri Tipleri",
       content: `
         <h3>Java\'da Veri Tipleri</h3>
         
@@ -115,10 +115,10 @@ final int SABIT_SAYI = 100;
 var otomatikTip = "Bu bir String";
 var sayi2 = 42; // int olarak algılanır</code></pre>
         </div>
-      `
+      `,
     },
     {
-      title: 'Operatörler ve İfadeler',
+      title: "Operatörler ve İfadeler",
       content: `
         <h3>Java Operatörleri</h3>
         
@@ -178,10 +178,10 @@ boolean degil = !a; // false
 // Kısa devre operatörleri
 boolean kisaDevre = (a && b); // b kontrol edilmez</code></pre>
         </div>
-      `
+      `,
     },
     {
-      title: 'Kontrol Yapıları (if, else, switch)',
+      title: "Kontrol Yapıları (if, else, switch)",
       content: `
         <h3>Kontrol Yapıları</h3>
         
@@ -243,10 +243,10 @@ String gunAdi = switch (gun) {
     default -> "Diğer günler";
 };</code></pre>
         </div>
-      `
+      `,
     },
     {
-      title: 'Döngüler (for, while, do-while)',
+      title: "Döngüler (for, while, do-while)",
       content: `
         <h3>Döngüler</h3>
         
@@ -323,50 +323,56 @@ for (int i = 0; i < 10; i++) {
     System.out.println(i); // Sadece tek sayılar
 }</code></pre>
         </div>
-      `
-    }
+      `,
+    },
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-[#18181b]">
       {/* Header */}
-      <section className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+      <section className="bg-[#18181b] shadow-sm border-b border-[#23272f]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
             <nav className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-              <Link href="/java-core" className="hover:text-orange-600 dark:hover:text-orange-400">
+              <Link
+                href="/java-core"
+                className="hover:text-gray-600 dark:hover:text-gray-400"
+              >
                 Java Core
               </Link>
               <span className="mx-2">→</span>
-              <span className="text-gray-900 dark:text-white">Java Temelleri</span>
+              <span className="text-gray-900 dark:text-white">
+                Java Temelleri
+              </span>
             </nav>
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
               Java Temelleri
             </h1>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Java programlama dilinin temel kavramlarını öğrenin. Değişkenler, veri tipleri, 
-              operatörler ve kontrol yapıları ile Java\'ya giriş yapın.
+              Java programlama dilinin temel kavramlarını öğrenin. Değişkenler,
+              veri tipleri, operatörler ve kontrol yapıları ile Java\'ya giriş
+              yapın.
             </p>
           </div>
         </div>
       </section>
 
       {/* Content */}
-      <section className="py-16">
+      <section className="py-16 bg-[#18181b]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="space-y-16">
             {lessons.map((lesson, index) => (
               <div
                 key={index}
-                className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700"
+                className="bg-[#23272f] rounded-xl shadow-md overflow-hidden border border-[#23272f]"
               >
-                <div className="bg-orange-50 dark:bg-orange-900/20 p-6 border-b border-gray-200 dark:border-gray-700">
+                <div className="bg-[#2a2f38] p-6 border-b border-[#23272f]">
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                     {index + 1}. {lesson.title}
                   </h2>
                 </div>
                 <div className="p-6">
-                  <div 
+                  <div
                     className="prose prose-lg max-w-none dark:prose-invert"
                     dangerouslySetInnerHTML={{ __html: lesson.content }}
                   />
@@ -378,25 +384,45 @@ for (int i = 0; i < 10; i++) {
       </section>
 
       {/* Navigation */}
-      <section className="py-16 bg-white dark:bg-gray-800">
+      <section className="py-16 bg-[#18181b]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             <Link
               href="/java-core"
-              className="inline-flex items-center text-orange-600 dark:text-orange-400 hover:text-orange-700 dark:hover:text-orange-300 font-medium"
+              className="inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 font-medium"
             >
-              <svg className="mr-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              <svg
+                className="mr-2 w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
               Java Core Ana Sayfa
             </Link>
             <Link
               href="/java-core/nesne-yonelimli-programlama"
-              className="inline-flex items-center text-orange-600 dark:text-orange-400 hover:text-orange-700 dark:hover:text-orange-300 font-medium"
+              className="inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 font-medium"
             >
               Sonraki: Nesne Yönelimli Programlama
-              <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              <svg
+                className="ml-2 w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
             </Link>
           </div>
@@ -404,4 +430,4 @@ for (int i = 0; i < 10; i++) {
       </section>
     </div>
   );
-} 
+}

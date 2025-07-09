@@ -1,12 +1,13 @@
-import Link from 'next/link';
+import Link from "next/link";
 
 export default function TwoSumPage() {
   const solutions = [
     {
-      title: 'Brute Force Yaklaşımı',
-      description: 'İki iç içe döngü kullanarak tüm kombinasyonları kontrol eder',
-      complexity: 'O(n²)',
-      space: 'O(1)',
+      title: "Brute Force Yaklaşımı",
+      description:
+        "İki iç içe döngü kullanarak tüm kombinasyonları kontrol eder",
+      complexity: "O(n²)",
+      space: "O(1)",
       code: `public class Solution {
     public int[] twoSum(int[] nums, int target) {
         int n = nums.length;
@@ -42,13 +43,13 @@ export default function TwoSumPage() {
           <li>Yavaş - O(n²) zaman karmaşıklığı</li>
           <li>Büyük diziler için verimsiz</li>
         </ul>
-      `
+      `,
     },
     {
-      title: 'HashMap Yaklaşımı',
-      description: 'HashMap kullanarak tek geçişte çözüm bulur',
-      complexity: 'O(n)',
-      space: 'O(n)',
+      title: "HashMap Yaklaşımı",
+      description: "HashMap kullanarak tek geçişte çözüm bulur",
+      complexity: "O(n)",
+      space: "O(n)",
       code: `import java.util.HashMap;
 import java.util.Map;
 
@@ -92,13 +93,13 @@ public class Solution {
           <li>O(n) ekstra bellek kullanır</li>
           <li>HashMap overhead'i</li>
         </ul>
-      `
+      `,
     },
     {
-      title: 'İki Pointer Yaklaşımı (Sıralı Dizi)',
-      description: 'Dizi sıralıysa iki pointer kullanarak çözüm bulur',
-      complexity: 'O(n log n)',
-      space: 'O(1)',
+      title: "İki Pointer Yaklaşımı (Sıralı Dizi)",
+      description: "Dizi sıralıysa iki pointer kullanarak çözüm bulur",
+      complexity: "O(n log n)",
+      space: "O(1)",
       code: `import java.util.Arrays;
 
 public class Solution {
@@ -153,8 +154,8 @@ public class Solution {
           <li>Orijinal indeksleri korumak karmaşık</li>
           <li>HashMap yaklaşımından daha yavaş</li>
         </ul>
-      `
-    }
+      `,
+    },
   ];
 
   return (
@@ -164,11 +165,17 @@ public class Solution {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
             <nav className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-              <Link href="/dsa-solutions" className="hover:text-orange-600 dark:hover:text-orange-400">
+              <Link
+                href="/dsa-solutions"
+                className="hover:text-gray-600 dark:hover:text-gray-400"
+              >
                 DSA Çözümleri
               </Link>
               <span className="mx-2">→</span>
-              <Link href="/dsa-solutions/array-problems" className="hover:text-orange-600 dark:hover:text-orange-400">
+              <Link
+                href="/dsa-solutions/array-problems"
+                className="hover:text-gray-600 dark:hover:text-gray-400"
+              >
                 Array Problems
               </Link>
               <span className="mx-2">→</span>
@@ -178,7 +185,8 @@ public class Solution {
               Two Sum Problemi
             </h1>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              LeetCode #1 - Verilen bir dizide toplamı hedef değere eşit olan iki elemanın indekslerini bulun.
+              LeetCode #1 - Verilen bir dizide toplamı hedef değere eşit olan
+              iki elemanın indekslerini bulun.
             </p>
           </div>
         </div>
@@ -188,7 +196,7 @@ public class Solution {
       <section className="py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
-            <div className="bg-orange-50 dark:bg-orange-900/20 p-6 border-b border-gray-200 dark:border-gray-700">
+            <div className="bg-gray-50 dark:bg-gray-900/20 p-6 border-b border-gray-200 dark:border-gray-700">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
                 Problem Açıklaması
               </h2>
@@ -197,29 +205,42 @@ public class Solution {
               <div className="prose prose-lg max-w-none dark:prose-invert">
                 <h3>Problem:</h3>
                 <p>
-                  Verilen bir tamsayı dizisi <code>nums</code> ve bir hedef değer <code>target</code> için, 
-                  dizide toplamı hedef değere eşit olan iki elemanın indekslerini döndürün.
+                  Verilen bir tamsayı dizisi <code>nums</code> ve bir hedef
+                  değer <code>target</code> için, dizide toplamı hedef değere
+                  eşit olan iki elemanın indekslerini döndürün.
                 </p>
-                
+
                 <h3>Giriş Formatı:</h3>
                 <ul>
-                  <li><code>nums</code>: Tamsayı dizisi (2 ≤ nums.length ≤ 10⁴)</li>
-                  <li><code>target</code>: Hedef toplam değeri</li>
+                  <li>
+                    <code>nums</code>: Tamsayı dizisi (2 ≤ nums.length ≤ 10⁴)
+                  </li>
+                  <li>
+                    <code>target</code>: Hedef toplam değeri
+                  </li>
                 </ul>
-                
+
                 <h3>Çıkış Formatı:</h3>
                 <ul>
                   <li>İki elemanın indekslerini içeren dizi</li>
-                  <li>Her giriş için tam olarak bir çözüm olduğu garanti edilir</li>
+                  <li>
+                    Her giriş için tam olarak bir çözüm olduğu garanti edilir
+                  </li>
                 </ul>
-                
+
                 <h3>Örnek:</h3>
                 <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg my-4">
-                  <p><strong>Giriş:</strong> nums = [2, 7, 11, 15], target = 9</p>
-                  <p><strong>Çıkış:</strong> [0, 1]</p>
-                  <p><strong>Açıklama:</strong> nums[0] + nums[1] = 2 + 7 = 9</p>
+                  <p>
+                    <strong>Giriş:</strong> nums = [2, 7, 11, 15], target = 9
+                  </p>
+                  <p>
+                    <strong>Çıkış:</strong> [0, 1]
+                  </p>
+                  <p>
+                    <strong>Açıklama:</strong> nums[0] + nums[1] = 2 + 7 = 9
+                  </p>
                 </div>
-                
+
                 <h3>Kısıtlamalar:</h3>
                 <ul>
                   <li>2 ≤ nums.length ≤ 10⁴</li>
@@ -244,14 +265,14 @@ public class Solution {
               Farklı algoritma yaklaşımları ve optimizasyon teknikleri
             </p>
           </div>
-          
+
           <div className="space-y-16">
             {solutions.map((solution, index) => (
               <div
                 key={index}
                 className="bg-gray-50 dark:bg-gray-700 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-600"
               >
-                <div className="bg-orange-100 dark:bg-orange-900/30 p-6 border-b border-gray-200 dark:border-gray-600">
+                <div className="bg-gray-100 dark:bg-gray-900/30 p-6 border-b border-gray-200 dark:border-gray-600">
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                     <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 md:mb-0">
                       {index + 1}. {solution.title}
@@ -269,7 +290,7 @@ public class Solution {
                     {solution.description}
                   </p>
                 </div>
-                
+
                 <div className="p-6">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <div>
@@ -282,14 +303,16 @@ public class Solution {
                         </pre>
                       </div>
                     </div>
-                    
+
                     <div>
                       <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                         Açıklama:
                       </h4>
-                      <div 
+                      <div
                         className="prose prose-sm max-w-none dark:prose-invert"
-                        dangerouslySetInnerHTML={{ __html: solution.explanation }}
+                        dangerouslySetInnerHTML={{
+                          __html: solution.explanation,
+                        }}
                       />
                     </div>
                   </div>
@@ -304,7 +327,7 @@ public class Solution {
       <section className="py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
-            <div className="bg-orange-50 dark:bg-orange-900/20 p-6 border-b border-gray-200 dark:border-gray-700">
+            <div className="bg-gray-50 dark:bg-gray-900/20 p-6 border-b border-gray-200 dark:border-gray-700">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                 Karmaşıklık Analizi
               </h2>
@@ -315,8 +338,12 @@ public class Solution {
                   <thead>
                     <tr className="bg-gray-100 dark:bg-gray-700">
                       <th className="border px-4 py-2 text-left">Yaklaşım</th>
-                      <th className="border px-4 py-2 text-left">Zaman Karmaşıklığı</th>
-                      <th className="border px-4 py-2 text-left">Bellek Karmaşıklığı</th>
+                      <th className="border px-4 py-2 text-left">
+                        Zaman Karmaşıklığı
+                      </th>
+                      <th className="border px-4 py-2 text-left">
+                        Bellek Karmaşıklığı
+                      </th>
                       <th className="border px-4 py-2 text-left">Önerilen</th>
                     </tr>
                   </thead>
@@ -355,8 +382,18 @@ public class Solution {
               href="/dsa-solutions/array-problems"
               className="inline-flex items-center text-orange-600 dark:text-orange-400 hover:text-orange-700 dark:hover:text-orange-300 font-medium"
             >
-              <svg className="mr-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              <svg
+                className="mr-2 w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
               Array Problems
             </Link>
@@ -365,8 +402,18 @@ public class Solution {
               className="inline-flex items-center text-orange-600 dark:text-orange-400 hover:text-orange-700 dark:hover:text-orange-300 font-medium"
             >
               Sonraki: Maximum Subarray
-              <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              <svg
+                className="ml-2 w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
             </Link>
           </div>
@@ -374,4 +421,4 @@ public class Solution {
       </section>
     </div>
   );
-} 
+}

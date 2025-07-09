@@ -1,25 +1,25 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { useState } from 'react';
+import Link from "next/link";
+import { useState } from "react";
 
 const LANGUAGES = [
-  { code: 'en', label: 'EN' },
-  { code: 'tr', label: 'TR' },
-  { code: 'de', label: 'DE' },
+  { code: "en", label: "EN" },
+  { code: "tr", label: "TR" },
+  { code: "de", label: "DE" },
 ];
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [lang, setLang] = useState('en');
+  const [lang, setLang] = useState("en");
 
   const menuItems = [
-    { name: 'Home', href: '/' },
-    { name: 'Java Core', href: '/java-core' },
-    { name: 'Advanced Java', href: '/advanced-java' },
-    { name: 'DSA Solutions', href: '/dsa-solutions' },
-    { name: 'Algorithm Problems', href: '/algorithm-problems' },
-    { name: 'About', href: '/about' },
+    { name: "Home", href: "/" },
+    { name: "Java Core", href: "/java-core" },
+    { name: "Advanced Java", href: "/advanced-java" },
+    { name: "DSA Solutions", href: "/dsa-solutions" },
+    { name: "Algorithm Problems", href: "/algorithm-problems" },
+    { name: "About", href: "/about" },
   ];
 
   return (
@@ -31,9 +31,11 @@ export default function Navigation() {
             <Link href="/" className="flex items-center space-x-3 group">
               <div className="relative">
                 <div className="w-10 h-10 bg-[#23272f] rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
-                  <span className="text-white dark:text-gray-900 font-bold text-lg">J</span>
+                  <span className="text-white dark:text-gray-900 font-bold text-lg">
+                    J
+                  </span>
                 </div>
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white dark:border-gray-900 animate-pulse-slow"></div>
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-gray-500 rounded-full border-2 border-white dark:border-gray-900 animate-pulse-slow"></div>
               </div>
               <div className="flex flex-col">
                 <span className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors duration-200">
@@ -64,8 +66,15 @@ export default function Navigation() {
               {LANGUAGES.map((lng) => (
                 <button
                   key={lng.code}
-                  className={`px-2 py-1 rounded text-xs font-semibold transition-colors duration-150 ${lang === lng.code ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
-                  onClick={() => { setLang(lng.code); console.log('Language changed to', lng.code); }}
+                  className={`px-2 py-1 rounded text-xs font-semibold transition-colors duration-150 ${
+                    lang === lng.code
+                      ? "bg-gray-700 text-white"
+                      : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                  }`}
+                  onClick={() => {
+                    setLang(lng.code);
+                    console.log("Language changed to", lng.code);
+                  }}
                 >
                   {lng.label}
                 </button>
@@ -81,9 +90,21 @@ export default function Navigation() {
             >
               <span className="sr-only">Ana menüyü aç</span>
               <div className="w-6 h-6 flex flex-col justify-center items-center">
-                <span className={`block w-5 h-0.5 bg-current transition-all duration-300 ${isMenuOpen ? 'rotate-45 translate-y-0.5' : '-translate-y-1'}`}></span>
-                <span className={`block w-5 h-0.5 bg-current transition-all duration-300 ${isMenuOpen ? 'opacity-0' : 'opacity-100'}`}></span>
-                <span className={`block w-5 h-0.5 bg-current transition-all duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-0.5' : 'translate-y-1'}`}></span>
+                <span
+                  className={`block w-5 h-0.5 bg-current transition-all duration-300 ${
+                    isMenuOpen ? "rotate-45 translate-y-0.5" : "-translate-y-1"
+                  }`}
+                ></span>
+                <span
+                  className={`block w-5 h-0.5 bg-current transition-all duration-300 ${
+                    isMenuOpen ? "opacity-0" : "opacity-100"
+                  }`}
+                ></span>
+                <span
+                  className={`block w-5 h-0.5 bg-current transition-all duration-300 ${
+                    isMenuOpen ? "-rotate-45 -translate-y-0.5" : "translate-y-1"
+                  }`}
+                ></span>
               </div>
             </button>
           </div>
@@ -108,8 +129,15 @@ export default function Navigation() {
               {LANGUAGES.map((lng) => (
                 <button
                   key={lng.code}
-                  className={`px-2 py-1 rounded text-xs font-semibold transition-colors duration-150 ${lang === lng.code ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
-                  onClick={() => { setLang(lng.code); console.log('Language changed to', lng.code); }}
+                  className={`px-2 py-1 rounded text-xs font-semibold transition-colors duration-150 ${
+                    lang === lng.code
+                      ? "bg-gray-700 text-white"
+                      : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                  }`}
+                  onClick={() => {
+                    setLang(lng.code);
+                    console.log("Language changed to", lng.code);
+                  }}
                 >
                   {lng.label}
                 </button>
@@ -120,4 +148,4 @@ export default function Navigation() {
       )}
     </nav>
   );
-} 
+}
