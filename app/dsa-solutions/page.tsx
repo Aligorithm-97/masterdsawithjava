@@ -221,7 +221,7 @@ export default function DSASolutionsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#18181b]">
+    <div className="min-h-screen bg-[#18181b] pt-16">
       {/* Header */}
       <section className="bg-[#18181b] shadow-sm border-b border-[#23272f]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">

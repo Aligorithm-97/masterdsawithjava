@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const LANGUAGES = [
   { code: "en", label: "EN" },
@@ -11,7 +11,19 @@ const LANGUAGES = [
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
+  const menuRef = useRef(null);
   const [lang, setLang] = useState("en");
+
+  useEffect(() => {
+    if (isMenuOpen) {
+      setShowMenu(true);
+    } else {
+      // Menü kapanırken animasyon için kısa gecikme
+      const timeout = setTimeout(() => setShowMenu(false), 300);
+      return () => clearTimeout(timeout);
+    }
+  }, [isMenuOpen]);
 
   const menuItems = [
     { name: "Home", href: "/" },
@@ -23,25 +35,33 @@ export default function Navigation() {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 glass border-b border-gray-200 dark:border-gray-700">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#18181b]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <Link href="/" className="flex items-center space-x-3 group">
+            <Link
+              href="/"
+              tabIndex={0}
+              className="flex items-center space-x-3 group focus:outline-none focus-visible:outline-none focus:ring-0 focus:border-transparent focus:shadow-none active:outline-none active:ring-0 active:border-transparent active:shadow-none"
+              style={{ outline: "none", boxShadow: "none" }}
+            >
               <div className="relative">
-                <div className="w-10 h-10 bg-[#23272f] rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
-                  <span className="text-white dark:text-gray-900 font-bold text-lg">
+                <div
+                  className="w-11 h-11 bg-gradient-to-br from-[#23272f] to-[#18181b] border border-[#31343a] rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-200 group-hover:scale-105 focus:outline-none focus-visible:outline-none focus:ring-0 focus:border-transparent focus:shadow-none active:outline-none active:ring-0 active:border-transparent active:shadow-none"
+                  style={{ outline: "none", boxShadow: "none" }}
+                >
+                  <span className="text-white dark:text-gray-100 font-mono font-extrabold text-2xl select-none">
                     J
                   </span>
                 </div>
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-gray-500 rounded-full border-2 border-white dark:border-gray-900 animate-pulse-slow"></div>
+                <div className="absolute -top-1.5 -right-1.5 w-2.5 h-2.5 bg-gray-400 rounded-full border border-white dark:border-[#18181b] shadow-sm"></div>
               </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors duration-200">
+              <div className="flex flex-col justify-center ml-1">
+                <span className="text-lg font-bold tracking-tight text-gray-100 dark:text-white group-hover:text-gray-300 transition-colors duration-200">
                   Master DSA
                 </span>
-                <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
+                <span className="text-[11px] text-gray-400 dark:text-gray-400 font-medium tracking-wide mt-0.5">
                   with Java
                 </span>
               </div>
@@ -102,7 +122,7 @@ export default function Navigation() {
                 ></span>
                 <span
                   className={`block w-5 h-0.5 bg-current transition-all duration-300 ${
-                    isMenuOpen ? "-rotate-45 -translate-y-0.5" : "translate-y-1"
+                    isMenuOpen ? "rotate-45 -translate-y-1" : "translate-y-0.5"
                   }`}
                 ></span>
               </div>
@@ -110,42 +130,6 @@ export default function Navigation() {
           </div>
         </div>
       </div>
-
-      {/* Mobile Menu */}
-      {isMenuOpen && (
-        <div className="md:hidden absolute top-16 left-0 w-full bg-[#23272f] shadow-lg z-40 animate-slide-in-left">
-          <div className="flex flex-col py-4">
-            {menuItems.map((item, index) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="px-6 py-3 text-gray-300 hover:text-white hover:bg-gray-700 transition-colors duration-200"
-              >
-                {item.name}
-              </Link>
-            ))}
-            {/* Mobile Language Switcher */}
-            <div className="flex items-center space-x-1 px-6 mt-2">
-              {LANGUAGES.map((lng) => (
-                <button
-                  key={lng.code}
-                  className={`px-2 py-1 rounded text-xs font-semibold transition-colors duration-150 ${
-                    lang === lng.code
-                      ? "bg-gray-700 text-white"
-                      : "text-gray-300 hover:bg-gray-700 hover:text-white"
-                  }`}
-                  onClick={() => {
-                    setLang(lng.code);
-                    console.log("Language changed to", lng.code);
-                  }}
-                >
-                  {lng.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
     </nav>
   );
 }

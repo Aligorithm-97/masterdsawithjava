@@ -328,10 +328,10 @@ for (int i = 0; i < 10; i++) {
   ];
 
   return (
-    <div className="min-h-screen bg-[#18181b]">
+    <div className="min-h-screen bg-[#18181b] pt-16">
       {/* Header */}
-      <section className="bg-[#18181b] shadow-sm border-b border-[#23272f]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <section className="bg-[#18181b] shadow-sm pt-0">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-0 pb-8">
           <div className="text-center">
             <nav className="text-sm text-gray-500 dark:text-gray-400 mb-4">
               <Link
@@ -364,9 +364,9 @@ for (int i = 0; i < 10; i++) {
             {lessons.map((lesson, index) => (
               <div
                 key={index}
-                className="bg-[#23272f] rounded-xl shadow-md overflow-hidden border border-[#23272f]"
+                className="bg-[#23272f] rounded-xl shadow-md overflow-hidden"
               >
-                <div className="bg-[#2a2f38] p-6 border-b border-[#23272f]">
+                <div className="bg-[#2a2f38] p-6">
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                     {index + 1}. {lesson.title}
                   </h2>
