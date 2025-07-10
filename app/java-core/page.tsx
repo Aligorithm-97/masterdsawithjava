@@ -3,14 +3,14 @@ import Link from "next/link";
 export default function JavaCorePage() {
   const topics = [
     {
-      title: "Java Temelleri",
-      description: "Değişkenler, veri tipleri, operatörler ve temel syntax",
+      title: "Java Fundamentals",
+      description: "Variables, data types, operators, and basic syntax",
       lessons: [
-        "Java'ya Giriş ve Kurulum",
-        "Değişkenler ve Veri Tipleri",
-        "Operatörler ve İfadeler",
-        "Kontrol Yapıları (if, else, switch)",
-        "Döngüler (for, while, do-while)",
+        "Introduction to Java and Setup",
+        "Variables and Data Types",
+        "Operators and Expressions",
+        "Control Structures (if, else, switch)",
+        "Loops (for, while, do-while)",
       ],
       icon: (
         <svg
@@ -28,18 +28,18 @@ export default function JavaCorePage() {
         </svg>
       ),
       color: "from-gray-600 to-gray-700",
-      href: "/java-core/java-temelleri",
+      href: "/java-core/java-fundamentals",
     },
     {
-      title: "Nesne Yönelimli Programlama",
-      description: "Sınıflar, nesneler, kalıtım, polimorfizm ve encapsulation",
+      title: "Object-Oriented Programming",
+      description: "Classes, objects, inheritance, polymorphism, and encapsulation",
       lessons: [
-        "Sınıflar ve Nesneler",
-        "Constructor ve Method Overloading",
-        "Inheritance (Kalıtım)",
-        "Polymorphism (Çok Biçimlilik)",
-        "Encapsulation ve Access Modifiers",
-        "Abstract Classes ve Interfaces",
+        "Classes and Objects",
+        "Constructor and Method Overloading",
+        "Inheritance",
+        "Polymorphism",
+        "Encapsulation and Access Modifiers",
+        "Abstract Classes and Interfaces",
       ],
       icon: (
         <svg
@@ -61,12 +61,12 @@ export default function JavaCorePage() {
     },
     {
       title: "Exception Handling",
-      description: "Hata yönetimi ve exception handling mekanizmaları",
+      description: "Error management and exception handling mechanisms",
       lessons: [
-        "Exception Handling Temelleri",
-        "Try-Catch Blokları",
-        "Finally ve Try-with-Resources",
-        "Custom Exception Oluşturma",
+        "Exception Handling Basics",
+        "Try-Catch Blocks",
+        "Finally and Try-with-Resources",
+        "Creating Custom Exceptions",
         "Exception Hierarchy",
       ],
       icon: (
@@ -88,12 +88,12 @@ export default function JavaCorePage() {
       href: "/java-core/exception-handling",
     },
     {
-      title: "String ve StringBuilder",
-      description: "String işlemleri ve performans optimizasyonu",
+      title: "String and StringBuilder",
+      description: "String operations and performance optimization",
       lessons: [
-        "String Sınıfı ve Metodları",
-        "StringBuilder ve StringBuffer",
-        "String Pool ve Immutability",
+        "String Class and Methods",
+        "StringBuilder and StringBuffer",
+        "String Pool and Immutability",
         "String Formatting",
         "Regular Expressions",
       ],
@@ -116,14 +116,14 @@ export default function JavaCorePage() {
       href: "/java-core/string-ve-stringbuilder",
     },
     {
-      title: "Arrays ve Collections",
-      description: "Diziler ve temel collection sınıfları",
+      title: "Arrays and Collections",
+      description: "Arrays and basic collection classes",
       lessons: [
-        "Arrays (Diziler)",
-        "ArrayList ve LinkedList",
-        "HashSet ve TreeSet",
-        "HashMap ve TreeMap",
-        "Collections Utility Sınıfı",
+        "Arrays",
+        "ArrayList and LinkedList",
+        "HashSet and TreeSet",
+        "HashMap and TreeMap",
+        "Collections Utility Class",
       ],
       icon: (
         <svg
@@ -145,11 +145,11 @@ export default function JavaCorePage() {
     },
     {
       title: "File I/O",
-      description: "Dosya okuma, yazma ve I/O işlemleri",
+      description: "File reading, writing, and I/O operations",
       lessons: [
-        "File Sınıfı",
-        "FileReader ve FileWriter",
-        "BufferedReader ve BufferedWriter",
+        "File Class",
+        "FileReader and FileWriter",
+        "BufferedReader and BufferedWriter",
         "Serialization",
         "NIO.2 API",
       ],
@@ -202,8 +202,7 @@ export default function JavaCorePage() {
               className="text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed animate-fade-in-up"
               style={{ animationDelay: "200ms" }}
             >
-              Java programlama dilinin temel kavramlarını öğrenin. OOP
-              prensiplerinden exception handling\'e kadar kapsamlı bir rehber.
+              Learn the fundamental concepts of the Java programming language. A comprehensive guide from OOP principles to exception handling.
             </p>
           </div>
         </div>
@@ -214,10 +213,10 @@ export default function JavaCorePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 animate-fade-in-up">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-              Öğrenme Yolculuğu
+              Learning Journey
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Java\'yı adım adım öğrenin ve her konuyu detaylı olarak inceleyin
+              Learn Java step by step and explore each topic in detail.
             </p>
           </div>
 
@@ -245,7 +244,7 @@ export default function JavaCorePage() {
 
                 <div className="space-y-3">
                   <h4 className="font-semibold text-gray-900 dark:text-white text-sm uppercase tracking-wide">
-                    İçerik:
+                    Content:
                   </h4>
                   <ul className="space-y-2">
                     {topic.lessons.map((lesson, lessonIndex) => (
@@ -262,7 +261,7 @@ export default function JavaCorePage() {
 
                 <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
                   <span className="inline-flex items-center text-gray-700 dark:text-gray-300 font-medium group-hover:text-gray-900 dark:group-hover:text-white transition-colors duration-200">
-                    Detayları görüntüle
+                    View Details
                     <svg
                       className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-200"
                       fill="none"
@@ -289,10 +288,10 @@ export default function JavaCorePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 animate-fade-in-up">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
-              Hızlı Başlangıç
+              Quick Start
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Java öğrenmeye başlamak için temel adımlar
+              Basic steps to start learning Java.
             </p>
           </div>
 
@@ -305,10 +304,10 @@ export default function JavaCorePage() {
                 <span className="text-2xl font-bold text-white">1</span>
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                JDK Kurulumu
+                JDK Installation
               </h3>
               <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                Java Development Kit\'i indirin ve sisteminize kurun
+                Download and install the Java Development Kit on your system.
               </p>
             </div>
 
@@ -320,10 +319,10 @@ export default function JavaCorePage() {
                 <span className="text-2xl font-bold text-white">2</span>
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                IDE Seçimi
+                IDE Selection
               </h3>
               <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                IntelliJ IDEA, Eclipse veya VS Code gibi bir IDE seçin
+                Choose an IDE like IntelliJ IDEA, Eclipse, or VS Code.
               </p>
             </div>
 
@@ -335,10 +334,10 @@ export default function JavaCorePage() {
                 <span className="text-2xl font-bold text-white">3</span>
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                İlk Program
+                First Program
               </h3>
               <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                "Hello World" programı ile Java\'ya başlayın
+                Start with the "Hello World" program to begin your Java journey.
               </p>
             </div>
           </div>
@@ -349,16 +348,16 @@ export default function JavaCorePage() {
       <section className="py-20 bg-[#18181b]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6 animate-fade-in-up">
-            Java Öğrenmeye Hazır mısınız?
+            Ready to learn Java?
           </h2>
           <p
             className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed animate-fade-in-up"
             style={{ animationDelay: "200ms" }}
           >
-            İlk adımı atın ve Java programlama yolculuğunuza başlayın
+            Take the first step and begin your Java programming journey.
           </p>
           <Link
-            href="/java-core/java-temelleri"
+            href="/java-core/java-fundamentals"
             className="btn btn-primary px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl hover-lift animate-fade-in-up"
             style={{ animationDelay: "400ms" }}
           >
@@ -375,7 +374,7 @@ export default function JavaCorePage() {
                 d="M13 10V3L4 14h7v7l9-11h-7z"
               />
             </svg>
-            İlk Derse Başla
+            Start Your First Lesson
           </Link>
         </div>
       </section>

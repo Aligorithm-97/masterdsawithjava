@@ -4,7 +4,7 @@ export default function AlgorithmProblemsPage() {
   const platforms = [
     {
       name: "LeetCode",
-      description: "En popüler algoritma problem platformu",
+      description: "The most popular algorithm problem platform",
       problems: [
         {
           title: "Two Sum",
@@ -42,7 +42,7 @@ export default function AlgorithmProblemsPage() {
     },
     {
       name: "HackerRank",
-      description: "Algoritma ve veri yapıları problemleri",
+      description: "Algorithm and data structure problems",
       problems: [
         {
           title: "Arrays - DS",
@@ -80,7 +80,7 @@ export default function AlgorithmProblemsPage() {
     },
     {
       name: "CodeForces",
-      description: "Competitive programming problemleri",
+      description: "Competitive programming problems",
       problems: [
         {
           title: "Watermelon",
@@ -140,11 +140,10 @@ export default function AlgorithmProblemsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-              Algoritma Soruları
+              Algorithm Problems
             </h1>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              LeetCode, HackerRank ve CodeForces\'tan seçilmiş problemler. Her
-              problem için detaylı çözüm ve açıklamalar.
+              Selected problems from LeetCode, HackerRank, and CodeForces. Detailed solutions and explanations for each problem.
             </p>
           </div>
         </div>
@@ -155,10 +154,10 @@ export default function AlgorithmProblemsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-              Platform İstatistikleri
+              Platform Statistics
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-300">
-              Çözülen problem sayıları ve başarı oranları
+              Number of solved problems and success rates
             </p>
           </div>
 
@@ -222,7 +221,7 @@ export default function AlgorithmProblemsPage() {
                               .replace(/\s+/g, "-")}`}
                             className="text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 font-medium text-sm"
                           >
-                            Çözüm
+                            Solution
                           </Link>
                         </div>
                       </div>
@@ -234,7 +233,7 @@ export default function AlgorithmProblemsPage() {
                       href={`/algorithm-problems/${platform.name.toLowerCase()}`}
                       className="inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 font-medium"
                     >
-                      Tüm {platform.name} problemleri
+                      All {platform.name} problems
                       <svg
                         className="ml-2 w-4 h-4"
                         fill="none"
@@ -262,10 +261,10 @@ export default function AlgorithmProblemsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-              Problem Kategorileri
+              Problem Categories
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-300">
-              Farklı algoritma kategorilerinde problemler
+              Problems in different algorithm categories
             </p>
           </div>
 
@@ -296,10 +295,10 @@ export default function AlgorithmProblemsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-              İlerleme Takibi
+              Progress Tracking
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-300">
-              Çözülen problemlerinizi takip edin ve hedeflerinizi belirleyin
+              Track your solved problems and set your goals
             </p>
           </div>
 
@@ -310,7 +309,7 @@ export default function AlgorithmProblemsPage() {
                   45
                 </div>
                 <div className="text-gray-600 dark:text-gray-300">
-                  Toplam Çözülen
+                  Total Solved
                 </div>
               </div>
             </div>
@@ -321,7 +320,7 @@ export default function AlgorithmProblemsPage() {
                   23
                 </div>
                 <div className="text-gray-600 dark:text-gray-300">
-                  Easy Çözülen
+                  Easy Solved
                 </div>
               </div>
             </div>
@@ -332,7 +331,7 @@ export default function AlgorithmProblemsPage() {
                   18
                 </div>
                 <div className="text-gray-600 dark:text-gray-300">
-                  Medium Çözülen
+                  Medium Solved
                 </div>
               </div>
             </div>
@@ -344,17 +343,16 @@ export default function AlgorithmProblemsPage() {
       <section className="py-16 bg-[#18181b]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">
-            Algoritma Problemlerini Çözmeye Başlayın
+            Start Solving Algorithm Problems
           </h2>
           <p className="text-xl text-gray-100 mb-8 max-w-2xl mx-auto">
-            Farklı zorluk seviyelerinde problemlerle algoritma becerilerinizi
-            geliştirin ve yazılım mülakatlarına hazırlanın.
+            Develop your algorithm skills with problems of different difficulty levels and prepare for software interviews.
           </p>
           <Link
             href="/algorithm-problems/leetcode/two-sum"
             className="bg-white text-gray-700 hover:bg-gray-100 px-8 py-4 rounded-lg font-semibold text-lg transition-colors duration-200"
           >
-            İlk Problemi Çöz
+            Solve First Problem
           </Link>
         </div>
       </section>

@@ -4,7 +4,7 @@ export default function DSASolutionsPage() {
   const categories = [
     {
       title: "Array Problems",
-      description: "Dizi problemleri ve çözüm yaklaşımları",
+      description: "Array problems and solution approaches",
       problems: [
         { title: "Two Sum", difficulty: "Easy", solutions: 3 },
         { title: "Maximum Subarray", difficulty: "Medium", solutions: 2 },
@@ -36,7 +36,7 @@ export default function DSASolutionsPage() {
     },
     {
       title: "String Problems",
-      description: "String manipülasyonu ve algoritma problemleri",
+      description: "String manipulation and algorithm problems",
       problems: [
         { title: "Valid Parentheses", difficulty: "Easy", solutions: 2 },
         {
@@ -76,7 +76,7 @@ export default function DSASolutionsPage() {
     },
     {
       title: "Linked List",
-      description: "Bağlı liste problemleri ve çözümleri",
+      description: "Linked list problems and solutions",
       problems: [
         { title: "Reverse Linked List", difficulty: "Easy", solutions: 2 },
         {
@@ -112,7 +112,7 @@ export default function DSASolutionsPage() {
     },
     {
       title: "Tree Problems",
-      description: "Ağaç veri yapısı problemleri",
+      description: "Tree data structure problems",
       problems: [
         {
           title: "Binary Tree Inorder Traversal",
@@ -156,7 +156,7 @@ export default function DSASolutionsPage() {
     },
     {
       title: "Dynamic Programming",
-      description: "Dinamik programlama problemleri",
+      description: "Dynamic programming problems",
       problems: [
         { title: "Climbing Stairs", difficulty: "Easy", solutions: 2 },
         { title: "House Robber", difficulty: "Medium", solutions: 2 },
@@ -188,7 +188,7 @@ export default function DSASolutionsPage() {
     },
     {
       title: "Graph Problems",
-      description: "Graf algoritmaları ve problemleri",
+      description: "Graph algorithms and problems",
       problems: [
         { title: "Number of Islands", difficulty: "Medium", solutions: 2 },
         { title: "Course Schedule", difficulty: "Medium", solutions: 2 },
@@ -240,17 +240,16 @@ export default function DSASolutionsPage() {
                   d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
                 />
               </svg>
-              DSA Çözümleri
+              DSA Solutions
             </div>
             <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6 animate-fade-in-up">
-              DSA Çözümleri
+              DSA Solutions
             </h1>
             <p
               className="text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed animate-fade-in-up"
               style={{ animationDelay: "200ms" }}
             >
-              Veri yapıları ve algoritma problemlerinin detaylı çözümleri. Her
-              problem için farklı yaklaşımlar ve optimizasyon teknikleri.
+              Detailed solutions for data structures and algorithm problems. Different approaches and optimization techniques for each problem.
             </p>
           </div>
         </div>
@@ -261,11 +260,10 @@ export default function DSASolutionsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 animate-fade-in-up">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-              Problem Kategorileri
+              Problem Categories
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Farklı veri yapıları ve algoritma türlerine göre organize edilmiş
-              problemler
+              Problems organized by different data structures and algorithm types
             </p>
           </div>
 
@@ -324,7 +322,7 @@ export default function DSASolutionsPage() {
                                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                               />
                             </svg>
-                            {problem.solutions} çözüm
+                            {problem.solutions} solutions
                           </span>
                         </div>
                       </div>
@@ -336,7 +334,7 @@ export default function DSASolutionsPage() {
                           .replace(/\s+/g, "-")}`}
                         className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium text-sm flex items-center group-hover:translate-x-1 transition-all duration-200"
                       >
-                        Çözümü gör
+                        View Solution
                         <svg
                           className="ml-1 w-4 h-4"
                           fill="none"
@@ -360,7 +358,7 @@ export default function DSASolutionsPage() {
                     href={category.href}
                     className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-semibold transition-colors duration-200"
                   >
-                    Tüm {category.title} problemleri
+                    All {category.title} Problems
                     <svg
                       className="ml-2 w-4 h-4"
                       fill="none"
@@ -387,10 +385,10 @@ export default function DSASolutionsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 animate-fade-in-up">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
-              Öğrenme Yolu
+              Learning Path
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              DSA problemlerini çözmeye başlamak için önerilen sıralama
+              Recommended order to start solving DSA problems
             </p>
           </div>
 
@@ -403,10 +401,10 @@ export default function DSASolutionsPage() {
                 <span className="text-2xl font-bold text-white">1</span>
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                Temel Algoritmalar
+                Fundamental Algorithms
               </h3>
               <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                Sorting, searching ve temel veri yapıları
+                Sorting, searching and fundamental data structures
               </p>
             </div>
 
@@ -418,10 +416,10 @@ export default function DSASolutionsPage() {
                 <span className="text-2xl font-bold text-white">2</span>
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                Veri Yapıları
+                Data Structures
               </h3>
               <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                Arrays, linked lists, trees ve graphs
+                Arrays, linked lists, trees and graphs
               </p>
             </div>
 
@@ -433,7 +431,7 @@ export default function DSASolutionsPage() {
                 <span className="text-2xl font-bold text-white">3</span>
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                Algoritma Teknikleri
+                Algorithm Techniques
               </h3>
               <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
                 Two pointers, sliding window, DP
@@ -448,10 +446,10 @@ export default function DSASolutionsPage() {
                 <span className="text-2xl font-bold text-white">4</span>
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                İleri Seviye
+                Advanced Topics
               </h3>
               <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                Graph algorithms ve advanced DP
+                Graph algorithms and advanced DP
               </p>
             </div>
           </div>
@@ -462,13 +460,13 @@ export default function DSASolutionsPage() {
       <section className="py-20 bg-[#18181b]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6 animate-fade-in-up">
-            DSA Problemlerini Çözmeye Başlayın
+            Start Solving DSA Problems
           </h2>
           <p
             className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed animate-fade-in-up"
             style={{ animationDelay: "200ms" }}
           >
-            İlk problemi çözmeye başlayın ve algoritma becerilerinizi geliştirin
+            Start solving your first problem and improve your algorithm skills
           </p>
           <Link
             href="/dsa-solutions/array-problems/two-sum"
@@ -488,7 +486,7 @@ export default function DSASolutionsPage() {
                 d="M13 10V3L4 14h7v7l9-11h-7z"
               />
             </svg>
-            İlk Problemi Çöz
+            Solve First Problem
           </Link>
         </div>
       </section>
