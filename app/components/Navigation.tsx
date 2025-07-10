@@ -16,6 +16,20 @@ export default function Navigation() {
   const menuRef = useRef(null);
   const javaMenuRef = useRef(null);
   const [lang, setLang] = useState("en");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    // Check authentication status
+    const checkAuth = () => {
+      const auth = localStorage.getItem("isAuthenticated");
+      setIsAuthenticated(auth === "true");
+    };
+
+    checkAuth();
+    // Listen for storage changes (when user logs in/out)
+    window.addEventListener("storage", checkAuth);
+    return () => window.removeEventListener("storage", checkAuth);
+  }, []);
 
   const handleJavaMenuEnter = () => {
     if (javaMenuTimeout) {
@@ -170,6 +184,17 @@ export default function Navigation() {
               <span className="absolute bottom-0 left-1/2 w-0 h-0.5 bg-gray-700 dark:bg-gray-300 group-hover:w-full group-hover:left-0 transition-all duration-300"></span>
             </Link>
 
+            {/* Admin Link - Only show when authenticated */}
+            {isAuthenticated && (
+              <Link
+                href="/admin"
+                className="relative px-4 py-2 text-sm font-medium text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 rounded-lg transition-all duration-200 hover:bg-green-50 dark:hover:bg-green-900/20 group border border-green-600/30"
+              >
+                Admin
+                <span className="absolute bottom-0 left-1/2 w-0 h-0.5 bg-green-600 dark:bg-green-400 group-hover:w-full group-hover:left-0 transition-all duration-300"></span>
+              </Link>
+            )}
+
             {/* Language Switcher */}
             <div className="ml-4 flex items-center space-x-1 bg-[#23272f] rounded-lg px-2 py-1">
               {LANGUAGES.map((lng) => (
@@ -278,6 +303,17 @@ export default function Navigation() {
               >
                 About
               </Link>
+
+              {/* Admin Link - Only show when authenticated */}
+              {isAuthenticated && (
+                <Link
+                  href="/admin"
+                  className="block px-3 py-2 text-base font-medium text-green-400 hover:text-green-300 hover:bg-green-900/20 rounded-md transition-colors duration-150 border-l-4 border-green-600"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Admin Panel
+                </Link>
+              )}
             </div>
           </div>
         )}

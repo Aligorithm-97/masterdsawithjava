@@ -1,5 +1,6 @@
 "use client"
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 const CATEGORIES = [
   "Java Core",
@@ -38,6 +39,45 @@ export default function AdminPage() {
   const [category, setCategory] = useState(CATEGORIES[0]);
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [message, setMessage] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
+
+  // Check authentication on component mount
+  useEffect(() => {
+    const checkAuth = () => {
+      const auth = localStorage.getItem("isAuthenticated");
+      if (auth === "true") {
+        setIsAuthenticated(true);
+      } else {
+        router.push("/login");
+      }
+      setIsLoading(false);
+    };
+
+    checkAuth();
+  }, [router]);
+
+  // Logout function
+  const handleLogout = () => {
+    localStorage.removeItem("isAuthenticated");
+    localStorage.removeItem("adminUser");
+    router.push("/login");
+  };
+
+  // Show loading while checking authentication
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#18181b] flex items-center justify-center">
+        <div className="text-white text-xl">Loading...</div>
+      </div>
+    );
+  }
+
+  // Don't render admin content if not authenticated
+  if (!isAuthenticated) {
+    return null;
+  }
 
   // Blok ekle
   const handleAddBlock = (type: Block["type"]) => {
@@ -119,9 +159,18 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen bg-[#18181b] pt-16 px-4">
       <div className="max-w-2xl mx-auto py-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 text-center">
-          Admin Panel
-        </h1>
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+            Admin Panel
+          </h1>
+          <button
+            onClick={handleLogout}
+            className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-lg shadow-md transition-colors duration-200"
+          >
+            Logout
+          </button>
+        </div>
+        
         <form
           onSubmit={handleAddPost}
           className="bg-[#23272f] p-6 rounded-xl shadow-md mb-8 space-y-4"
