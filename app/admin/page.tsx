@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabase";
+import PostRenderer from "../../components/PostRenderer";
 
 const CATEGORIES = [
   "Java Core",
@@ -545,26 +546,12 @@ export default function AdminPage() {
                         {post.summary && (
                           <div className="text-gray-400 mb-1 italic">{post.summary}</div>
                         )}
-                        <div className="space-y-2">
-                          {post.blocks.map((block, bidx) => {
-                            if (block.type === "heading")
-                              return <div key={bidx} className="text-xl font-bold text-blue-200 mt-2">{block.content}</div>;
-                            if (block.type === "paragraph")
-                              return <div key={bidx} className="text-gray-200 whitespace-pre-line">{block.content}</div>;
-                            if (block.type === "image")
-                              return block.url ? (
-                                <img key={bidx} src={block.url} alt={block.alt || "image"} className="max-h-60 rounded border border-gray-700 mx-auto" />
-                              ) : null;
-                            if (block.type === "code")
-                              return (
-                                <pre key={bidx} className="bg-gray-800 text-green-200 rounded p-2 overflow-x-auto font-mono text-sm">
-                                  <code>{block.code}</code>
-                                </pre>
-                              );
-                            if (block.type === "quote")
-                              return <blockquote key={bidx} className="border-l-4 border-yellow-400 pl-4 italic text-yellow-200">{block.content}</blockquote>;
-                            return null;
-                          })}
+                        <div className="space-y-4">
+                          <PostRenderer 
+                            blocks={post.blocks} 
+                            maxBlocks={3} 
+                            isPreview={true} 
+                          />
                         </div>
                       </div>
                     </div>

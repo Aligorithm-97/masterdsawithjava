@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabase";
+import PostRenderer from "../../components/PostRenderer";
 
 type Block =
   | { type: "paragraph"; content: string }
@@ -281,28 +282,19 @@ export default function DSASolutionsPage() {
                       </p>
                     )}
                     <div className="space-y-3">
-                      {post.blocks.slice(0, 2).map((block, idx) => {
-                        if (block.type === "heading")
-                          return <div key={idx} className="text-lg font-semibold text-green-200">{block.content}</div>;
-                        if (block.type === "paragraph")
-                          return <div key={idx} className="text-gray-300 text-sm line-clamp-2">{block.content}</div>;
-                        if (block.type === "image" && block.url)
-                          return <img key={idx} src={block.url} alt={block.alt || "image"} className="w-full h-32 object-cover rounded" />;
-                        if (block.type === "code")
-                          return (
-                            <pre key={idx} className="bg-gray-800 text-green-200 rounded p-2 text-xs overflow-x-auto">
-                              <code>{block.code.substring(0, 100)}...</code>
-                            </pre>
-                          );
-                        if (block.type === "quote")
-                          return <blockquote key={idx} className="border-l-4 border-yellow-400 pl-3 italic text-yellow-200 text-sm">{block.content}</blockquote>;
-                        return null;
-                      })}
+                      <PostRenderer 
+                        blocks={post.blocks} 
+                        maxBlocks={2} 
+                        isPreview={true} 
+                      />
                     </div>
                     <div className="mt-4 pt-4 border-t border-gray-700">
-                      <button className="text-green-400 hover:text-green-300 text-sm font-medium">
+                      <Link 
+                        href={`/post/${post.id}`}
+                        className="text-green-400 hover:text-green-300 text-sm font-medium"
+                      >
                         Read More →
-                      </button>
+                      </Link>
                     </div>
                   </div>
                 </article>
