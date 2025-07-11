@@ -1,60 +1,63 @@
+"use client"
 import Link from "next/link";
+import { useState, useEffect } from "react";
+import { supabase } from "../../lib/supabase";
+
+type Block =
+  | { type: "paragraph"; content: string }
+  | { type: "heading"; content: string }
+  | { type: "image"; url: string; alt?: string }
+  | { type: "code"; code: string; language?: string }
+  | { type: "quote"; content: string };
+
+interface Post {
+  id: string;
+  title: string;
+  summary: string;
+  blocks: Block[];
+  category: string;
+  date: string;
+  created_at: string;
+}
 
 export default function DSASolutionsPage() {
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadPosts();
+  }, []);
+
+  const loadPosts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('posts')
+        .select('*')
+        .eq('category', 'DSA Solutions')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error loading posts:', error);
+      } else {
+        setPosts(data || []);
+      }
+    } catch (error) {
+      console.error('Error loading posts:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const categories = [
     {
-      title: "Array Problems",
-      description: "Array problems and solution approaches",
+      title: "Arrays",
+      description: "Array manipulation, searching, and sorting algorithms",
       problems: [
-        { title: "Two Sum", difficulty: "Easy", solutions: 3 },
-        { title: "Maximum Subarray", difficulty: "Medium", solutions: 2 },
-        {
-          title: "Container With Most Water",
-          difficulty: "Medium",
-          solutions: 2,
-        },
-        { title: "3Sum", difficulty: "Medium", solutions: 2 },
-        { title: "Trapping Rain Water", difficulty: "Hard", solutions: 3 },
-      ],
-      icon: (
-        <svg
-          className="w-8 h-8"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-          />
-        </svg>
-      ),
-      color: "from-gray-600 to-gray-700",
-      href: "/dsa-solutions/array-problems",
-    },
-    {
-      title: "String Problems",
-      description: "String manipulation and algorithm problems",
-      problems: [
-        { title: "Valid Parentheses", difficulty: "Easy", solutions: 2 },
-        {
-          title: "Longest Substring Without Repeating Characters",
-          difficulty: "Medium",
-          solutions: 2,
-        },
-        {
-          title: "Longest Palindromic Substring",
-          difficulty: "Medium",
-          solutions: 3,
-        },
-        {
-          title: "Regular Expression Matching",
-          difficulty: "Hard",
-          solutions: 2,
-        },
-        { title: "Minimum Window Substring", difficulty: "Hard", solutions: 2 },
+        "Two Sum",
+        "Maximum Subarray",
+        "Merge Sorted Array",
+        "Remove Duplicates",
+        "Rotate Array",
       ],
       icon: (
         <svg
@@ -71,26 +74,46 @@ export default function DSASolutionsPage() {
           />
         </svg>
       ),
-      color: "from-gray-700 to-gray-800",
-      href: "/dsa-solutions/string-problems",
+      color: "from-blue-600 to-blue-700",
+      href: "/dsa-solutions/arrays",
     },
     {
-      title: "Linked List",
-      description: "Linked list problems and solutions",
+      title: "Strings",
+      description: "String manipulation and pattern matching",
       problems: [
-        { title: "Reverse Linked List", difficulty: "Easy", solutions: 2 },
-        {
-          title: "Detect Cycle in Linked List",
-          difficulty: "Medium",
-          solutions: 2,
-        },
-        { title: "Merge Two Sorted Lists", difficulty: "Easy", solutions: 2 },
-        {
-          title: "Remove Nth Node From End",
-          difficulty: "Medium",
-          solutions: 2,
-        },
-        { title: "Reorder List", difficulty: "Medium", solutions: 2 },
+        "Valid Parentheses",
+        "Longest Substring Without Repeating Characters",
+        "Valid Palindrome",
+        "String to Integer",
+        "Longest Common Prefix",
+      ],
+      icon: (
+        <svg
+          className="w-8 h-8"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
+          />
+        </svg>
+      ),
+      color: "from-green-600 to-green-700",
+      href: "/dsa-solutions/strings",
+    },
+    {
+      title: "Linked Lists",
+      description: "Linked list operations and manipulations",
+      problems: [
+        "Reverse Linked List",
+        "Detect Cycle",
+        "Merge Two Sorted Lists",
+        "Remove Nth Node From End",
+        "Palindrome Linked List",
       ],
       icon: (
         <svg
@@ -107,34 +130,18 @@ export default function DSASolutionsPage() {
           />
         </svg>
       ),
-      color: "from-gray-800 to-gray-900",
-      href: "/dsa-solutions/linked-list",
+      color: "from-purple-600 to-purple-700",
+      href: "/dsa-solutions/linked-lists",
     },
     {
-      title: "Tree Problems",
-      description: "Tree data structure problems",
+      title: "Trees",
+      description: "Binary trees, BST, and tree traversals",
       problems: [
-        {
-          title: "Binary Tree Inorder Traversal",
-          difficulty: "Easy",
-          solutions: 3,
-        },
-        {
-          title: "Maximum Depth of Binary Tree",
-          difficulty: "Easy",
-          solutions: 2,
-        },
-        {
-          title: "Validate Binary Search Tree",
-          difficulty: "Medium",
-          solutions: 2,
-        },
-        { title: "Lowest Common Ancestor", difficulty: "Medium", solutions: 2 },
-        {
-          title: "Serialize and Deserialize Binary Tree",
-          difficulty: "Hard",
-          solutions: 2,
-        },
+        "Maximum Depth of Binary Tree",
+        "Validate Binary Search Tree",
+        "Invert Binary Tree",
+        "Binary Tree Level Order Traversal",
+        "Lowest Common Ancestor",
       ],
       icon: (
         <svg
@@ -147,54 +154,22 @@ export default function DSASolutionsPage() {
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth={2}
-            d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+            d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
           />
         </svg>
       ),
-      color: "from-gray-900 to-black",
-      href: "/dsa-solutions/tree-problems",
+      color: "from-yellow-600 to-yellow-700",
+      href: "/dsa-solutions/trees",
     },
     {
-      title: "Dynamic Programming",
-      description: "Dynamic programming problems",
+      title: "Graphs",
+      description: "Graph algorithms and traversals",
       problems: [
-        { title: "Climbing Stairs", difficulty: "Easy", solutions: 2 },
-        { title: "House Robber", difficulty: "Medium", solutions: 2 },
-        {
-          title: "Longest Increasing Subsequence",
-          difficulty: "Medium",
-          solutions: 2,
-        },
-        { title: "Coin Change", difficulty: "Medium", solutions: 2 },
-        { title: "Edit Distance", difficulty: "Hard", solutions: 2 },
-      ],
-      icon: (
-        <svg
-          className="w-8 h-8"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-          />
-        </svg>
-      ),
-      color: "from-black to-gray-900",
-      href: "/dsa-solutions/dynamic-programming",
-    },
-    {
-      title: "Graph Problems",
-      description: "Graph algorithms and problems",
-      problems: [
-        { title: "Number of Islands", difficulty: "Medium", solutions: 2 },
-        { title: "Course Schedule", difficulty: "Medium", solutions: 2 },
-        { title: "Word Ladder", difficulty: "Hard", solutions: 2 },
-        { title: "Alien Dictionary", difficulty: "Hard", solutions: 2 },
-        { title: "Redundant Connection", difficulty: "Medium", solutions: 2 },
+        "Number of Islands",
+        "Clone Graph",
+        "Course Schedule",
+        "Word Ladder",
+        "Graph Valid Tree",
       ],
       icon: (
         <svg
@@ -211,14 +186,38 @@ export default function DSASolutionsPage() {
           />
         </svg>
       ),
-      color: "from-gray-500 to-gray-600",
-      href: "/dsa-solutions/graph-problems",
+      color: "from-red-600 to-red-700",
+      href: "/dsa-solutions/graphs",
+    },
+    {
+      title: "Dynamic Programming",
+      description: "DP problems and optimization techniques",
+      problems: [
+        "Climbing Stairs",
+        "House Robber",
+        "Longest Increasing Subsequence",
+        "Coin Change",
+        "Edit Distance",
+      ],
+      icon: (
+        <svg
+          className="w-8 h-8"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+          />
+        </svg>
+      ),
+      color: "from-indigo-600 to-indigo-700",
+      href: "/dsa-solutions/dynamic-programming",
     },
   ];
-
-  const getDifficultyColor = (difficulty: string) => {
-    return "badge-error"; // badge-error artık gri olacak
-  };
 
   return (
     <div className="min-h-screen bg-[#18181b] pt-16">
@@ -237,106 +236,124 @@ export default function DSASolutionsPage() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                  d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
                 />
               </svg>
-              DSA Solutions
+              Data Structures & Algorithms
             </div>
             <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6 animate-fade-in-up">
               DSA Solutions
             </h1>
-            <p
-              className="text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed animate-fade-in-up"
-              style={{ animationDelay: "200ms" }}
-            >
-              Detailed solutions for data structures and algorithm problems. Different approaches and optimization techniques for each problem.
+            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto animate-fade-in-up animation-delay-200">
+              Comprehensive solutions to Data Structures and Algorithms problems with detailed explanations and Java implementations.
             </p>
           </div>
         </div>
       </section>
 
+      {/* Dynamic Posts Section */}
+      {posts.length > 0 && (
+        <section className="py-16 bg-[#23272f]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-white mb-4">Latest Solutions</h2>
+              <p className="text-gray-400">Explore our latest DSA problem solutions and tutorials</p>
+            </div>
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {posts.map((post) => (
+                <article
+                  key={post.id}
+                  className="bg-[#18181b] rounded-xl shadow-lg border border-gray-700 overflow-hidden hover:shadow-xl transition-shadow duration-300"
+                >
+                  <div className="p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        DSA Solutions
+                      </span>
+                      <span className="text-xs text-gray-400">{post.date}</span>
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-2 line-clamp-2">
+                      {post.title}
+                    </h3>
+                    {post.summary && (
+                      <p className="text-gray-400 mb-4 line-clamp-3">
+                        {post.summary}
+                      </p>
+                    )}
+                    <div className="space-y-3">
+                      {post.blocks.slice(0, 2).map((block, idx) => {
+                        if (block.type === "heading")
+                          return <div key={idx} className="text-lg font-semibold text-green-200">{block.content}</div>;
+                        if (block.type === "paragraph")
+                          return <div key={idx} className="text-gray-300 text-sm line-clamp-2">{block.content}</div>;
+                        if (block.type === "image" && block.url)
+                          return <img key={idx} src={block.url} alt={block.alt || "image"} className="w-full h-32 object-cover rounded" />;
+                        if (block.type === "code")
+                          return (
+                            <pre key={idx} className="bg-gray-800 text-green-200 rounded p-2 text-xs overflow-x-auto">
+                              <code>{block.code.substring(0, 100)}...</code>
+                            </pre>
+                          );
+                        if (block.type === "quote")
+                          return <blockquote key={idx} className="border-l-4 border-yellow-400 pl-3 italic text-yellow-200 text-sm">{block.content}</blockquote>;
+                        return null;
+                      })}
+                    </div>
+                    <div className="mt-4 pt-4 border-t border-gray-700">
+                      <button className="text-green-400 hover:text-green-300 text-sm font-medium">
+                        Read More →
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Categories Grid */}
-      <section className="py-20 bg-[#18181b]">
+      <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16 animate-fade-in-up">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
               Problem Categories
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Problems organized by different data structures and algorithm types
+            <p className="text-xl text-gray-600 dark:text-gray-400">
+              Explore DSA problems by category with detailed solutions
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {categories.map((category, index) => (
-              <div
-                key={index}
-                className="card hover-lift animate-fade-in-up bg-[#23272f]"
-                style={{ animationDelay: `${index * 100}ms` }}
+              <Link
+                key={category.title}
+                href={category.href}
+                className="group block bg-[#23272f] rounded-xl shadow-lg border border-gray-700 overflow-hidden hover:shadow-xl transition-all duration-300 hover:scale-105"
               >
-                <div className="flex items-center mb-6">
-                  <div
-                    className={`w-16 h-16 bg-[#23272f] rounded-2xl flex items-center justify-center text-white mr-4`}
-                  >
-                    {category.icon}
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className={`p-3 rounded-lg bg-gradient-to-br ${category.color}`}>
+                      <div className="text-white">{category.icon}</div>
+                    </div>
+                    <span className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors">
+                      {category.problems.length} problems
+                    </span>
                   </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-                      {category.title}
-                    </h3>
-                    <p className="text-gray-600 dark:text-gray-300 text-sm">
-                      {category.description}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="space-y-3 mb-6">
-                  {category.problems.map((problem, problemIndex) => (
-                    <div
-                      key={problemIndex}
-                      className="flex items-center justify-between p-4 bg-[#23272f] rounded-xl hover:bg-[#2a2f38] transition-all duration-200 group"
-                    >
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-gray-900 dark:text-white group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors duration-200">
-                          {problem.title}
-                        </h4>
-                        <div className="flex items-center mt-2">
-                          <span
-                            className={`badge ${getDifficultyColor(
-                              problem.difficulty
-                            )}`}
-                          >
-                            {problem.difficulty}
-                          </span>
-                          <span className="text-sm text-gray-500 dark:text-gray-400 ml-3 flex items-center">
-                            <svg
-                              className="w-4 h-4 mr-1"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                              />
-                            </svg>
-                            {problem.solutions} solutions
-                          </span>
-                        </div>
-                      </div>
-                      <Link
-                        href={`/dsa-solutions/${category.title
-                          .toLowerCase()
-                          .replace(/\s+/g, "-")}/${problem.title
-                          .toLowerCase()
-                          .replace(/\s+/g, "-")}`}
-                        className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium text-sm flex items-center group-hover:translate-x-1 transition-all duration-200"
+                  <h3 className="text-xl font-bold text-white mb-2 group-hover:text-green-400 transition-colors">
+                    {category.title}
+                  </h3>
+                  <p className="text-gray-400 mb-4 line-clamp-2">
+                    {category.description}
+                  </p>
+                  <ul className="space-y-1">
+                    {category.problems.slice(0, 3).map((problem, problemIndex) => (
+                      <li
+                        key={problemIndex}
+                        className="flex items-center text-sm text-gray-500 group-hover:text-gray-400 transition-colors"
                       >
-                        View Solution
                         <svg
-                          className="ml-1 w-4 h-4"
+                          className="w-4 h-4 mr-2 text-green-500"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -345,149 +362,61 @@ export default function DSASolutionsPage() {
                             strokeLinecap="round"
                             strokeLinejoin="round"
                             strokeWidth={2}
-                            d="M9 5l7 7-7 7"
+                            d="M5 13l4 4L19 7"
                           />
                         </svg>
-                      </Link>
-                    </div>
-                  ))}
+                        {problem}
+                      </li>
+                    ))}
+                    {category.problems.length > 3 && (
+                      <li className="text-sm text-green-400 font-medium">
+                        +{category.problems.length - 3} more problems
+                      </li>
+                    )}
+                  </ul>
                 </div>
-
-                <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-                  <Link
-                    href={category.href}
-                    className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-semibold transition-colors duration-200"
-                  >
-                    All {category.title} Problems
-                    <svg
-                      className="ml-2 w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </Link>
-                </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Learning Path Section */}
-      <section className="py-20 bg-[#18181b]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16 animate-fade-in-up">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
-              Learning Path
-            </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Recommended order to start solving DSA problems
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div
-              className="text-center group animate-fade-in-up bg-[#23272f]"
-              style={{ animationDelay: "200ms" }}
-            >
-              <div className="w-20 h-20 bg-[#23272f] rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                <span className="text-2xl font-bold text-white">1</span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                Fundamental Algorithms
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                Sorting, searching and fundamental data structures
-              </p>
-            </div>
-
-            <div
-              className="text-center group animate-fade-in-up bg-[#23272f]"
-              style={{ animationDelay: "400ms" }}
-            >
-              <div className="w-20 h-20 bg-[#23272f] rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                <span className="text-2xl font-bold text-white">2</span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                Data Structures
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                Arrays, linked lists, trees and graphs
-              </p>
-            </div>
-
-            <div
-              className="text-center group animate-fade-in-up bg-[#23272f]"
-              style={{ animationDelay: "600ms" }}
-            >
-              <div className="w-20 h-20 bg-[#23272f] rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                <span className="text-2xl font-bold text-white">3</span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                Algorithm Techniques
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                Two pointers, sliding window, DP
-              </p>
-            </div>
-
-            <div
-              className="text-center group animate-fade-in-up bg-[#23272f]"
-              style={{ animationDelay: "800ms" }}
-            >
-              <div className="w-20 h-20 bg-[#23272f] rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                <span className="text-2xl font-bold text-white">4</span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                Advanced Topics
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                Graph algorithms and advanced DP
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-[#18181b]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6 animate-fade-in-up">
-            Start Solving DSA Problems
+      {/* Call to Action */}
+      <section className="py-16 bg-[#23272f]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl font-bold text-white mb-4">
+            Ready to Master DSA?
           </h2>
-          <p
-            className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed animate-fade-in-up"
-            style={{ animationDelay: "200ms" }}
-          >
-            Start solving your first problem and improve your algorithm skills
+          <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
+            Start solving problems and improve your algorithmic thinking with our comprehensive DSA solutions.
           </p>
-          <Link
-            href="/dsa-solutions/array-problems/two-sum"
-            className="btn btn-primary px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl hover-lift animate-fade-in-up"
-            style={{ animationDelay: "400ms" }}
-          >
-            <svg
-              className="w-5 h-5 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/dsa-solutions/arrays"
+              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-green-600 hover:bg-green-700 transition-colors duration-200"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M13 10V3L4 14h7v7l9-11h-7z"
-              />
-            </svg>
-            Solve First Problem
-          </Link>
+              Start Solving
+              <svg
+                className="ml-2 -mr-1 w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 7l5 5m0 0l-5 5m5-5H6"
+                />
+              </svg>
+            </Link>
+            <Link
+              href="/algorithm-problems"
+              className="inline-flex items-center px-6 py-3 border border-gray-600 text-base font-medium rounded-lg text-gray-300 hover:text-white hover:bg-gray-700 transition-colors duration-200"
+            >
+              Algorithm Problems
+            </Link>
+          </div>
         </div>
       </section>
     </div>

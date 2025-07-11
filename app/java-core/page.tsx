@@ -1,6 +1,53 @@
+"use client"
 import Link from "next/link";
+import { useState, useEffect } from "react";
+import { supabase } from "../../lib/supabase";
+
+type Block =
+  | { type: "paragraph"; content: string }
+  | { type: "heading"; content: string }
+  | { type: "image"; url: string; alt?: string }
+  | { type: "code"; code: string; language?: string }
+  | { type: "quote"; content: string };
+
+interface Post {
+  id: string;
+  title: string;
+  summary: string;
+  blocks: Block[];
+  category: string;
+  date: string;
+  created_at: string;
+}
 
 export default function JavaCorePage() {
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadPosts();
+  }, []);
+
+  const loadPosts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('posts')
+        .select('*')
+        .eq('category', 'Java Core')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error loading posts:', error);
+      } else {
+        setPosts(data || []);
+      }
+    } catch (error) {
+      console.error('Error loading posts:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const topics = [
     {
       title: "Java Fundamentals",
@@ -198,84 +245,136 @@ export default function JavaCorePage() {
             <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6 animate-fade-in-up">
               Java Core Concepts
             </h1>
-            <p
-              className="text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed animate-fade-in-up"
-              style={{ animationDelay: "200ms" }}
-            >
-              Learn the fundamental concepts of the Java programming language. A comprehensive guide from OOP principles to exception handling.
+            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto animate-fade-in-up animation-delay-200">
+              Master the fundamental concepts of Java programming language. From basic syntax to advanced object-oriented programming principles.
             </p>
           </div>
         </div>
       </section>
 
+      {/* Dynamic Posts Section */}
+      {posts.length > 0 && (
+        <section className="py-16 bg-[#23272f]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-white mb-4">Latest Articles</h2>
+              <p className="text-gray-400">Explore our latest Java Core articles and tutorials</p>
+            </div>
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {posts.map((post) => (
+                <article
+                  key={post.id}
+                  className="bg-[#18181b] rounded-xl shadow-lg border border-gray-700 overflow-hidden hover:shadow-xl transition-shadow duration-300"
+                >
+                  <div className="p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                        Java Core
+                      </span>
+                      <span className="text-xs text-gray-400">{post.date}</span>
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-2 line-clamp-2">
+                      {post.title}
+                    </h3>
+                    {post.summary && (
+                      <p className="text-gray-400 mb-4 line-clamp-3">
+                        {post.summary}
+                      </p>
+                    )}
+                    <div className="space-y-3">
+                      {post.blocks.slice(0, 2).map((block, idx) => {
+                        if (block.type === "heading")
+                          return <div key={idx} className="text-lg font-semibold text-blue-200">{block.content}</div>;
+                        if (block.type === "paragraph")
+                          return <div key={idx} className="text-gray-300 text-sm line-clamp-2">{block.content}</div>;
+                        if (block.type === "image" && block.url)
+                          return <img key={idx} src={block.url} alt={block.alt || "image"} className="w-full h-32 object-cover rounded" />;
+                        if (block.type === "code")
+                          return (
+                            <pre key={idx} className="bg-gray-800 text-green-200 rounded p-2 text-xs overflow-x-auto">
+                              <code>{block.code.substring(0, 100)}...</code>
+                            </pre>
+                          );
+                        if (block.type === "quote")
+                          return <blockquote key={idx} className="border-l-4 border-yellow-400 pl-3 italic text-yellow-200 text-sm">{block.content}</blockquote>;
+                        return null;
+                      })}
+                    </div>
+                    <div className="mt-4 pt-4 border-t border-gray-700">
+                      <button className="text-blue-400 hover:text-blue-300 text-sm font-medium">
+                        Read More →
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Topics Grid */}
-      <section className="py-20 bg-[#18181b]">
+      <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16 animate-fade-in-up">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-              Learning Journey
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+              Learning Path
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Learn Java step by step and explore each topic in detail.
+            <p className="text-xl text-gray-600 dark:text-gray-400">
+              Follow our structured learning path to master Java Core concepts
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {topics.map((topic, index) => (
               <Link
-                key={index}
+                key={topic.title}
                 href={topic.href}
-                className="group card hover-lift animate-fade-in-up bg-[#23272f]"
-                style={{ animationDelay: `${index * 100}ms` }}
+                className="group block bg-[#23272f] rounded-xl shadow-lg border border-gray-700 overflow-hidden hover:shadow-xl transition-all duration-300 hover:scale-105"
               >
-                <div
-                  className={`w-16 h-16 bg-[#23272f] rounded-2xl flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform duration-300`}
-                >
-                  {topic.icon}
-                </div>
-
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors duration-200">
-                  {topic.title}
-                </h3>
-
-                <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
-                  {topic.description}
-                </p>
-
-                <div className="space-y-3">
-                  <h4 className="font-semibold text-gray-900 dark:text-white text-sm uppercase tracking-wide">
-                    Content:
-                  </h4>
-                  <ul className="space-y-2">
-                    {topic.lessons.map((lesson, lessonIndex) => (
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className={`p-3 rounded-lg bg-gradient-to-br ${topic.color}`}>
+                      <div className="text-white">{topic.icon}</div>
+                    </div>
+                    <span className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors">
+                      {topic.lessons.length} lessons
+                    </span>
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
+                    {topic.title}
+                  </h3>
+                  <p className="text-gray-400 mb-4 line-clamp-2">
+                    {topic.description}
+                  </p>
+                  <ul className="space-y-1">
+                    {topic.lessons.slice(0, 3).map((lesson, lessonIndex) => (
                       <li
                         key={lessonIndex}
-                        className="flex items-center text-sm text-gray-600 dark:text-gray-300"
+                        className="flex items-center text-sm text-gray-500 group-hover:text-gray-400 transition-colors"
                       >
-                        <span className="w-1.5 h-1.5 bg-gray-500 rounded-full mr-3 flex-shrink-0"></span>
-                        <span className="leading-relaxed">{lesson}</span>
+                        <svg
+                          className="w-4 h-4 mr-2 text-green-500"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                        {lesson}
                       </li>
                     ))}
+                    {topic.lessons.length > 3 && (
+                      <li className="text-sm text-blue-400 font-medium">
+                        +{topic.lessons.length - 3} more lessons
+                      </li>
+                    )}
                   </ul>
-                </div>
-
-                <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
-                  <span className="inline-flex items-center text-gray-700 dark:text-gray-300 font-medium group-hover:text-gray-900 dark:group-hover:text-white transition-colors duration-200">
-                    View Details
-                    <svg
-                      className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-200"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </span>
                 </div>
               </Link>
             ))}
@@ -283,99 +382,42 @@ export default function JavaCorePage() {
         </div>
       </section>
 
-      {/* Quick Start Section */}
-      <section className="py-20 bg-[#18181b]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16 animate-fade-in-up">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
-              Quick Start
-            </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Basic steps to start learning Java.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div
-              className="text-center group animate-fade-in-up bg-[#23272f]"
-              style={{ animationDelay: "200ms" }}
-            >
-              <div className="w-20 h-20 bg-[#23272f] rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                <span className="text-2xl font-bold text-white">1</span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                JDK Installation
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                Download and install the Java Development Kit on your system.
-              </p>
-            </div>
-
-            <div
-              className="text-center group animate-fade-in-up bg-[#23272f]"
-              style={{ animationDelay: "400ms" }}
-            >
-              <div className="w-20 h-20 bg-[#23272f] rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                <span className="text-2xl font-bold text-white">2</span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                IDE Selection
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                Choose an IDE like IntelliJ IDEA, Eclipse, or VS Code.
-              </p>
-            </div>
-
-            <div
-              className="text-center group animate-fade-in-up bg-[#23272f]"
-              style={{ animationDelay: "600ms" }}
-            >
-              <div className="w-20 h-20 bg-[#23272f] rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                <span className="text-2xl font-bold text-white">3</span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                First Program
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                Start with the "Hello World" program to begin your Java journey.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-[#18181b]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6 animate-fade-in-up">
-            Ready to learn Java?
+      {/* Call to Action */}
+      <section className="py-16 bg-[#23272f]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl font-bold text-white mb-4">
+            Ready to Master Java?
           </h2>
-          <p
-            className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed animate-fade-in-up"
-            style={{ animationDelay: "200ms" }}
-          >
-            Take the first step and begin your Java programming journey.
+          <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
+            Start your journey with Java Core concepts and build a strong foundation for advanced programming.
           </p>
-          <Link
-            href="/java-core/java-fundamentals"
-            className="btn btn-primary px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl hover-lift animate-fade-in-up"
-            style={{ animationDelay: "400ms" }}
-          >
-            <svg
-              className="w-5 h-5 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/java-core/java-fundamentals"
+              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-200"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M13 10V3L4 14h7v7l9-11h-7z"
-              />
-            </svg>
-            Start Your First Lesson
-          </Link>
+              Start Learning
+              <svg
+                className="ml-2 -mr-1 w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 7l5 5m0 0l-5 5m5-5H6"
+                />
+              </svg>
+            </Link>
+            <Link
+              href="/dsa-solutions"
+              className="inline-flex items-center px-6 py-3 border border-gray-600 text-base font-medium rounded-lg text-gray-300 hover:text-white hover:bg-gray-700 transition-colors duration-200"
+            >
+              Explore DSA Solutions
+            </Link>
+          </div>
         </div>
       </section>
     </div>

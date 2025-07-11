@@ -1,6 +1,7 @@
 "use client"
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { supabase } from "../../lib/supabase";
 
 const CATEGORIES = [
   "Java Core",
@@ -17,11 +18,13 @@ type Block =
   | { type: "quote"; content: string };
 
 interface Post {
+  id?: string;
   title: string;
   summary: string;
   blocks: Block[];
   category: string;
   date: string;
+  created_at?: string;
 }
 
 const BLOCK_TYPES = [
@@ -41,6 +44,7 @@ export default function AdminPage() {
   const [message, setMessage] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
   // Check authentication on component mount
@@ -57,6 +61,32 @@ export default function AdminPage() {
 
     checkAuth();
   }, [router]);
+
+  // Load posts from Supabase
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadPosts();
+    }
+  }, [isAuthenticated]);
+
+  const loadPosts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('posts')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error loading posts:', error);
+        setMessage('Error loading posts: ' + error.message);
+      } else {
+        setPosts(data || []);
+      }
+    } catch (error) {
+      console.error('Error loading posts:', error);
+      setMessage('Error loading posts');
+    }
+  };
 
   // Logout function
   const handleLogout = () => {
@@ -126,28 +156,69 @@ export default function AdminPage() {
     );
   };
 
+  // Post sil
+  const handleDeletePost = async (postId: string) => {
+    if (!confirm('Are you sure you want to delete this post?')) return;
+    
+    try {
+      const { error } = await supabase
+        .from('posts')
+        .delete()
+        .eq('id', postId);
+
+      if (error) {
+        console.error('Error deleting post:', error);
+        setMessage('Error deleting post: ' + error.message);
+      } else {
+        setMessage('Post deleted successfully!');
+        loadPosts(); // Reload posts
+      }
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      setMessage('Error deleting post');
+    }
+  };
+
   // Yazı ekle
-  const handleAddPost = (e: React.FormEvent) => {
+  const handleAddPost = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim() || !category.trim() || blocks.length === 0) {
       setMessage("Title, category and at least one block are required.");
       return;
     }
-    setPosts([
-      {
-        title,
-        summary,
-        blocks,
-        category,
-        date: new Date().toLocaleString(),
-      },
-      ...posts,
-    ]);
-    setTitle("");
-    setSummary("");
-    setBlocks([]);
-    setCategory(CATEGORIES[0]);
-    setMessage("Post added!");
+
+    setIsSubmitting(true);
+    try {
+      const { data, error } = await supabase
+        .from('posts')
+        .insert([
+          {
+            title: title.trim(),
+            summary: summary.trim(),
+            blocks: blocks,
+            category: category,
+            date: new Date().toLocaleString(),
+          }
+        ])
+        .select();
+
+      if (error) {
+        console.error('Error adding post:', error);
+        setMessage('Error adding post: ' + error.message);
+      } else {
+        setTitle("");
+        setSummary("");
+        setBlocks([]);
+        setCategory(CATEGORIES[0]);
+        setMessage("Post added successfully!");
+        loadPosts(); // Reload posts
+      }
+    } catch (error) {
+      console.error('Error adding post:', error);
+      setMessage('Error adding post');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Kategorilere göre gruplama
@@ -303,13 +374,16 @@ export default function AdminPage() {
             </div>
           </div>
           {message && (
-            <div className="mb-2 text-green-400 font-medium">{message}</div>
+            <div className={`mb-2 font-medium ${message.includes('Error') ? 'text-red-400' : 'text-green-400'}`}>
+              {message}
+            </div>
           )}
           <button
             type="submit"
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition-colors duration-200"
+            disabled={isSubmitting}
+            className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition-colors duration-200 disabled:cursor-not-allowed"
           >
-            Add Post
+            {isSubmitting ? 'Adding Post...' : 'Add Post'}
           </button>
         </form>
 
@@ -326,7 +400,7 @@ export default function AdminPage() {
                 <div className="space-y-6">
                   {posts.map((post, idx) => (
                     <div
-                      key={idx}
+                      key={post.id || idx}
                       className="bg-[#23272f] p-4 rounded-xl shadow border border-gray-700"
                     >
                       <div className="flex flex-col gap-2">
@@ -334,7 +408,15 @@ export default function AdminPage() {
                           <span className="text-lg font-semibold text-white">
                             {post.title}
                           </span>
-                          <span className="text-xs text-gray-400">{post.date}</span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs text-gray-400">{post.date}</span>
+                            <button
+                              onClick={() => post.id && handleDeletePost(post.id)}
+                              className="text-red-400 hover:text-red-600 text-sm px-2 py-1 rounded hover:bg-red-900/20"
+                            >
+                              Delete
+                            </button>
+                          </div>
                         </div>
                         {post.summary && (
                           <div className="text-gray-400 mb-1 italic">{post.summary}</div>
