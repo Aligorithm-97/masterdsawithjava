@@ -1,24 +1,38 @@
 "use client"
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { supabase } from "../../lib/supabase";
 
 export default function LoginPage() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
     
-    // Simple authentication - you can replace this with your own logic
-    if (username === "admin" && password === "admin123") {
-      // Set authentication in localStorage
-      localStorage.setItem("isAuthenticated", "true");
-      localStorage.setItem("adminUser", username);
-      router.push("/admin");
-    } else {
-      setError("Invalid username or password");
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        setError(error.message);
+      } else {
+        // Store user info in localStorage for convenience
+        localStorage.setItem("isAuthenticated", "true");
+        localStorage.setItem("adminUser", data.user?.email || "");
+        router.push("/admin");
+      }
+    } catch (error) {
+      setError("An unexpected error occurred");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -34,14 +48,14 @@ export default function LoginPage() {
           <form onSubmit={handleLogin} className="space-y-6">
             <div>
               <label className="block text-gray-300 mb-2 font-semibold">
-                Username
+                Email
               </label>
               <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Enter username"
+                placeholder="Enter your email"
                 required
               />
             </div>
@@ -55,7 +69,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Enter password"
+                placeholder="Enter your password"
                 required
               />
             </div>
@@ -68,15 +82,16 @@ export default function LoginPage() {
             
             <button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200"
+              disabled={loading}
+              className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 disabled:cursor-not-allowed"
             >
-              Login
+              {loading ? "Signing In..." : "Sign In"}
             </button>
           </form>
           
           <div className="mt-6 text-center">
             <p className="text-gray-500 text-sm">
-              Demo credentials: admin / admin123
+              Admin access only. Contact administrator for credentials.
             </p>
           </div>
         </div>

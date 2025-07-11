@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
+import { supabase } from "../../lib/supabase";
 
 const LANGUAGES = [
   { code: "en", label: "EN" },
@@ -17,18 +18,43 @@ export default function Navigation() {
   const javaMenuRef = useRef(null);
   const [lang, setLang] = useState("en");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
     // Check authentication status
-    const checkAuth = () => {
-      const auth = localStorage.getItem("isAuthenticated");
-      setIsAuthenticated(auth === "true");
+    const checkAuth = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          setIsAuthenticated(true);
+          setUser(session.user);
+        } else {
+          setIsAuthenticated(false);
+          setUser(null);
+        }
+      } catch (error) {
+        console.error('Auth check error:', error);
+        setIsAuthenticated(false);
+        setUser(null);
+      }
     };
 
     checkAuth();
-    // Listen for storage changes (when user logs in/out)
-    window.addEventListener("storage", checkAuth);
-    return () => window.removeEventListener("storage", checkAuth);
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (event === 'SIGNED_IN' && session) {
+          setIsAuthenticated(true);
+          setUser(session.user);
+        } else if (event === 'SIGNED_OUT') {
+          setIsAuthenticated(false);
+          setUser(null);
+        }
+      }
+    );
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const handleJavaMenuEnter = () => {

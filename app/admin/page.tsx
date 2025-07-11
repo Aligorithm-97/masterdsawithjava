@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabase";
 
@@ -45,21 +45,62 @@ export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
   // Check authentication on component mount
   useEffect(() => {
-    const checkAuth = () => {
-      const auth = localStorage.getItem("isAuthenticated");
-      if (auth === "true") {
-        setIsAuthenticated(true);
-      } else {
+    const checkAuth = async () => {
+      try {
+        // Get current session
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error('Error getting session:', error);
+          router.push("/login");
+          return;
+        }
+
+        if (session) {
+          setIsAuthenticated(true);
+          setUser(session.user);
+          // Update localStorage for compatibility
+          localStorage.setItem("isAuthenticated", "true");
+          localStorage.setItem("adminUser", session.user.email || "");
+        } else {
+          router.push("/login");
+        }
+      } catch (error) {
+        console.error('Auth check error:', error);
         router.push("/login");
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
 
     checkAuth();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (event === 'SIGNED_IN' && session) {
+          setIsAuthenticated(true);
+          setUser(session.user);
+          localStorage.setItem("isAuthenticated", "true");
+          localStorage.setItem("adminUser", session.user.email || "");
+        } else if (event === 'SIGNED_OUT') {
+          setIsAuthenticated(false);
+          setUser(null);
+          localStorage.removeItem("isAuthenticated");
+          localStorage.removeItem("adminUser");
+          router.push("/login");
+        }
+      }
+    );
+
+    return () => subscription.unsubscribe();
   }, [router]);
 
   // Load posts from Supabase
@@ -88,11 +129,56 @@ export default function AdminPage() {
     }
   };
 
+  // Image upload function
+  const uploadImage = async (file: File): Promise<string> => {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Math.random()}.${fileExt}`;
+    const filePath = `${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from('post-images')
+      .upload(filePath, file);
+
+    if (uploadError) {
+      throw uploadError;
+    }
+
+    const { data } = supabase.storage
+      .from('post-images')
+      .getPublicUrl(filePath);
+
+    return data.publicUrl;
+  };
+
+  // Handle image upload
+  const handleImageUpload = async (file: File, blockIndex: number) => {
+    setUploadingImage(true);
+    try {
+      const imageUrl = await uploadImage(file);
+      handleBlockChange(blockIndex, { url: imageUrl });
+      setMessage('Image uploaded successfully!');
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      setMessage('Error uploading image: ' + (error as Error).message);
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
   // Logout function
-  const handleLogout = () => {
-    localStorage.removeItem("isAuthenticated");
-    localStorage.removeItem("adminUser");
-    router.push("/login");
+  const handleLogout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error('Error signing out:', error);
+      } else {
+        localStorage.removeItem("isAuthenticated");
+        localStorage.removeItem("adminUser");
+        router.push("/login");
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   // Show loading while checking authentication
@@ -231,9 +317,16 @@ export default function AdminPage() {
     <div className="min-h-screen bg-[#18181b] pt-16 px-4">
       <div className="max-w-2xl mx-auto py-8">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Admin Panel
-          </h1>
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              Admin Panel
+            </h1>
+            {user && (
+              <p className="text-gray-400 text-sm mt-1">
+                Logged in as: {user.email}
+              </p>
+            )}
+          </div>
           <button
             onClick={handleLogout}
             className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-lg shadow-md transition-colors duration-200"
@@ -311,13 +404,35 @@ export default function AdminPage() {
                   )}
                   {block.type === "image" && (
                     <div className="space-y-2">
-                      <input
-                        type="text"
-                        value={block.url}
-                        onChange={e => handleBlockChange(idx, { url: e.target.value })}
-                        className="w-full px-3 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Image URL..."
-                      />
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={block.url}
+                          onChange={e => handleBlockChange(idx, { url: e.target.value })}
+                          className="flex-1 px-3 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Image URL or upload file..."
+                        />
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              handleImageUpload(file, idx);
+                            }
+                          }}
+                          className="hidden"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => fileInputRef.current?.click()}
+                          disabled={uploadingImage}
+                          className="px-3 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800 text-white rounded text-sm font-medium transition-colors duration-200"
+                        >
+                          {uploadingImage ? 'Uploading...' : 'Upload'}
+                        </button>
+                      </div>
                       <input
                         type="text"
                         value={block.alt || ""}
@@ -326,7 +441,16 @@ export default function AdminPage() {
                         placeholder="Alt text (optional)"
                       />
                       {block.url && (
-                        <img src={block.url} alt={block.alt || "image preview"} className="max-h-40 rounded border border-gray-700 mx-auto" />
+                        <div className="relative">
+                          <img src={block.url} alt={block.alt || "image preview"} className="max-h-40 rounded border border-gray-700 mx-auto" />
+                          <button
+                            type="button"
+                            onClick={() => handleBlockChange(idx, { url: "", alt: "" })}
+                            className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs"
+                          >
+                            ✕
+                          </button>
+                        </div>
                       )}
                     </div>
                   )}
