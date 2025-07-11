@@ -20,6 +20,9 @@ export const metadata: Metadata = {
   keywords:
     "Java, DSA, algorithms, data structures, programming, tutorials, problem solving",
   authors: [{ name: "Master DSA with Java" }],
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export const viewport: Viewport = {
