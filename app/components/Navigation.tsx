@@ -13,7 +13,9 @@ const LANGUAGES = [
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showJavaMenu, setShowJavaMenu] = useState(false);
-  const [javaMenuTimeout, setJavaMenuTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [javaMenuTimeout, setJavaMenuTimeout] = useState<NodeJS.Timeout | null>(
+    null
+  );
   const menuRef = useRef(null);
   const javaMenuRef = useRef(null);
   const [lang, setLang] = useState("en");
@@ -24,7 +26,9 @@ export default function Navigation() {
     // Check authentication status
     const checkAuth = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
         if (session) {
           setIsAuthenticated(true);
           setUser(session.user);
@@ -33,7 +37,7 @@ export default function Navigation() {
           setUser(null);
         }
       } catch (error) {
-        console.error('Auth check error:', error);
+        console.error("Auth check error:", error);
         setIsAuthenticated(false);
         setUser(null);
       }
@@ -41,18 +45,17 @@ export default function Navigation() {
 
     checkAuth();
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (event === 'SIGNED_IN' && session) {
-          setIsAuthenticated(true);
-          setUser(session.user);
-        } else if (event === 'SIGNED_OUT') {
-          setIsAuthenticated(false);
-          setUser(null);
-        }
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === "SIGNED_IN" && session) {
+        setIsAuthenticated(true);
+        setUser(session.user);
+      } else if (event === "SIGNED_OUT") {
+        setIsAuthenticated(false);
+        setUser(null);
       }
-    );
+    });
 
     return () => subscription.unsubscribe();
   }, []);
@@ -103,14 +106,66 @@ export default function Navigation() {
               <span className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-[#23272f] to-[#18181b] border border-[#31343a] shadow-lg mr-2 group-hover:shadow-xl transition-shadow duration-200">
                 <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
                   {/* Kod bloğu */}
-                  <rect x="8" y="10" width="20" height="12" rx="3" fill="#fff" stroke="#2563eb" strokeWidth="2"/>
-                  <text x="18" y="20" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#2563eb" fontFamily="monospace">{`{ }`}</text>
+                  <rect
+                    x="8"
+                    y="10"
+                    width="20"
+                    height="12"
+                    rx="3"
+                    fill="#fff"
+                    stroke="#2563eb"
+                    strokeWidth="2"
+                  />
+                  <text
+                    x="18"
+                    y="20"
+                    textAnchor="middle"
+                    fontSize="12"
+                    fontWeight="bold"
+                    fill="#2563eb"
+                    fontFamily="monospace"
+                  >{`{ }`}</text>
                   {/* DSA düğümleri ve bağlantılar */}
-                  <circle cx="12" cy="32" r="2" fill="#2563eb" stroke="#fff" strokeWidth="1.2"/>
-                  <circle cx="24" cy="32" r="2" fill="#2563eb" stroke="#fff" strokeWidth="1.2"/>
-                  <circle cx="18" cy="26" r="2" fill="#2563eb" stroke="#fff" strokeWidth="1.2"/>
-                  <line x1="13.5" y1="30.5" x2="17" y2="27.5" stroke="#2563eb" strokeWidth="1.2"/>
-                  <line x1="22.5" y1="30.5" x2="19" y2="27.5" stroke="#2563eb" strokeWidth="1.2"/>
+                  <circle
+                    cx="12"
+                    cy="32"
+                    r="2"
+                    fill="#2563eb"
+                    stroke="#fff"
+                    strokeWidth="1.2"
+                  />
+                  <circle
+                    cx="24"
+                    cy="32"
+                    r="2"
+                    fill="#2563eb"
+                    stroke="#fff"
+                    strokeWidth="1.2"
+                  />
+                  <circle
+                    cx="18"
+                    cy="26"
+                    r="2"
+                    fill="#2563eb"
+                    stroke="#fff"
+                    strokeWidth="1.2"
+                  />
+                  <line
+                    x1="13.5"
+                    y1="30.5"
+                    x2="17"
+                    y2="27.5"
+                    stroke="#2563eb"
+                    strokeWidth="1.2"
+                  />
+                  <line
+                    x1="22.5"
+                    y1="30.5"
+                    x2="19"
+                    y2="27.5"
+                    stroke="#2563eb"
+                    strokeWidth="1.2"
+                  />
                 </svg>
               </span>
               <div className="flex flex-col justify-center ml-1">
@@ -138,34 +193,42 @@ export default function Navigation() {
               <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 group-hover:w-full transition-all duration-300"></div>
             </Link>
 
-            {/* Java Dropdown Menu */}
-            <div 
-              className="relative" 
+            <div
+              className="relative"
               ref={javaMenuRef}
               onMouseEnter={handleJavaMenuEnter}
               onMouseLeave={handleJavaMenuLeave}
             >
               <button
                 className={`relative px-4 py-3 text-sm font-semibold rounded-lg transition-all duration-200 group flex items-center space-x-2 ${
-                  showJavaMenu 
-                    ? 'text-blue-400 bg-blue-600/20 border border-blue-500/30' 
-                    : 'text-gray-300 hover:text-white hover:bg-gray-800/50'
+                  showJavaMenu
+                    ? "text-blue-400 bg-blue-600/20 border border-blue-500/30"
+                    : "text-gray-300 hover:text-white hover:bg-gray-800/50"
                 }`}
               >
                 <span>Java</span>
                 <svg
-                  className={`w-4 h-4 transition-transform duration-300 ${showJavaMenu ? 'rotate-180 text-blue-400' : 'text-gray-400'}`}
+                  className={`w-4 h-4 transition-transform duration-300 ${
+                    showJavaMenu ? "rotate-180 text-blue-400" : "text-gray-400"
+                  }`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
                 </svg>
-                <div className={`absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300 ${
-                  showJavaMenu ? 'w-full' : 'group-hover:w-full'
-                }`}></div>
+                <div
+                  className={`absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300 ${
+                    showJavaMenu ? "w-full" : "group-hover:w-full"
+                  }`}
+                ></div>
               </button>
-              
+
               {showJavaMenu && (
                 <div className="absolute top-full left-0 mt-2 w-64 bg-gray-800/95 backdrop-blur-md rounded-xl shadow-2xl border border-gray-700 py-3 z-50">
                   <div className="px-2">
@@ -187,7 +250,6 @@ export default function Navigation() {
               )}
             </div>
 
-            {/* DSA Solutions */}
             <Link
               href="/dsa-solutions"
               className="relative px-4 py-3 text-sm font-semibold text-gray-300 hover:text-white rounded-lg transition-all duration-200 hover:bg-gray-800/50 group"
@@ -197,7 +259,6 @@ export default function Navigation() {
               <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-green-500 to-blue-500 group-hover:w-full transition-all duration-300"></div>
             </Link>
 
-            {/* Algorithm Problems */}
             <Link
               href="/algorithm-problems"
               className="relative px-4 py-3 text-sm font-semibold text-gray-300 hover:text-white rounded-lg transition-all duration-200 hover:bg-gray-800/50 group"
@@ -207,7 +268,6 @@ export default function Navigation() {
               <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300"></div>
             </Link>
 
-            {/* About */}
             <Link
               href="/about"
               className="relative px-4 py-3 text-sm font-semibold text-gray-300 hover:text-white rounded-lg transition-all duration-200 hover:bg-gray-800/50 group"
@@ -217,7 +277,6 @@ export default function Navigation() {
               <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-gray-500 to-gray-400 group-hover:w-full transition-all duration-300"></div>
             </Link>
 
-            {/* Admin Link - Only show when authenticated */}
             {isAuthenticated && (
               <Link
                 href="/admin"
@@ -229,7 +288,6 @@ export default function Navigation() {
               </Link>
             )}
 
-            {/* Language Switcher */}
             <div className="ml-4 flex items-center space-x-1 bg-gray-800/50 backdrop-blur-sm rounded-lg px-2 py-1 border border-gray-700">
               {LANGUAGES.map((lng) => (
                 <button
@@ -250,7 +308,6 @@ export default function Navigation() {
             </div>
           </div>
 
-          {/* Mobile menu button */}
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -278,7 +335,6 @@ export default function Navigation() {
           </div>
         </div>
 
-        {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="md:hidden transition-all duration-300 opacity-100 max-h-96">
             <div className="px-2 pt-2 pb-3 space-y-1 bg-gray-800/95 backdrop-blur-md border-t border-gray-700">
@@ -291,7 +347,6 @@ export default function Navigation() {
                 Home
               </Link>
 
-              {/* Java Section */}
               <div className="px-3 py-2">
                 <div className="text-sm font-bold text-blue-400 uppercase tracking-wider mb-2">
                   Java
@@ -310,7 +365,6 @@ export default function Navigation() {
                 </div>
               </div>
 
-              {/* DSA Section */}
               <div className="px-3 py-2">
                 <div className="text-sm font-bold text-green-400 uppercase tracking-wider mb-2">
                   DSA & Algorithms
@@ -329,7 +383,6 @@ export default function Navigation() {
                 </div>
               </div>
 
-              {/* About */}
               <Link
                 href="/about"
                 className="block px-3 py-3 text-base font-semibold text-gray-300 hover:text-white hover:bg-gray-700/50 rounded-lg transition-all duration-200"
@@ -338,7 +391,6 @@ export default function Navigation() {
                 About
               </Link>
 
-              {/* Admin Link - Only show when authenticated */}
               {isAuthenticated && (
                 <Link
                   href="/admin"
