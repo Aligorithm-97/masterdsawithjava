@@ -50,6 +50,7 @@ export default function AdminPage() {
   const [user, setUser] = useState<any>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const [editingPostId, setEditingPostId] = useState<string | null>(null);
 
   // Check authentication on component mount
   useEffect(() => {
@@ -308,6 +309,66 @@ export default function AdminPage() {
     }
   };
 
+  // Post düzenleme için formu doldur
+  const handleEditPost = (post: Post) => {
+    setEditingPostId(post.id || null);
+    setTitle(post.title);
+    setSummary(post.summary);
+    setBlocks(post.blocks);
+    setCategory(post.category);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Postu güncelle
+  const handleUpdatePost = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingPostId) return;
+    if (!title.trim() || !category.trim() || blocks.length === 0) {
+      setMessage("Title, category and at least one block are required.");
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      const { error } = await supabase
+        .from('posts')
+        .update({
+          title: title.trim(),
+          summary: summary.trim(),
+          blocks: blocks,
+          category: category,
+          date: new Date().toLocaleString(),
+        })
+        .eq('id', editingPostId);
+      if (error) {
+        console.error('Error updating post:', error);
+        setMessage('Error updating post: ' + error.message);
+      } else {
+        setMessage('Post updated successfully!');
+        setEditingPostId(null);
+        setTitle("");
+        setSummary("");
+        setBlocks([]);
+        setCategory(CATEGORIES[0]);
+        loadPosts();
+      }
+    } catch (error) {
+      console.error('Error updating post:', error);
+      setMessage('Error updating post');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Düzenlemeyi iptal et
+  const handleCancelEdit = () => {
+    setEditingPostId(null);
+    setTitle("");
+    setSummary("");
+    setBlocks([]);
+    setCategory(CATEGORIES[0]);
+    setMessage("");
+  };
+
   // Kategorilere göre gruplama
   const postsByCategory = CATEGORIES.map(cat => ({
     category: cat,
@@ -337,7 +398,7 @@ export default function AdminPage() {
         </div>
         
         <form
-          onSubmit={handleAddPost}
+          onSubmit={editingPostId ? handleUpdatePost : handleAddPost}
           className="bg-[#23272f] p-6 rounded-xl shadow-md mb-8 space-y-4"
         >
           <div>
@@ -508,8 +569,17 @@ export default function AdminPage() {
             disabled={isSubmitting}
             className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition-colors duration-200 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? 'Adding Post...' : 'Add Post'}
+            {isSubmitting ? (editingPostId ? 'Updating...' : 'Adding Post...') : (editingPostId ? 'Güncelle' : 'Add Post')}
           </button>
+          {editingPostId && (
+            <button
+              type="button"
+              onClick={handleCancelEdit}
+              className="ml-2 bg-gray-600 hover:bg-gray-700 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition-colors duration-200"
+            >
+              Vazgeç
+            </button>
+          )}
         </form>
 
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
@@ -540,6 +610,12 @@ export default function AdminPage() {
                               className="text-red-400 hover:text-red-600 text-sm px-2 py-1 rounded hover:bg-red-900/20"
                             >
                               Delete
+                            </button>
+                            <button
+                              onClick={() => handleEditPost(post)}
+                              className="text-blue-400 hover:text-blue-600 text-sm px-2 py-1 rounded hover:bg-blue-900/20 ml-2"
+                            >
+                              Düzenle
                             </button>
                           </div>
                         </div>
