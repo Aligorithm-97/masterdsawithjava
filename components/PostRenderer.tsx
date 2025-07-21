@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 type Block =
   | { type: "paragraph"; content: string }
@@ -15,6 +15,15 @@ interface PostRendererProps {
 
 export default function PostRenderer({ blocks, maxBlocks, isPreview = false }: PostRendererProps) {
   const blocksToRender = maxBlocks ? blocks.slice(0, maxBlocks) : blocks;
+
+  // Kopyalama durumunu her kod bloğu için ayrı ayrı tutmak için state
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+
+  const handleCopy = (code: string, index: number) => {
+    navigator.clipboard.writeText(code);
+    setCopiedIndex(index);
+    setTimeout(() => setCopiedIndex(null), 1500);
+  };
 
   const renderBlock = (block: Block, index: number) => {
     switch (block.type) {
@@ -71,7 +80,16 @@ export default function PostRenderer({ blocks, maxBlocks, isPreview = false }: P
 
       case "code":
         return (
-          <div key={index} className={`${isPreview ? 'mb-4' : 'mb-12'}`}>
+          <div key={index} className={`${isPreview ? 'mb-4' : 'mb-12'} relative`}>
+            {!isPreview && (
+              <button
+                onClick={() => handleCopy(block.code, index)}
+                className="absolute right-2 top-2 bg-gray-700 hover:bg-gray-600 text-gray-200 px-3 py-1 rounded text-xs font-mono z-10 border border-gray-600 transition"
+                style={{ minWidth: 80 }}
+              >
+                {copiedIndex === index ? 'Kopyalandı!' : 'Kopyala'}
+              </button>
+            )}
             {block.language && !isPreview && (
               <div className="bg-gray-800 text-gray-300 px-4 py-3 rounded-t-lg border-b border-gray-700 text-sm font-mono font-semibold">
                 {block.language.toUpperCase()}
@@ -81,7 +99,7 @@ export default function PostRenderer({ blocks, maxBlocks, isPreview = false }: P
               isPreview 
                 ? 'p-3 text-xs' 
                 : 'p-6 text-sm leading-6'
-            }`}>
+            }`} style={{ position: 'relative' }}>
               <code>
                 {isPreview 
                   ? `${block.code.substring(0, 100)}${block.code.length > 100 ? '...' : ''}`
