@@ -51,6 +51,10 @@ export default function AdminPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
+  const POSTS_PER_PAGE = 10;
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [totalPosts, setTotalPosts] = useState(0);
 
   // Check authentication on component mount
   useEffect(() => {
@@ -105,25 +109,45 @@ export default function AdminPage() {
     return () => subscription.unsubscribe();
   }, [router]);
 
-  // Load posts from Supabase
+  // Load posts from Supabase (with pagination and search)
   useEffect(() => {
     if (isAuthenticated) {
-      loadPosts();
+      loadPosts(currentPage, searchTerm);
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, currentPage, searchTerm]);
 
-  const loadPosts = async () => {
+  // Arama inputu değişince
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1);
+  };
+
+  // Pagination için toplam sayfa sayısı
+  const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
+
+  const loadPosts = async (page = 1, search = "") => {
     try {
-      const { data, error } = await supabase
+      let query = supabase
         .from('posts')
-        .select('*')
+        .select('*', { count: 'exact' })
         .order('created_at', { ascending: false });
+
+      if (search) {
+        query = query.or(`title.ilike.%${search}%,summary.ilike.%${search}%`);
+      }
+
+      const from = (page - 1) * POSTS_PER_PAGE;
+      const to = from + POSTS_PER_PAGE - 1;
+      query = query.range(from, to);
+
+      const { data, error, count } = await query;
 
       if (error) {
         console.error('Error loading posts:', error);
         setMessage('Error loading posts: ' + error.message);
       } else {
         setPosts(data || []);
+        setTotalPosts(count || 0);
       }
     } catch (error) {
       console.error('Error loading posts:', error);
@@ -582,6 +606,20 @@ export default function AdminPage() {
           )}
         </form>
 
+        {/* Arama kutusu */}
+        <div className="mb-6 flex items-center gap-2">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            placeholder="Başlık veya özet ara..."
+            className="px-3 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full max-w-xs"
+          />
+          {searchTerm && (
+            <button onClick={() => setSearchTerm("")} className="ml-2 text-gray-400 hover:text-red-400">Temizle</button>
+          )}
+        </div>
+
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
           Posts by Category
         </h2>
@@ -637,6 +675,28 @@ export default function AdminPage() {
             </div>
           ))}
         </div>
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center gap-2 my-8">
+            <button
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="px-3 py-1 rounded bg-gray-700 text-white disabled:opacity-40"
+            >Önceki</button>
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+              <button
+                key={page}
+                onClick={() => setCurrentPage(page)}
+                className={`px-3 py-1 rounded ${currentPage === page ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'} font-semibold`}
+              >{page}</button>
+            ))}
+            <button
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+              className="px-3 py-1 rounded bg-gray-700 text-white disabled:opacity-40"
+            >Sonraki</button>
+          </div>
+        )}
       </div>
     </div>
   );
