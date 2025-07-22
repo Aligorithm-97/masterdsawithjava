@@ -276,16 +276,16 @@ export default function JavaCorePage() {
       </section>
 
       {/* Arama kutusu */}
-      <div className="mb-8 flex items-center gap-2 justify-center">
+      <div className="mb-8 flex items-center gap-2 justify-center px-6 py-4 mx-6 my-4">
         <input
           type="text"
           value={searchTerm}
           onChange={handleSearchChange}
-          placeholder="Başlık veya özet ara..."
+          placeholder="Search by title or summary..."
           className="px-3 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full max-w-xs"
         />
         {searchTerm && (
-          <button onClick={() => setSearchTerm("")} className="ml-2 text-gray-400 hover:text-red-400">Temizle</button>
+          <button onClick={() => setSearchTerm("")} className="ml-2 text-gray-400 hover:text-red-400">Clear</button>
         )}
       </div>
 
@@ -348,7 +348,7 @@ export default function JavaCorePage() {
             onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
             disabled={currentPage === 1}
             className="px-3 py-1 rounded bg-gray-700 text-white disabled:opacity-40"
-          >Önceki</button>
+          >Previous</button>
           {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
             <button
               key={page}
@@ -360,7 +360,7 @@ export default function JavaCorePage() {
             onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
             className="px-3 py-1 rounded bg-gray-700 text-white disabled:opacity-40"
-          >Sonraki</button>
+          >Next</button>
         </div>
       )}
 
