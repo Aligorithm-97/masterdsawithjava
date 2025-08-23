@@ -1,36 +1,549 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Master DSA with Java - Microservice Platform
 
-## Getting Started
+Modern microservice architecture-based learning platform for Java and DSA (Data Structures & Algorithms).
 
-First, run the development server:
+## About the Project
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+**Master DSA with Java** is a comprehensive educational platform designed for learning Java programming language and data structures/algorithms. The project is being transformed from a monolithic structure to a modern microservice architecture.
+
+### Features
+
+- **Java Core Concepts**: Basic Java programming concepts
+- **Advanced Java**: Advanced Java topics
+- **DSA Solutions**: Data structures and algorithm solutions
+- **Algorithm Problems**: Platform-based problem solutions
+- **Progress Tracking**: User progress tracking
+- **Multi-language Support**: Turkish, English, and German language support
+
+## Architecture Transformation Roadmap
+
+### **Phase 1: Architecture Design and Planning (2-3 weeks)**
+
+#### 1.1 Domain-Driven Design (DDD) Analysis
+
+```
+Existing Domains:
+├── User Management
+├── Content Management
+├── Learning Progress
+├── Problem Management
+├── Authentication & Authorization
+└── Analytics & Reporting
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+#### 1.2 Microservice Breakdown
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+Recommended Microservices:
+├── user-service (Java - Spring Boot)
+├── content-service (Java - Spring Boot)
+├── progress-service (Java - Spring Boot)
+├── problem-service (Go - Gin)
+├── auth-service (Go - Gin)
+├── notification-service (Go - Gin)
+├── analytics-service (Java - Spring Boot)
+└── gateway-service (Go - Gin)
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+#### 1.3 Technology Stack Selection
 
-## Learn More
+```
+Backend Stack:
+├── Java Services: Spring Boot 3.x + Spring Cloud
+├── Go Services: Gin + Gorilla Mux
+├── Database: PostgreSQL + Supabase
+├── Message Queue: Apache Kafka
+├── Cache: Redis
+├── Search: Elasticsearch
+├── Container: Docker
+└── Orchestration: Kubernetes
+```
 
-To learn more about Next.js, take a look at the following resources:
+### **Phase 2: Infrastructure Setup (3-4 weeks)**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+#### 2.1 Development Environment
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+# Local development with Docker Compose
+docker-compose up -d postgres redis kafka elasticsearch
 
-## Deploy on Vercel
+# Kubernetes cluster (minikube/kind)
+minikube start --cpus=4 --memory=8192
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+#### 2.2 CI/CD Pipeline
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```yaml
+# GitHub Actions workflow
+name: Microservice CI/CD
+on: [push, pull_request]
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Java Services
+      - name: Build Go Services
+      - name: Run Tests
+      - name: Build Docker Images
+      - name: Deploy to Kubernetes
+```
+
+### **Phase 3: Core Services Development (6-8 weeks)**
+
+#### 3.1 User Service (Java)
+
+```java
+// Spring Boot + Spring Data JPA
+@RestController
+@RequestMapping("/api/v1/users")
+public class UserController {
+
+    @PostMapping("/register")
+    public ResponseEntity<UserDTO> registerUser(@RequestBody UserRegistrationRequest request) {
+        // Saga Pattern: User Registration Saga
+        return userService.registerUser(request);
+    }
+
+    @GetMapping("/{userId}/progress")
+    public ResponseEntity<UserProgressDTO> getUserProgress(@PathVariable Long userId) {
+        return userService.getUserProgress(userId);
+    }
+}
+```
+
+#### 3.2 Content Service (Java)
+
+```java
+// Content Management + Elasticsearch
+@Service
+public class ContentService {
+
+    public ContentDTO createContent(ContentCreateRequest request) {
+        Content content = contentRepository.save(request.toEntity());
+
+        // Kafka event: ContentCreatedEvent
+        kafkaTemplate.send("content-events", new ContentCreatedEvent(content));
+
+        // Elasticsearch indexing
+        elasticsearchService.indexContent(content);
+
+        return content.toDTO();
+    }
+}
+```
+
+#### 3.3 Problem Service (Go)
+
+```go
+// Go + Gin + GORM
+type ProblemService struct {
+    db          *gorm.DB
+    redisClient *redis.Client
+    kafkaProducer *kafka.Producer
+}
+
+func (s *ProblemService) CreateProblem(ctx context.Context, req *CreateProblemRequest) (*Problem, error) {
+    // Saga Pattern: Problem Creation Saga
+    problem := &Problem{
+        Title:       req.Title,
+        Difficulty:  req.Difficulty,
+        Category:    req.Category,
+        Content:     req.Content,
+    }
+
+    if err := s.db.Create(problem).Error; err != nil {
+        return nil, err
+    }
+
+    // Kafka event
+    s.kafkaProducer.Produce("problem-events", problem.ID, problem)
+
+    return problem, nil
+}
+```
+
+### **Phase 4: Event-Driven Architecture (3-4 weeks)**
+
+#### 4.1 Kafka Event Schema
+
+```json
+// User Events
+{
+  "eventType": "USER_REGISTERED",
+  "eventId": "uuid",
+  "timestamp": "2024-01-15T10:30:00Z",
+  "data": {
+    "userId": 123,
+    "email": "user@example.com",
+    "username": "java_master"
+  }
+}
+
+// Content Events
+{
+  "eventType": "CONTENT_CREATED",
+  "eventId": "uuid",
+  "timestamp": "2024-01-15T10:30:00Z",
+  "data": {
+    "contentId": 456,
+    "title": "Java Collections Framework",
+    "category": "java-core"
+  }
+}
+```
+
+#### 4.2 Saga Pattern Implementation
+
+```java
+// User Registration Saga
+@Component
+public class UserRegistrationSaga {
+
+    @Transactional
+    public void execute(UserRegistrationRequest request) {
+        try {
+            // Step 1: Create User
+            User user = userService.createUser(request);
+
+            // Step 2: Initialize Progress
+            progressService.initializeProgress(user.getId());
+
+            // Step 3: Send Welcome Email
+            notificationService.sendWelcomeEmail(user.getEmail());
+
+            // Saga completed successfully
+            sagaService.markCompleted(user.getId());
+
+        } catch (Exception e) {
+            // Compensating actions
+            sagaService.executeCompensation(user.getId());
+            throw e;
+        }
+    }
+}
+```
+
+### **Phase 5: API Gateway & Service Discovery (2-3 weeks)**
+
+#### 5.1 API Gateway (Go)
+
+```go
+// Gin + JWT + Rate Limiting
+func main() {
+    r := gin.Default()
+
+    // Middleware
+    r.Use(cors.Default())
+    r.Use(rateLimit())
+    r.Use(authMiddleware())
+
+    // Service routes
+    api := r.Group("/api/v1")
+    {
+        api.POST("/auth/login", authHandler.Login)
+        api.POST("/auth/register", authHandler.Register)
+
+        // User routes
+        api.GET("/users/:id", userHandler.GetUser)
+        api.PUT("/users/:id", userHandler.UpdateUser)
+
+        // Content routes
+        api.GET("/content", contentHandler.GetContent)
+        api.POST("/content", contentHandler.CreateContent)
+    }
+
+    r.Run(":8080")
+}
+```
+
+#### 5.2 Service Discovery
+
+```yaml
+# Kubernetes Service Discovery
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+spec:
+  selector:
+    app: user-service
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
+```
+
+### **Phase 6: Database & Caching Strategy (2-3 weeks)**
+
+#### 6.1 PostgreSQL Schema Design
+
+```sql
+-- Users table
+CREATE TABLE users (
+    id BIGSERIAL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    username VARCHAR(100) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Content table
+CREATE TABLE content (
+    id BIGSERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    category VARCHAR(100) NOT NULL,
+    difficulty VARCHAR(50),
+    author_id BIGINT REFERENCES users(id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- User Progress table
+CREATE TABLE user_progress (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT REFERENCES users(id),
+    content_id BIGINT REFERENCES content(id),
+    completed BOOLEAN DEFAULT FALSE,
+    progress_percentage INTEGER DEFAULT 0,
+    last_accessed TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+#### 6.2 Redis Caching Strategy
+
+```java
+@Service
+public class ContentCacheService {
+
+    @Cacheable(value = "content", key = "#contentId")
+    public ContentDTO getContent(Long contentId) {
+        return contentRepository.findById(contentId)
+            .map(Content::toDTO)
+            .orElseThrow(() -> new ContentNotFoundException(contentId));
+    }
+
+    @CacheEvict(value = "content", key = "#contentId")
+    public void evictContent(Long contentId) {
+        // Cache will be automatically evicted
+    }
+}
+```
+
+### **Phase 7: Kubernetes Deployment (2-3 weeks)**
+
+#### 7.1 Dockerfile Examples
+
+```dockerfile
+# Java Service Dockerfile
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY target/*.jar app.jar
+EXPOSE 8080
+CMD ["java", "-jar", "app.jar"]
+
+# Go Service Dockerfile
+FROM golang:1.21-alpine AS builder
+WORKDIR /app
+COPY . .
+RUN go build -o main .
+FROM alpine:latest
+RUN apk --no-cache add ca-certificates
+WORKDIR /root/
+COPY --from=builder /app/main .
+CMD ["./main"]
+```
+
+#### 7.2 Kubernetes Manifests
+
+```yaml
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+      - name: user-service
+        image: user-service:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: url
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+
+# Horizontal Pod Autoscaler
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: user-service-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: user-service
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+```
+
+### **Phase 8: Monitoring & Observability (2-3 weeks)**
+
+#### 8.1 Prometheus + Grafana
+
+```yaml
+# Prometheus Config
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: "user-service"
+    static_configs:
+      - targets: ["user-service:8080"]
+    metrics_path: "/actuator/prometheus"
+```
+
+#### 8.2 Distributed Tracing (Jaeger)
+
+```java
+// Spring Boot + Sleuth + Zipkin
+@SpringBootApplication
+@EnableSleuth
+public class UserServiceApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(UserServiceApplication.class, args);
+    }
+}
+```
+
+### **Phase 9: Non-Functional Requirements (2-3 weeks)**
+
+#### 9.1 Performance & Scalability
+
+```java
+// Circuit Breaker Pattern
+@Service
+public class ContentServiceClient {
+
+    @CircuitBreaker(name = "contentService", fallbackMethod = "getContentFallback")
+    public ContentDTO getContent(Long contentId) {
+        return contentService.getContent(contentId);
+    }
+
+    public ContentDTO getContentFallback(Long contentId, Exception e) {
+        // Return cached content or default content
+        return contentCacheService.getContent(contentId);
+    }
+}
+```
+
+#### 9.2 Security & Compliance
+
+```java
+// JWT + RBAC
+@RestController
+@RequestMapping("/api/v1/admin")
+@PreAuthorize("hasRole('ADMIN')")
+public class AdminController {
+
+    @GetMapping("/users")
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
+}
+```
+
+### **Phase 10: Testing & Quality Assurance (2-3 weeks)**
+
+#### 10.1 Test Strategy
+
+```java
+// Integration Tests
+@SpringBootTest
+@AutoConfigureTestDatabase
+class UserServiceIntegrationTest {
+
+    @Test
+    void shouldCreateUserSuccessfully() {
+        // Given
+        UserRegistrationRequest request = new UserRegistrationRequest("test@example.com", "password");
+
+        // When
+        UserDTO user = userService.registerUser(request);
+
+        // Then
+        assertThat(user.getEmail()).isEqualTo("test@example.com");
+        assertThat(user.getId()).isNotNull();
+    }
+}
+```
+
+## Total Duration: 24-32 Weeks (6-8 Months)
+
+## Migration Strategy
+
+### **Incremental Migration Approach:**
+
+1. **Week 1-4**: Modularize the monolith
+2. **Week 5-8**: Extract first microservice (User Service)
+3. **Week 9-12**: Separate Content Service
+4. **Week 13-16**: Rewrite Problem Service with Go
+5. **Week 17-20**: Implement event-driven architecture
+6. **Week 21-24**: Kubernetes deployment
+7. **Week 25-28**: Monitoring and observability
+8. **Week 29-32**: Testing and optimization
+
+## Quick Start Commands
+
+```bash
+# 1. Repository clone
+git clone <your-repo>
+cd masterdsawithjava-microservices
+
+# 2. Development environment
+docker-compose up -d
+
+# 3. Build services
+./scripts/build-all.sh
+
+# 4. Deploy to Kubernetes
+kubectl apply -f k8s/
+
+# 5. Access services
+kubectl port-forward svc/gateway-service 8080:8080
+```
+
+## Learning Resources
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Spring Boot Documentation](https://spring.io/projects/spring-boot)
+- [Go Documentation](https://golang.org/doc/)
+- [Kubernetes Documentation](https://kubernetes.io/docs/)
+- [Apache Kafka Documentation](https://kafka.apache.org/documentation/)
