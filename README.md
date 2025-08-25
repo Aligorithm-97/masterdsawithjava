@@ -27,6 +27,7 @@ Existing Domains:
 ├── Content Management
 ├── Learning Progress
 ├── Problem Management
+├── Payment & Billing
 ├── Authentication & Authorization
 └── Analytics & Reporting
 ```
@@ -42,6 +43,7 @@ Recommended Microservices:
 ├── auth-service (Go - Gin)
 ├── notification-service (Go - Gin)
 ├── analytics-service (Java - Spring Boot)
+├── payment-service (Java - Spring Boot)
 └── gateway-service (Go - Gin)
 ```
 
@@ -163,6 +165,82 @@ func (s *ProblemService) CreateProblem(ctx context.Context, req *CreateProblemRe
 }
 ```
 
+#### 3.4 Payment Service (Java)
+
+```java
+// Spring Boot + JPA + Kafka + Redis (idempotency)
+@RestController
+@RequestMapping("/api/v1/payments")
+public class PaymentController {
+
+    @PostMapping(value = "/intents", headers = "Idempotency-Key")
+    public ResponseEntity<PaymentIntentDTO> createIntent(
+            @RequestHeader("Idempotency-Key") String idempotencyKey,
+            @RequestBody CreatePaymentIntentRequest request) {
+        // Ensures idempotency across retries and parallel requests
+        return ResponseEntity.ok(paymentService.createIntent(idempotencyKey, request));
+    }
+
+    @PostMapping("/{intentId}/confirm")
+    public ResponseEntity<PaymentDTO> confirm(@PathVariable UUID intentId) {
+        return ResponseEntity.ok(paymentService.confirm(intentId));
+    }
+}
+
+@Service
+public class PaymentService {
+
+    @Transactional
+    public PaymentIntentDTO createIntent(String idempotencyKey, CreatePaymentIntentRequest request) {
+        // 1) Fast-path idempotency with Redis (SETNX + TTL) to block duplicate work
+        // 2) Database uniqueness constraint on idempotency_key for ultimate consistency
+        // 3) Outbox write for PAYMENT_INTENT_CREATED event in same tx
+        PaymentIntent intent = repository.findByIdempotencyKey(idempotencyKey)
+            .orElseGet(() -> repository.save(PaymentIntent.newPending(idempotencyKey, request)));
+        outboxRepository.save(OutboxEvent.paymentIntentCreated(intent));
+        return intent.toDTO();
+    }
+
+    @Transactional
+    public PaymentDTO confirm(UUID intentId) {
+        // Pessimistic lock to prevent double-confirm
+        PaymentIntent intent = repository.findByIdWithPessimisticWriteLock(intentId)
+            .orElseThrow(() -> new NotFoundException("intent"));
+
+        if (intent.isTerminal()) {
+            return intent.getPayment().toDTO();
+        }
+
+        // Charge provider (mock/stripe-like) and record ledger atomically
+        Payment payment = paymentProvider.charge(intent);
+        ledgerRepository.appendEntry(LedgerEntry.from(payment));
+        intent.markSucceeded(payment);
+        outboxRepository.save(OutboxEvent.paymentSucceeded(intent, payment));
+        return payment.toDTO();
+    }
+}
+
+@Entity
+@Table(name = "payment_intents", uniqueConstraints = @UniqueConstraint(name = "uk_idem_key", columnNames = "idempotency_key"))
+public class PaymentIntent {
+    @Id UUID id;
+    @Column(name = "idempotency_key", nullable = false) String idempotencyKey;
+    @Version long version; // Optimistic locking for race experiments
+    @Enumerated(EnumType.STRING) PaymentIntentStatus status;
+    BigDecimal amount; String currency; UUID userId;
+    @OneToOne(mappedBy = "intent") Payment payment;
+}
+```
+
+- Idempotency strategy:
+  - Redis SETNX with TTL to short-circuit duplicates.
+  - Database unique constraint on `idempotency_key` as the source of truth.
+  - Outbox Pattern to publish events exactly-once.
+- Race-condition labs to try:
+  - Fire N parallel `confirm` calls; observe locks/versions and terminal state.
+  - Remove lock and switch to optimistic-only to study retries and conflicts.
+  - Toggle isolation level to SERIALIZABLE to observe write skew avoidance.
+
 ### **Phase 4: Event-Driven Architecture (3-4 weeks)**
 
 #### 4.1 Kafka Event Schema
@@ -189,6 +267,31 @@ func (s *ProblemService) CreateProblem(ctx context.Context, req *CreateProblemRe
     "contentId": 456,
     "title": "Java Collections Framework",
     "category": "java-core"
+  }
+}
+
+// Payment Events
+{
+  "eventType": "PAYMENT_INTENT_CREATED",
+  "eventId": "uuid",
+  "timestamp": "2024-01-15T10:30:00Z",
+  "data": {
+    "intentId": "uuid",
+    "userId": "uuid",
+    "amount": 1999,
+    "currency": "USD"
+  }
+}
+{
+  "eventType": "PAYMENT_SUCCEEDED",
+  "eventId": "uuid",
+  "timestamp": "2024-01-15T10:30:00Z",
+  "data": {
+    "intentId": "uuid",
+    "paymentId": "uuid",
+    "userId": "uuid",
+    "amount": 1999,
+    "currency": "USD"
   }
 }
 ```
@@ -251,6 +354,11 @@ func main() {
         // Content routes
         api.GET("/content", contentHandler.GetContent)
         api.POST("/content", contentHandler.CreateContent)
+
+        // Payment routes
+        api.POST("/payments/intents", paymentHandler.CreateIntent)      // expects Idempotency-Key
+        api.POST("/payments/:intentId/confirm", paymentHandler.Confirm)
+        api.GET("/payments/:intentId", paymentHandler.GetIntent)
     }
 
     r.Run(":8080")
@@ -310,6 +418,39 @@ CREATE TABLE user_progress (
     progress_percentage INTEGER DEFAULT 0,
     last_accessed TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Payment tables
+CREATE TYPE payment_intent_status AS ENUM ('PENDING','REQUIRES_CONFIRMATION','SUCCEEDED','FAILED','CANCELED');
+
+CREATE TABLE payment_intents (
+    id UUID PRIMARY KEY,
+    user_id BIGINT REFERENCES users(id),
+    amount NUMERIC(18,2) NOT NULL,
+    currency VARCHAR(10) NOT NULL,
+    idempotency_key VARCHAR(64) NOT NULL,
+    status payment_intent_status NOT NULL DEFAULT 'PENDING',
+    version BIGINT NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (idempotency_key)
+);
+
+CREATE TABLE payments (
+    id UUID PRIMARY KEY,
+    intent_id UUID UNIQUE REFERENCES payment_intents(id),
+    provider_charge_id VARCHAR(128),
+    amount NUMERIC(18,2) NOT NULL,
+    currency VARCHAR(10) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE ledger_entries (
+    id BIGSERIAL PRIMARY KEY,
+    payment_id UUID REFERENCES payments(id),
+    user_id BIGINT REFERENCES users(id),
+    delta NUMERIC(18,2) NOT NULL,
+    balance_after NUMERIC(18,2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 ```
 
 #### 6.2 Redis Caching Strategy
@@ -331,6 +472,8 @@ public class ContentCacheService {
     }
 }
 ```
+
+- For payments, use Redis keys `idem:{key}` with short TTL (e.g., 24h) to deduplicate client retries.
 
 ### **Phase 7: Kubernetes Deployment (2-3 weeks)**
 
@@ -480,6 +623,13 @@ public class AdminController {
 }
 ```
 
+#### 9.3 Consistency, Idempotency, and Exactly-Once
+
+- Use idempotency keys for all payment-creating endpoints.
+- Pessimistic locking on confirmation to avoid double-spend.
+- Outbox + Kafka with key `paymentIntentId` for ordered, at-least-once publishing; consumers implement dedup by `eventId`.
+- Enable retries with exponential backoff; treat provider callbacks as upserts.
+
 ### **Phase 10: Testing & Quality Assurance (2-3 weeks)**
 
 #### 10.1 Test Strategy
@@ -504,6 +654,37 @@ class UserServiceIntegrationTest {
     }
 }
 ```
+
+#### 10.2 Concurrency & Race-Condition Tests (Payment)
+
+```java
+// Parallel confirms should yield a single SUCCEEDED payment
+@SpringBootTest
+class PaymentConcurrencyTest {
+
+    @Test
+    void parallelConfirmations_resultInSinglePayment() throws Exception {
+        UUID intentId = paymentService.createIntent("idem-123", new CreatePaymentIntentRequest(...)).id();
+
+        int threads = 10;
+        ExecutorService pool = Executors.newFixedThreadPool(threads);
+        List<Future<PaymentDTO>> results = new ArrayList<>();
+        for (int i = 0; i < threads; i++) {
+            results.add(pool.submit(() -> paymentService.confirm(intentId)));
+        }
+        pool.shutdown();
+        pool.awaitTermination(10, TimeUnit.SECONDS);
+
+        long successCount = results.stream().map(f -> {
+            try { return f.get(); } catch (Exception e) { return null; }
+        }).filter(Objects::nonNull).distinct().count();
+
+        assertThat(successCount).isEqualTo(1);
+    }
+}
+```
+
+- Load testing idea: run `wrk`/`k6`/JMeter with concurrent `confirm` calls to observe lock waits and throughput.
 
 ## Total Duration: 24-32 Weeks (6-8 Months)
 
