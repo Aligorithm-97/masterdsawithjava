@@ -159,10 +159,10 @@ export default function Navigation() {
               </span>
               <div className="flex flex-col justify-center ml-1">
                 <span className="text-2xl font-extrabold tracking-tight text-white group-hover:text-blue-400 transition-colors duration-200">
-                  Java & DSA Mastery
+                  MasterDSA
                 </span>
                 <span className="text-xs text-gray-400 font-medium tracking-wide mt-0.5">
-                  Professional Learning Platform
+                  My Personal Learning Journey
                 </span>
               </div>
             </Link>

@@ -38,11 +38,12 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-              About
+              Hi there! 👋
             </h1>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Master DSA with Java is a comprehensive learning platform for
-              those who want to learn Java programming and algorithm problems.
+              I'm just like you - someone trying to learn Java and DSA. This
+              platform is my personal notebook where I share what I've learned
+              during my own learning journey.
             </p>
           </div>
         </div>
@@ -54,17 +55,16 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
-                Our Mission
+                Why This Platform?
               </h2>
               <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
-                To provide high-quality, clear, and practical content for
-                everyone who wants to learn Java programming and solve algorithm
-                problems.
+                I want to share the challenges I faced while learning and how I
+                solved them. Maybe you'll face similar challenges too.
               </p>
               <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
-                We help you develop the essential programming skills and
-                problem-solving abilities needed to succeed in the modern
-                software development world.
+                Here I try to explain everything in my own way - simple and
+                practical. This isn't a professional educational platform, but a
+                friendly knowledge sharing space.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
@@ -103,10 +103,10 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-              Platform Features
+              My Learning Journey
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-300">
-              The comprehensive learning experience we offer you
+              What you can find on this platform
             </p>
           </div>
 
@@ -134,9 +134,11 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-white mb-4">
-              Platform Statistics
+              My Progress So Far
             </h2>
-            <p className="text-xl text-gray-100">Our achievements and growth</p>
+            <p className="text-xl text-gray-100">
+              What I've accomplished in my learning journey
+            </p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -157,10 +159,10 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-              Learning Path
+              My Learning Path
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-300">
-              The recommended roadmap for your Java and DSA learning process
+              The roadmap I followed in my Java and DSA learning journey
             </p>
           </div>
 
@@ -211,10 +213,11 @@ export default function AboutPage() {
       <section className="py-16 bg-[#18181b]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-            Contact
+            Let's Connect!
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
-            You can contact us for your questions, suggestions, or feedback.
+            Feel free to reach out with questions, suggestions, or just to chat
+            about learning!
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

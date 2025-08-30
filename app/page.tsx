@@ -125,12 +125,12 @@ export default function Home() {
               New: Java 21 Features Added
             </div>
             <h1 className="text-5xl md:text-7xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
-              Master DSA with <span className="gradient-text">Java</span>
+              MasterDSA with <span className="gradient-text">Java</span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-10 max-w-4xl mx-auto leading-relaxed">
-              Learn Java core concepts, discover advanced programming
-              techniques, and improve your algorithm skills by solving DSA
-              problems.
+              Welcome to my personal learning space! I'm sharing my Java and DSA
+              journey as I learn and grow. Join me in this adventure of
+              problem-solving and coding.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
               <Link
