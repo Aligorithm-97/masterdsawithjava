@@ -53,7 +53,7 @@ Recommended Microservices:
 Backend Stack:
 ├── Java Services: Spring Boot 3.x + Spring Cloud
 ├── Go Services: Gin + Gorilla Mux
-├── Database: PostgreSQL + Supabase
+├── Database: PostgreSQL
 ├── Message Queue: Apache Kafka
 ├── Cache: Redis
 ├── Search: Elasticsearch
@@ -706,19 +706,23 @@ class PaymentConcurrencyTest {
 ```bash
 # 1. Repository clone
 git clone <your-repo>
-cd masterdsawithjava-microservices
+cd masterdsawithjava
 
-# 2. Development environment
-docker-compose up -d
+# 2. Install dependencies
+npm install
 
-# 3. Build services
-./scripts/build-all.sh
+# 3. Set up PostgreSQL with Docker
+docker-compose up -d postgres
 
-# 4. Deploy to Kubernetes
-kubectl apply -f k8s/
+# 4. Create database tables
+PGPASSWORD=postgres psql -h localhost -p 5433 -U postgres -d masterdsa -f supabase-schema.sql
 
-# 5. Access services
-kubectl port-forward svc/gateway-service 8080:8080
+# 5. Set up environment variables
+cp .env.example .env.local
+# Edit .env.local with your PostgreSQL credentials
+
+# 6. Start the development server
+npm run dev
 ```
 
 ## Learning Resources

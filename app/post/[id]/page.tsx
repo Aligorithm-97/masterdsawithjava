@@ -1,8 +1,8 @@
-"use client"
+"use client";
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { supabase } from "../../../lib/supabase";
+
 import PostRenderer from "../../../components/PostRenderer";
 
 type Block =
@@ -32,21 +32,18 @@ export default function PostDetailPage() {
   useEffect(() => {
     const loadPost = async () => {
       if (!params.id) return;
-      
-      try {
-        const { data, error } = await supabase
-          .from('posts')
-          .select('*')
-          .eq('id', params.id)
-          .single();
 
-        if (error) {
-          setError('Post not found');
+      try {
+        const response = await fetch(`/api/posts/${params.id}`);
+
+        if (response.ok) {
+          const data = await response.json();
+          setPost(data.data);
         } else {
-          setPost(data);
+          setError("Post not found");
         }
       } catch (err) {
-        setError('Failed to load post');
+        setError("Failed to load post");
       } finally {
         setLoading(false);
       }
@@ -73,8 +70,12 @@ export default function PostDetailPage() {
       <div className="min-h-screen bg-[#18181b] pt-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-white mb-4">Post Not Found</h1>
-            <p className="text-gray-400 mb-8">The post you're looking for doesn't exist.</p>
+            <h1 className="text-3xl font-bold text-white mb-4">
+              Post Not Found
+            </h1>
+            <p className="text-gray-400 mb-8">
+              The post you're looking for doesn't exist.
+            </p>
             <Link
               href="/"
               className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-200"
@@ -94,31 +95,43 @@ export default function PostDetailPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="mb-6">
             <Link
-              href={`/${post.category.toLowerCase().replace(' ', '-')}`}
+              href={`/${post.category.toLowerCase().replace(" ", "-")}`}
               className="inline-flex items-center text-blue-400 hover:text-blue-300 text-sm font-medium mb-4"
             >
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              <svg
+                className="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
               Back to {post.category}
             </Link>
           </div>
-          
+
           <div className="flex items-center justify-between mb-6">
-            <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-              post.category === 'Java Core' 
-                ? 'bg-blue-100 text-blue-800' 
-                : 'bg-green-100 text-green-800'
-            }`}>
+            <span
+              className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                post.category === "Java Core"
+                  ? "bg-blue-100 text-blue-800"
+                  : "bg-green-100 text-green-800"
+              }`}
+            >
               {post.category}
             </span>
             <span className="text-sm text-gray-400">{post.date}</span>
           </div>
-          
+
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
             {post.title}
           </h1>
-          
+
           {post.summary && (
             <p className="text-xl text-gray-400 leading-relaxed max-w-3xl">
               {post.summary}
@@ -140,8 +153,12 @@ export default function PostDetailPage() {
       <section className="bg-[#23272f] border-t border-gray-700">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
-            <h2 className="text-2xl font-bold text-white mb-4">Enjoyed this article?</h2>
-            <p className="text-gray-400 mb-8">Explore more content in our learning resources.</p>
+            <h2 className="text-2xl font-bold text-white mb-4">
+              Enjoyed this article?
+            </h2>
+            <p className="text-gray-400 mb-8">
+              Explore more content in our learning resources.
+            </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/java-core"
@@ -161,4 +178,4 @@ export default function PostDetailPage() {
       </section>
     </div>
   );
-} 
+}

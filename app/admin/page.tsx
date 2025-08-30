@@ -1,7 +1,7 @@
-"use client"
+"use client";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "../../lib/supabase";
+
 import PostRenderer from "../../components/PostRenderer";
 
 const CATEGORIES = [
@@ -60,26 +60,19 @@ export default function AdminPage() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        // Get current session
-        const { data: { session }, error } = await supabase.auth.getSession();
-        
-        if (error) {
-          console.error('Error getting session:', error);
-          router.push("/login");
-          return;
-        }
+        const response = await fetch("/api/session");
+        const data = await response.json();
 
-        if (session) {
+        if (data.session) {
           setIsAuthenticated(true);
-          setUser(session.user);
-          // Update localStorage for compatibility
+          setUser(data.session.user);
           localStorage.setItem("isAuthenticated", "true");
-          localStorage.setItem("adminUser", session.user.email || "");
+          localStorage.setItem("adminUser", data.session.user.email || "");
         } else {
           router.push("/login");
         }
       } catch (error) {
-        console.error('Auth check error:', error);
+        console.error("Auth check error:", error);
         router.push("/login");
       } finally {
         setIsLoading(false);
@@ -87,29 +80,9 @@ export default function AdminPage() {
     };
 
     checkAuth();
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (event === 'SIGNED_IN' && session) {
-          setIsAuthenticated(true);
-          setUser(session.user);
-          localStorage.setItem("isAuthenticated", "true");
-          localStorage.setItem("adminUser", session.user.email || "");
-        } else if (event === 'SIGNED_OUT') {
-          setIsAuthenticated(false);
-          setUser(null);
-          localStorage.removeItem("isAuthenticated");
-          localStorage.removeItem("adminUser");
-          router.push("/login");
-        }
-      }
-    );
-
-    return () => subscription.unsubscribe();
   }, [router]);
 
-  // Load posts from Supabase (with pagination and search)
+  // Load posts from PostgreSQL (with pagination and search)
   useEffect(() => {
     if (isAuthenticated) {
       loadPosts(currentPage, searchTerm);
@@ -127,53 +100,32 @@ export default function AdminPage() {
 
   const loadPosts = async (page = 1, search = "") => {
     try {
-      let query = supabase
-        .from('posts')
-        .select('*', { count: 'exact' })
-        .order('created_at', { ascending: false });
+      const params = new URLSearchParams({
+        page: page.toString(),
+        pageSize: POSTS_PER_PAGE.toString(),
+        search: search,
+      });
 
-      if (search) {
-        query = query.or(`title.ilike.%${search}%,summary.ilike.%${search}%`);
-      }
+      const response = await fetch(`/api/posts?${params}`);
+      const data = await response.json();
 
-      const from = (page - 1) * POSTS_PER_PAGE;
-      const to = from + POSTS_PER_PAGE - 1;
-      query = query.range(from, to);
-
-      const { data, error, count } = await query;
-
-      if (error) {
-        console.error('Error loading posts:', error);
-        setMessage('Error loading posts: ' + error.message);
+      if (response.ok) {
+        setPosts(data.data || []);
+        setTotalPosts(data.count || 0);
       } else {
-        setPosts(data || []);
-        setTotalPosts(count || 0);
+        setMessage("Error loading posts: " + data.error);
       }
     } catch (error) {
-      console.error('Error loading posts:', error);
-      setMessage('Error loading posts');
+      console.error("Error loading posts:", error);
+      setMessage("Error loading posts");
     }
   };
 
-  // Image upload function
+  // Image upload function (placeholder - Supabase Storage removed)
   const uploadImage = async (file: File): Promise<string> => {
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${Math.random()}.${fileExt}`;
-    const filePath = `${fileName}`;
-
-    const { error: uploadError } = await supabase.storage
-      .from('post-images')
-      .upload(filePath, file);
-
-    if (uploadError) {
-      throw uploadError;
-    }
-
-    const { data } = supabase.storage
-      .from('post-images')
-      .getPublicUrl(filePath);
-
-    return data.publicUrl;
+    // For now, return a placeholder URL
+    // In production, you'd implement file upload to your server or cloud storage
+    return `https://via.placeholder.com/400x300/2563eb/ffffff?text=Image+Upload+Disabled`;
   };
 
   // Handle image upload
@@ -182,10 +134,10 @@ export default function AdminPage() {
     try {
       const imageUrl = await uploadImage(file);
       handleBlockChange(blockIndex, { url: imageUrl });
-      setMessage('Image uploaded successfully!');
+      setMessage("Image uploaded successfully!");
     } catch (error) {
-      console.error('Error uploading image:', error);
-      setMessage('Error uploading image: ' + (error as Error).message);
+      console.error("Error uploading image:", error);
+      setMessage("Error uploading image: " + (error as Error).message);
     } finally {
       setUploadingImage(false);
     }
@@ -194,16 +146,14 @@ export default function AdminPage() {
   // Logout function
   const handleLogout = async () => {
     try {
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        console.error('Error signing out:', error);
-      } else {
+      const response = await fetch("/api/logout", { method: "POST" });
+      if (response.ok) {
         localStorage.removeItem("isAuthenticated");
         localStorage.removeItem("adminUser");
         router.push("/login");
       }
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
     }
   };
 
@@ -248,12 +198,13 @@ export default function AdminPage() {
 
   // Blok sil
   const handleRemoveBlock = (idx: number) => {
-    setBlocks(blocks => blocks.filter((_, i) => i !== idx));
+    setBlocks((blocks) => blocks.filter((_, i) => i !== idx));
   };
 
   // Blok yukarı/aşağı taşı
   const moveBlock = (idx: number, dir: -1 | 1) => {
-    if ((dir === -1 && idx === 0) || (dir === 1 && idx === blocks.length - 1)) return;
+    if ((dir === -1 && idx === 0) || (dir === 1 && idx === blocks.length - 1))
+      return;
     const newBlocks = [...blocks];
     const temp = newBlocks[idx];
     newBlocks[idx] = newBlocks[idx + dir];
@@ -263,31 +214,30 @@ export default function AdminPage() {
 
   // Blok içeriğini güncelle
   const handleBlockChange = (idx: number, value: Partial<Block>) => {
-    setBlocks(blocks =>
-      blocks.map((b, i) => (i === idx ? { ...b, ...value } as Block : b))
+    setBlocks((blocks) =>
+      blocks.map((b, i) => (i === idx ? ({ ...b, ...value } as Block) : b))
     );
   };
 
   // Post sil
   const handleDeletePost = async (postId: string) => {
-    if (!confirm('Are you sure you want to delete this post?')) return;
-    
-    try {
-      const { error } = await supabase
-        .from('posts')
-        .delete()
-        .eq('id', postId);
+    if (!confirm("Are you sure you want to delete this post?")) return;
 
-      if (error) {
-        console.error('Error deleting post:', error);
-        setMessage('Error deleting post: ' + error.message);
-      } else {
-        setMessage('Post deleted successfully!');
+    try {
+      const response = await fetch(`/api/posts/${postId}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        setMessage("Post deleted successfully!");
         loadPosts(); // Reload posts
+      } else {
+        const data = await response.json();
+        setMessage("Error deleting post: " + data.error);
       }
     } catch (error) {
-      console.error('Error deleting post:', error);
-      setMessage('Error deleting post');
+      console.error("Error deleting post:", error);
+      setMessage("Error deleting post");
     }
   };
 
@@ -301,33 +251,33 @@ export default function AdminPage() {
 
     setIsSubmitting(true);
     try {
-      const { data, error } = await supabase
-        .from('posts')
-        .insert([
-          {
-            title: title.trim(),
-            summary: summary.trim(),
-            blocks: blocks,
-            category: category,
-            date: new Date().toLocaleString(),
-          }
-        ])
-        .select();
+      const response = await fetch("/api/posts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: title.trim(),
+          summary: summary.trim(),
+          blocks: blocks,
+          category: category,
+          date: new Date().toLocaleString(),
+        }),
+      });
 
-      if (error) {
-        console.error('Error adding post:', error);
-        setMessage('Error adding post: ' + error.message);
-      } else {
+      const data = await response.json();
+
+      if (response.ok) {
         setTitle("");
         setSummary("");
         setBlocks([]);
         setCategory(CATEGORIES[0]);
         setMessage("Post added successfully!");
         loadPosts(); // Reload posts
+      } else {
+        setMessage("Error adding post: " + data.error);
       }
     } catch (error) {
-      console.error('Error adding post:', error);
-      setMessage('Error adding post');
+      console.error("Error adding post:", error);
+      setMessage("Error adding post");
     } finally {
       setIsSubmitting(false);
     }
@@ -340,7 +290,7 @@ export default function AdminPage() {
     setSummary(post.summary);
     setBlocks(post.blocks);
     setCategory(post.category);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   // Postu güncelle
@@ -353,31 +303,34 @@ export default function AdminPage() {
     }
     setIsSubmitting(true);
     try {
-      const { error } = await supabase
-        .from('posts')
-        .update({
+      const response = await fetch(`/api/posts/${editingPostId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
           title: title.trim(),
           summary: summary.trim(),
           blocks: blocks,
           category: category,
           date: new Date().toLocaleString(),
-        })
-        .eq('id', editingPostId);
-      if (error) {
-        console.error('Error updating post:', error);
-        setMessage('Error updating post: ' + error.message);
-      } else {
-        setMessage('Post updated successfully!');
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage("Post updated successfully!");
         setEditingPostId(null);
         setTitle("");
         setSummary("");
         setBlocks([]);
         setCategory(CATEGORIES[0]);
         loadPosts();
+      } else {
+        setMessage("Error updating post: " + data.error);
       }
     } catch (error) {
-      console.error('Error updating post:', error);
-      setMessage('Error updating post');
+      console.error("Error updating post:", error);
+      setMessage("Error updating post");
     } finally {
       setIsSubmitting(false);
     }
@@ -394,9 +347,9 @@ export default function AdminPage() {
   };
 
   // Kategorilere göre gruplama
-  const postsByCategory = CATEGORIES.map(cat => ({
+  const postsByCategory = CATEGORIES.map((cat) => ({
     category: cat,
-    posts: posts.filter(p => p.category === cat),
+    posts: posts.filter((p) => p.category === cat),
   }));
 
   return (
@@ -420,60 +373,97 @@ export default function AdminPage() {
             Logout
           </button>
         </div>
-        
+
         <form
           onSubmit={editingPostId ? handleUpdatePost : handleAddPost}
           className="bg-[#23272f] p-6 rounded-xl shadow-md mb-8 space-y-4"
         >
           <div>
-            <label className="block text-gray-300 mb-1 font-semibold">Category</label>
+            <label className="block text-gray-300 mb-1 font-semibold">
+              Category
+            </label>
             <select
               value={category}
-              onChange={e => setCategory(e.target.value)}
+              onChange={(e) => setCategory(e.target.value)}
               className="w-full px-3 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              {CATEGORIES.map(cat => (
-                <option key={cat} value={cat}>{cat}</option>
+              {CATEGORIES.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
               ))}
             </select>
           </div>
           <div>
-            <label className="block text-gray-300 mb-1 font-semibold">Title</label>
+            <label className="block text-gray-300 mb-1 font-semibold">
+              Title
+            </label>
             <input
               type="text"
               value={title}
-              onChange={e => setTitle(e.target.value)}
+              onChange={(e) => setTitle(e.target.value)}
               className="w-full px-3 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Enter post title"
             />
           </div>
           <div>
-            <label className="block text-gray-300 mb-1 font-semibold">Summary</label>
+            <label className="block text-gray-300 mb-1 font-semibold">
+              Summary
+            </label>
             <input
               type="text"
               value={summary}
-              onChange={e => setSummary(e.target.value)}
+              onChange={(e) => setSummary(e.target.value)}
               className="w-full px-3 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Short summary (optional)"
             />
           </div>
           <div>
-            <label className="block text-gray-300 mb-1 font-semibold">Content Blocks</label>
+            <label className="block text-gray-300 mb-1 font-semibold">
+              Content Blocks
+            </label>
             <div className="space-y-4">
               {blocks.map((block, idx) => (
-                <div key={idx} className="bg-gray-900 p-4 rounded-lg border border-gray-700 relative">
+                <div
+                  key={idx}
+                  className="bg-gray-900 p-4 rounded-lg border border-gray-700 relative"
+                >
                   <div className="absolute right-2 top-2 flex gap-1">
-                    <button type="button" onClick={() => moveBlock(idx, -1)} disabled={idx === 0} className="text-gray-400 hover:text-blue-400 disabled:opacity-30">↑</button>
-                    <button type="button" onClick={() => moveBlock(idx, 1)} disabled={idx === blocks.length - 1} className="text-gray-400 hover:text-blue-400 disabled:opacity-30">↓</button>
-                    <button type="button" onClick={() => handleRemoveBlock(idx)} className="text-red-400 hover:text-red-600">✕</button>
+                    <button
+                      type="button"
+                      onClick={() => moveBlock(idx, -1)}
+                      disabled={idx === 0}
+                      className="text-gray-400 hover:text-blue-400 disabled:opacity-30"
+                    >
+                      ↑
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => moveBlock(idx, 1)}
+                      disabled={idx === blocks.length - 1}
+                      className="text-gray-400 hover:text-blue-400 disabled:opacity-30"
+                    >
+                      ↓
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveBlock(idx)}
+                      className="text-red-400 hover:text-red-600"
+                    >
+                      ✕
+                    </button>
                   </div>
                   <div className="mb-2">
-                    <span className="text-xs text-blue-300 uppercase font-bold">{block.type}</span>
+                    <span className="text-xs text-blue-300 uppercase font-bold">
+                      {block.type}
+                    </span>
                   </div>
                   {block.type === "paragraph" && (
                     <textarea
                       value={block.content}
-                      onChange={e => handleBlockChange(idx, { content: e.target.value })}
+                      onChange={(e) =>
+                        handleBlockChange(idx, { content: e.target.value })
+                      }
                       className="w-full px-3 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       rows={3}
                       placeholder="Paragraph text..."
@@ -483,7 +473,9 @@ export default function AdminPage() {
                     <input
                       type="text"
                       value={block.content}
-                      onChange={e => handleBlockChange(idx, { content: e.target.value })}
+                      onChange={(e) =>
+                        handleBlockChange(idx, { content: e.target.value })
+                      }
                       className="w-full px-3 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 text-xl font-bold"
                       placeholder="Heading text..."
                     />
@@ -494,7 +486,9 @@ export default function AdminPage() {
                         <input
                           type="text"
                           value={block.url}
-                          onChange={e => handleBlockChange(idx, { url: e.target.value })}
+                          onChange={(e) =>
+                            handleBlockChange(idx, { url: e.target.value })
+                          }
                           className="flex-1 px-3 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                           placeholder="Image URL or upload file..."
                         />
@@ -516,22 +510,30 @@ export default function AdminPage() {
                           disabled={uploadingImage}
                           className="px-3 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800 text-white rounded text-sm font-medium transition-colors duration-200"
                         >
-                          {uploadingImage ? 'Uploading...' : 'Upload'}
+                          {uploadingImage ? "Uploading..." : "Upload"}
                         </button>
                       </div>
                       <input
                         type="text"
                         value={block.alt || ""}
-                        onChange={e => handleBlockChange(idx, { alt: e.target.value })}
+                        onChange={(e) =>
+                          handleBlockChange(idx, { alt: e.target.value })
+                        }
                         className="w-full px-3 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="Alt text (optional)"
                       />
                       {block.url && (
                         <div className="relative">
-                          <img src={block.url} alt={block.alt || "image preview"} className="max-h-40 rounded border border-gray-700 mx-auto" />
+                          <img
+                            src={block.url}
+                            alt={block.alt || "image preview"}
+                            className="max-h-40 rounded border border-gray-700 mx-auto"
+                          />
                           <button
                             type="button"
-                            onClick={() => handleBlockChange(idx, { url: "", alt: "" })}
+                            onClick={() =>
+                              handleBlockChange(idx, { url: "", alt: "" })
+                            }
                             className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs"
                           >
                             ✕
@@ -544,7 +546,9 @@ export default function AdminPage() {
                     <div className="space-y-2">
                       <textarea
                         value={block.code}
-                        onChange={e => handleBlockChange(idx, { code: e.target.value })}
+                        onChange={(e) =>
+                          handleBlockChange(idx, { code: e.target.value })
+                        }
                         className="w-full px-3 py-2 rounded bg-gray-800 text-green-200 font-mono border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         rows={4}
                         placeholder="Code..."
@@ -552,7 +556,9 @@ export default function AdminPage() {
                       <input
                         type="text"
                         value={block.language || ""}
-                        onChange={e => handleBlockChange(idx, { language: e.target.value })}
+                        onChange={(e) =>
+                          handleBlockChange(idx, { language: e.target.value })
+                        }
                         className="w-full px-3 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="Language (e.g. js, java, py)"
                       />
@@ -561,7 +567,9 @@ export default function AdminPage() {
                   {block.type === "quote" && (
                     <textarea
                       value={block.content}
-                      onChange={e => handleBlockChange(idx, { content: e.target.value })}
+                      onChange={(e) =>
+                        handleBlockChange(idx, { content: e.target.value })
+                      }
                       className="w-full px-3 py-2 rounded bg-gray-800 text-yellow-200 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 italic"
                       rows={2}
                       placeholder="Quote..."
@@ -570,7 +578,7 @@ export default function AdminPage() {
                 </div>
               ))}
               <div className="flex flex-wrap gap-2 mt-2">
-                {BLOCK_TYPES.map(bt => (
+                {BLOCK_TYPES.map((bt) => (
                   <button
                     key={bt.type}
                     type="button"
@@ -584,7 +592,11 @@ export default function AdminPage() {
             </div>
           </div>
           {message && (
-            <div className={`mb-2 font-medium ${message.includes('Error') ? 'text-red-400' : 'text-green-400'}`}>
+            <div
+              className={`mb-2 font-medium ${
+                message.includes("Error") ? "text-red-400" : "text-green-400"
+              }`}
+            >
               {message}
             </div>
           )}
@@ -593,7 +605,13 @@ export default function AdminPage() {
             disabled={isSubmitting}
             className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition-colors duration-200 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? (editingPostId ? 'Updating...' : 'Adding Post...') : (editingPostId ? 'Güncelle' : 'Add Post')}
+            {isSubmitting
+              ? editingPostId
+                ? "Updating..."
+                : "Adding Post..."
+              : editingPostId
+              ? "Güncelle"
+              : "Add Post"}
           </button>
           {editingPostId && (
             <button
@@ -616,7 +634,12 @@ export default function AdminPage() {
             className="px-3 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full max-w-xs"
           />
           {searchTerm && (
-            <button onClick={() => setSearchTerm("")} className="ml-2 text-gray-400 hover:text-red-400">Temizle</button>
+            <button
+              onClick={() => setSearchTerm("")}
+              className="ml-2 text-gray-400 hover:text-red-400"
+            >
+              Temizle
+            </button>
           )}
         </div>
 
@@ -626,9 +649,13 @@ export default function AdminPage() {
         <div className="space-y-10">
           {postsByCategory.map(({ category, posts }) => (
             <div key={category}>
-              <h3 className="text-xl font-semibold text-blue-400 mb-2">{category}</h3>
+              <h3 className="text-xl font-semibold text-blue-400 mb-2">
+                {category}
+              </h3>
               {posts.length === 0 ? (
-                <div className="text-gray-500 mb-4">No posts in this category.</div>
+                <div className="text-gray-500 mb-4">
+                  No posts in this category.
+                </div>
               ) : (
                 <div className="space-y-6">
                   {posts.map((post, idx) => (
@@ -642,9 +669,13 @@ export default function AdminPage() {
                             {post.title}
                           </span>
                           <div className="flex items-center gap-2">
-                            <span className="text-xs text-gray-400">{post.date}</span>
+                            <span className="text-xs text-gray-400">
+                              {post.date}
+                            </span>
                             <button
-                              onClick={() => post.id && handleDeletePost(post.id)}
+                              onClick={() =>
+                                post.id && handleDeletePost(post.id)
+                              }
                               className="text-red-400 hover:text-red-600 text-sm px-2 py-1 rounded hover:bg-red-900/20"
                             >
                               Delete
@@ -658,13 +689,15 @@ export default function AdminPage() {
                           </div>
                         </div>
                         {post.summary && (
-                          <div className="text-gray-400 mb-1 italic">{post.summary}</div>
+                          <div className="text-gray-400 mb-1 italic">
+                            {post.summary}
+                          </div>
                         )}
                         <div className="space-y-4">
-                          <PostRenderer 
-                            blocks={post.blocks} 
-                            maxBlocks={3} 
-                            isPreview={true} 
+                          <PostRenderer
+                            blocks={post.blocks}
+                            maxBlocks={3}
+                            isPreview={true}
                           />
                         </div>
                       </div>
@@ -679,25 +712,35 @@ export default function AdminPage() {
         {totalPages > 1 && (
           <div className="flex justify-center items-center gap-2 my-8">
             <button
-              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
               className="px-3 py-1 rounded bg-gray-700 text-white disabled:opacity-40"
-            >Önceki</button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+            >
+              Önceki
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
               <button
                 key={page}
                 onClick={() => setCurrentPage(page)}
-                className={`px-3 py-1 rounded ${currentPage === page ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'} font-semibold`}
-              >{page}</button>
+                className={`px-3 py-1 rounded ${
+                  currentPage === page
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-700 text-gray-300"
+                } font-semibold`}
+              >
+                {page}
+              </button>
             ))}
             <button
-              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
               className="px-3 py-1 rounded bg-gray-700 text-white disabled:opacity-40"
-            >Sonraki</button>
+            >
+              Sonraki
+            </button>
           </div>
         )}
       </div>
     </div>
   );
-} 
+}

@@ -1,7 +1,7 @@
-"use client"
+"use client";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { supabase } from "../../lib/supabase";
+
 import PostRenderer from "../../components/PostRenderer";
 
 type Block =
@@ -35,30 +35,24 @@ export default function JavaCorePage() {
 
   const loadPosts = async (page = 1, search = "") => {
     try {
-      let query = supabase
-        .from('posts')
-        .select('*', { count: 'exact' })
-        .eq('category', 'Java Core')
-        .order('created_at', { ascending: false });
+      const params = new URLSearchParams({
+        page: page.toString(),
+        pageSize: POSTS_PER_PAGE.toString(),
+        search: search,
+        category: "Java Core",
+      });
 
-      if (search) {
-        query = query.or(`title.ilike.%${search}%,summary.ilike.%${search}%`);
-      }
+      const response = await fetch(`/api/posts?${params}`);
+      const data = await response.json();
 
-      const from = (page - 1) * POSTS_PER_PAGE;
-      const to = from + POSTS_PER_PAGE - 1;
-      query = query.range(from, to);
-
-      const { data, error, count } = await query;
-
-      if (error) {
-        console.error('Error loading posts:', error);
+      if (response.ok) {
+        setPosts(data.data || []);
+        setTotalPosts(data.count || 0);
       } else {
-        setPosts(data || []);
-        setTotalPosts(count || 0);
+        console.error("Error loading posts:", data.error);
       }
     } catch (error) {
-      console.error('Error loading posts:', error);
+      console.error("Error loading posts:", error);
     } finally {
       setLoading(false);
     }
@@ -102,7 +96,8 @@ export default function JavaCorePage() {
     },
     {
       title: "Object-Oriented Programming",
-      description: "Classes, objects, inheritance, polymorphism, and encapsulation",
+      description:
+        "Classes, objects, inheritance, polymorphism, and encapsulation",
       lessons: [
         "Classes and Objects",
         "Constructor and Method Overloading",
@@ -269,7 +264,8 @@ export default function JavaCorePage() {
               Java Core Concepts
             </h1>
             <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto animate-fade-in-up animation-delay-200">
-              Master the fundamental concepts of Java programming language. From basic syntax to advanced object-oriented programming principles.
+              Master the fundamental concepts of Java programming language. From
+              basic syntax to advanced object-oriented programming principles.
             </p>
           </div>
         </div>
@@ -285,7 +281,12 @@ export default function JavaCorePage() {
           className="px-3 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full max-w-xs"
         />
         {searchTerm && (
-          <button onClick={() => setSearchTerm("")} className="ml-2 text-gray-400 hover:text-red-400">Clear</button>
+          <button
+            onClick={() => setSearchTerm("")}
+            className="ml-2 text-gray-400 hover:text-red-400"
+          >
+            Clear
+          </button>
         )}
       </div>
 
@@ -294,8 +295,12 @@ export default function JavaCorePage() {
         <section className="py-16 bg-[#23272f]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-white mb-4">Latest Articles</h2>
-              <p className="text-gray-400">Explore our latest Java Core articles and tutorials</p>
+              <h2 className="text-3xl font-bold text-white mb-4">
+                Latest Articles
+              </h2>
+              <p className="text-gray-400">
+                Explore our latest Java Core articles and tutorials
+              </p>
             </div>
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {posts.map((post) => (
@@ -319,14 +324,14 @@ export default function JavaCorePage() {
                       </p>
                     )}
                     <div className="space-y-3">
-                      <PostRenderer 
-                        blocks={post.blocks} 
-                        maxBlocks={2} 
-                        isPreview={true} 
+                      <PostRenderer
+                        blocks={post.blocks}
+                        maxBlocks={2}
+                        isPreview={true}
                       />
                     </div>
                     <div className="mt-4 pt-4 border-t border-gray-700">
-                      <Link 
+                      <Link
                         href={`/post/${post.id}`}
                         className="text-blue-400 hover:text-blue-300 text-sm font-medium"
                       >
@@ -345,22 +350,32 @@ export default function JavaCorePage() {
       {totalPages > 1 && (
         <div className="flex justify-center items-center gap-2 my-8">
           <button
-            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
             disabled={currentPage === 1}
             className="px-3 py-1 rounded bg-gray-700 text-white disabled:opacity-40"
-          >Previous</button>
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+          >
+            Previous
+          </button>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
             <button
               key={page}
               onClick={() => setCurrentPage(page)}
-              className={`px-3 py-1 rounded ${currentPage === page ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'} font-semibold`}
-            >{page}</button>
+              className={`px-3 py-1 rounded ${
+                currentPage === page
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-700 text-gray-300"
+              } font-semibold`}
+            >
+              {page}
+            </button>
           ))}
           <button
-            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
             className="px-3 py-1 rounded bg-gray-700 text-white disabled:opacity-40"
-          >Next</button>
+          >
+            Next
+          </button>
         </div>
       )}
 
@@ -385,7 +400,9 @@ export default function JavaCorePage() {
               >
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <div className={`p-3 rounded-lg bg-gradient-to-br ${topic.color}`}>
+                    <div
+                      className={`p-3 rounded-lg bg-gradient-to-br ${topic.color}`}
+                    >
                       <div className="text-white">{topic.icon}</div>
                     </div>
                     <span className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors">
@@ -440,7 +457,8 @@ export default function JavaCorePage() {
             Ready to Master Java?
           </h2>
           <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
-            Start your journey with Java Core concepts and build a strong foundation for advanced programming.
+            Start your journey with Java Core concepts and build a strong
+            foundation for advanced programming.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

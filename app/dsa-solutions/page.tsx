@@ -1,7 +1,7 @@
-"use client"
+"use client";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { supabase } from "../../lib/supabase";
+
 import PostRenderer from "../../components/PostRenderer";
 
 type Block =
@@ -31,19 +31,20 @@ export default function DSASolutionsPage() {
 
   const loadPosts = async () => {
     try {
-      const { data, error } = await supabase
-        .from('posts')
-        .select('*')
-        .eq('category', 'DSA Solutions')
-        .order('created_at', { ascending: false });
+      const params = new URLSearchParams({
+        category: "DSA Solutions",
+      });
 
-      if (error) {
-        console.error('Error loading posts:', error);
+      const response = await fetch(`/api/posts?${params}`);
+      const data = await response.json();
+
+      if (response.ok) {
+        setPosts(data.data || []);
       } else {
-        setPosts(data || []);
+        console.error("Error loading posts:", data.error);
       }
     } catch (error) {
-      console.error('Error loading posts:', error);
+      console.error("Error loading posts:", error);
     } finally {
       setLoading(false);
     }
@@ -246,7 +247,8 @@ export default function DSASolutionsPage() {
               DSA Solutions
             </h1>
             <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto animate-fade-in-up animation-delay-200">
-              Comprehensive solutions to Data Structures and Algorithms problems with detailed explanations and Java implementations.
+              Comprehensive solutions to Data Structures and Algorithms problems
+              with detailed explanations and Java implementations.
             </p>
           </div>
         </div>
@@ -257,8 +259,12 @@ export default function DSASolutionsPage() {
         <section className="py-16 bg-[#23272f]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-white mb-4">Latest Solutions</h2>
-              <p className="text-gray-400">Explore our latest DSA problem solutions and tutorials</p>
+              <h2 className="text-3xl font-bold text-white mb-4">
+                Latest Solutions
+              </h2>
+              <p className="text-gray-400">
+                Explore our latest DSA problem solutions and tutorials
+              </p>
             </div>
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {posts.map((post) => (
@@ -282,14 +288,14 @@ export default function DSASolutionsPage() {
                       </p>
                     )}
                     <div className="space-y-3">
-                      <PostRenderer 
-                        blocks={post.blocks} 
-                        maxBlocks={2} 
-                        isPreview={true} 
+                      <PostRenderer
+                        blocks={post.blocks}
+                        maxBlocks={2}
+                        isPreview={true}
                       />
                     </div>
                     <div className="mt-4 pt-4 border-t border-gray-700">
-                      <Link 
+                      <Link
                         href={`/post/${post.id}`}
                         className="text-green-400 hover:text-green-300 text-sm font-medium"
                       >
@@ -325,7 +331,9 @@ export default function DSASolutionsPage() {
               >
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <div className={`p-3 rounded-lg bg-gradient-to-br ${category.color}`}>
+                    <div
+                      className={`p-3 rounded-lg bg-gradient-to-br ${category.color}`}
+                    >
                       <div className="text-white">{category.icon}</div>
                     </div>
                     <span className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors">
@@ -339,27 +347,29 @@ export default function DSASolutionsPage() {
                     {category.description}
                   </p>
                   <ul className="space-y-1">
-                    {category.problems.slice(0, 3).map((problem, problemIndex) => (
-                      <li
-                        key={problemIndex}
-                        className="flex items-center text-sm text-gray-500 group-hover:text-gray-400 transition-colors"
-                      >
-                        <svg
-                          className="w-4 h-4 mr-2 text-green-500"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
+                    {category.problems
+                      .slice(0, 3)
+                      .map((problem, problemIndex) => (
+                        <li
+                          key={problemIndex}
+                          className="flex items-center text-sm text-gray-500 group-hover:text-gray-400 transition-colors"
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
-                        {problem}
-                      </li>
-                    ))}
+                          <svg
+                            className="w-4 h-4 mr-2 text-green-500"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M5 13l4 4L19 7"
+                            />
+                          </svg>
+                          {problem}
+                        </li>
+                      ))}
                     {category.problems.length > 3 && (
                       <li className="text-sm text-green-400 font-medium">
                         +{category.problems.length - 3} more problems
@@ -380,7 +390,8 @@ export default function DSASolutionsPage() {
             Ready to Master DSA?
           </h2>
           <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
-            Start solving problems and improve your algorithmic thinking with our comprehensive DSA solutions.
+            Start solving problems and improve your algorithmic thinking with
+            our comprehensive DSA solutions.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

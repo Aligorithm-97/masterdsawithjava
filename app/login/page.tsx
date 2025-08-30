@@ -1,7 +1,6 @@
-"use client"
+"use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "../../lib/supabase";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -14,15 +13,18 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     setError("");
-    
+
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
       });
 
-      if (error) {
-        setError(error.message);
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error);
       } else {
         // Store user info in localStorage for convenience
         localStorage.setItem("isAuthenticated", "true");
@@ -42,9 +44,11 @@ export default function LoginPage() {
         <div className="bg-[#23272f] p-8 rounded-xl shadow-lg border border-gray-700">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-white mb-2">Admin Login</h1>
-            <p className="text-gray-400">Enter your credentials to access the admin panel</p>
+            <p className="text-gray-400">
+              Enter your credentials to access the admin panel
+            </p>
           </div>
-          
+
           <form onSubmit={handleLogin} className="space-y-6">
             <div>
               <label className="block text-gray-300 mb-2 font-semibold">
@@ -59,7 +63,7 @@ export default function LoginPage() {
                 required
               />
             </div>
-            
+
             <div>
               <label className="block text-gray-300 mb-2 font-semibold">
                 Password
@@ -73,13 +77,13 @@ export default function LoginPage() {
                 required
               />
             </div>
-            
+
             {error && (
               <div className="text-red-400 text-sm font-medium text-center">
                 {error}
               </div>
             )}
-            
+
             <button
               type="submit"
               disabled={loading}
@@ -88,7 +92,7 @@ export default function LoginPage() {
               {loading ? "Signing In..." : "Sign In"}
             </button>
           </form>
-          
+
           <div className="mt-6 text-center">
             <p className="text-gray-500 text-sm">
               Admin access only. Contact administrator for credentials.
@@ -98,4 +102,4 @@ export default function LoginPage() {
       </div>
     </div>
   );
-} 
+}

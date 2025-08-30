@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
-import { supabase } from "../../lib/supabase";
 
 const LANGUAGES = [
   { code: "en", label: "EN" },
@@ -26,12 +25,12 @@ export default function Navigation() {
     // Check authentication status
     const checkAuth = async () => {
       try {
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
-        if (session) {
+        const response = await fetch("/api/session");
+        const data = await response.json();
+
+        if (data.session) {
           setIsAuthenticated(true);
-          setUser(session.user);
+          setUser(data.session.user);
         } else {
           setIsAuthenticated(false);
           setUser(null);
@@ -45,19 +44,9 @@ export default function Navigation() {
 
     checkAuth();
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === "SIGNED_IN" && session) {
-        setIsAuthenticated(true);
-        setUser(session.user);
-      } else if (event === "SIGNED_OUT") {
-        setIsAuthenticated(false);
-        setUser(null);
-      }
-    });
-
-    return () => subscription.unsubscribe();
+    // Check auth every 30 seconds
+    const interval = setInterval(checkAuth, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleJavaMenuEnter = () => {
