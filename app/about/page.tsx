@@ -4,8 +4,7 @@ export default function AboutPage() {
   const features = [
     {
       title: "Comprehensive Content",
-      description:
-        "Detailed guides from Java core to advanced topics",
+      description: "Detailed guides from Java core to advanced topics",
       icon: "📚",
     },
     {
@@ -42,7 +41,8 @@ export default function AboutPage() {
               About
             </h1>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Master DSA with Java is a comprehensive learning platform for those who want to learn Java programming and algorithm problems.
+              Master DSA with Java is a comprehensive learning platform for
+              those who want to learn Java programming and algorithm problems.
             </p>
           </div>
         </div>
@@ -57,10 +57,14 @@ export default function AboutPage() {
                 Our Mission
               </h2>
               <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
-                To provide high-quality, clear, and practical content for everyone who wants to learn Java programming and solve algorithm problems.
+                To provide high-quality, clear, and practical content for
+                everyone who wants to learn Java programming and solve algorithm
+                problems.
               </p>
               <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
-                We help you develop the essential programming skills and problem-solving abilities needed to succeed in the modern software development world.
+                We help you develop the essential programming skills and
+                problem-solving abilities needed to succeed in the modern
+                software development world.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
@@ -132,7 +136,6 @@ export default function AboutPage() {
             <h2 className="text-3xl font-bold text-white mb-4">
               Platform Statistics
             </h2>
-            <p className="text-xl text-gray-100">Başarılarımız ve büyümemiz</p>
             <p className="text-xl text-gray-100">Our achievements and growth</p>
           </div>
 
