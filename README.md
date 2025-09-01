@@ -58,7 +58,8 @@ Backend Stack:
 ├── Cache: Redis
 ├── Search: Elasticsearch
 ├── Container: Docker
-└── Orchestration: Kubernetes
+├── Orchestration: Kubernetes
+└── Infrastructure: Terraform + AWS
 ```
 
 ### **Phase 2: Infrastructure Setup (3-4 weeks)**
