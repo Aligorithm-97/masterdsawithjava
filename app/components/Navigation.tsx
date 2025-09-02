@@ -172,16 +172,6 @@ export default function Navigation() {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-1">
-            {/* Home */}
-            <Link
-              href="/"
-              className="relative px-4 py-3 text-sm font-semibold text-gray-300 hover:text-white rounded-lg transition-all duration-200 hover:bg-gray-800/50 group"
-            >
-              <span className="relative z-10">Home</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
-              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 group-hover:w-full transition-all duration-300"></div>
-            </Link>
-
             <div
               className="relative"
               ref={javaMenuRef}
@@ -327,15 +317,6 @@ export default function Navigation() {
         {isMenuOpen && (
           <div className="md:hidden transition-all duration-300 opacity-100 max-h-96">
             <div className="px-2 pt-2 pb-3 space-y-1 bg-gray-800/95 backdrop-blur-md border-t border-gray-700">
-              {/* Home */}
-              <Link
-                href="/"
-                className="block px-3 py-3 text-base font-semibold text-gray-300 hover:text-white hover:bg-gray-700/50 rounded-lg transition-all duration-200"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Home
-              </Link>
-
               <div className="px-3 py-2">
                 <div className="text-sm font-bold text-blue-400 uppercase tracking-wider mb-2">
                   Java
