@@ -161,9 +161,6 @@ export default function Navigation() {
                 <span className="text-2xl font-extrabold tracking-tight text-white group-hover:text-blue-400 transition-colors duration-200">
                   MasterDSA
                 </span>
-                <span className="text-xs text-gray-400 font-medium tracking-wide mt-0.5">
-                  My Personal Learning Journey
-                </span>
               </div>
             </Link>
             {/* Divider */}
