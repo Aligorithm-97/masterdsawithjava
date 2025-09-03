@@ -70,8 +70,9 @@ export default function Navigation() {
   ];
 
   const dsaMenuItems = [
-    { name: "DSA Solutions", href: "/dsa-solutions" },
-    { name: "Algorithm Problems", href: "/algorithm-problems" },
+    { name: "DSA", href: "/dsa-solutions" },
+    { name: "System Design", href: "/system-design" },
+    { name: "Design Patterns", href: "/design-patterns" },
   ];
 
   const otherMenuItems = [
@@ -230,20 +231,27 @@ export default function Navigation() {
               href="/dsa-solutions"
               className="relative px-4 py-3 text-sm font-semibold text-gray-300 hover:text-white rounded-lg transition-all duration-200 hover:bg-gray-800/50 group"
             >
-              <span className="relative z-10">DSA Solutions</span>
+              <span className="relative z-10">DSA</span>
               <div className="absolute inset-0 bg-gradient-to-r from-green-600/10 to-blue-600/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
               <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-green-500 to-blue-500 group-hover:w-full transition-all duration-300"></div>
             </Link>
 
             <Link
-              href="/algorithm-problems"
+              href="/system-design"
               className="relative px-4 py-3 text-sm font-semibold text-gray-300 hover:text-white rounded-lg transition-all duration-200 hover:bg-gray-800/50 group"
             >
-              <span className="relative z-10">Algorithm Problems</span>
+              <span className="relative z-10">System Design</span>
               <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-pink-600/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
               <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300"></div>
             </Link>
-
+            <Link
+              href="/design-patterns"
+              className="relative px-4 py-3 text-sm font-semibold text-gray-300 hover:text-white rounded-lg transition-all duration-200 hover:bg-gray-800/50 group"
+            >
+              <span className="relative z-10">Design Patterns</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-pink-600/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300"></div>
+            </Link>
             <Link
               href="/about"
               className="relative px-4 py-3 text-sm font-semibold text-gray-300 hover:text-white rounded-lg transition-all duration-200 hover:bg-gray-800/50 group"
