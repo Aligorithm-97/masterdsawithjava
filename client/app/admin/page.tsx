@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { apiFetch } from "../../lib/api";
 
 import PostRenderer from "../../components/PostRenderer";
 
@@ -60,7 +61,7 @@ export default function AdminPage() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch("/api/session");
+        const response = await apiFetch("/session");
         const data = await response.json();
 
         if (data.session) {
@@ -106,7 +107,7 @@ export default function AdminPage() {
         search: search,
       });
 
-      const response = await fetch(`/api/posts?${params}`);
+      const response = await apiFetch(`/posts?${params}`);
       const data = await response.json();
 
       if (response.ok) {
@@ -146,7 +147,7 @@ export default function AdminPage() {
   // Logout function
   const handleLogout = async () => {
     try {
-      const response = await fetch("/api/logout", { method: "POST" });
+      const response = await apiFetch("/logout", { method: "POST" });
       if (response.ok) {
         localStorage.removeItem("isAuthenticated");
         localStorage.removeItem("adminUser");
@@ -224,7 +225,7 @@ export default function AdminPage() {
     if (!confirm("Are you sure you want to delete this post?")) return;
 
     try {
-      const response = await fetch(`/api/posts/${postId}`, {
+      const response = await apiFetch(`/posts/${postId}`, {
         method: "DELETE",
       });
 
@@ -251,16 +252,15 @@ export default function AdminPage() {
 
     setIsSubmitting(true);
     try {
-      const response = await fetch("/api/posts", {
+      const response = await apiFetch("/posts", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+        json: {
           title: title.trim(),
           summary: summary.trim(),
           blocks: blocks,
           category: category,
           date: new Date().toLocaleString(),
-        }),
+        },
       });
 
       const data = await response.json();
@@ -303,16 +303,15 @@ export default function AdminPage() {
     }
     setIsSubmitting(true);
     try {
-      const response = await fetch(`/api/posts/${editingPostId}`, {
+      const response = await apiFetch(`/posts/${editingPostId}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+        json: {
           title: title.trim(),
           summary: summary.trim(),
           blocks: blocks,
           category: category,
           date: new Date().toLocaleString(),
-        }),
+        },
       });
 
       const data = await response.json();

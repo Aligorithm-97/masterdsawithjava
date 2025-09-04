@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
+import { apiFetch } from "../../lib/api";
 
 const LANGUAGES = [
   { code: "en", label: "EN" },
@@ -25,7 +26,7 @@ export default function Navigation() {
     // Check authentication status
     const checkAuth = async () => {
       try {
-        const response = await fetch("/api/session");
+        const response = await apiFetch("/session");
         const data = await response.json();
 
         if (data.session) {
