@@ -4,23 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 
 import PostRenderer from "../../../components/PostRenderer";
-
-type Block =
-  | { type: "paragraph"; content: string }
-  | { type: "heading"; content: string }
-  | { type: "image"; url: string; alt?: string }
-  | { type: "code"; code: string; language?: string }
-  | { type: "quote"; content: string };
-
-interface Post {
-  id: string;
-  title: string;
-  summary: string;
-  blocks: Block[];
-  category: string;
-  date: string;
-  created_at: string;
-}
+import { Post } from "../../../lib/types";
 
 export default function PostDetailPage() {
   const [post, setPost] = useState<Post | null>(null);

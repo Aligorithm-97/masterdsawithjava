@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { apiFetch } from "../../../../lib/api";
-import { UpdatePostRequest } from "../../../../lib/types";
+import { UpdateUserRequest } from "../../../../lib/types";
 
 export async function GET(
   _: NextRequest,
@@ -8,7 +8,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const response = await apiFetch(`/posts/${id}`);
+    const response = await apiFetch(`/users/${id}`);
 
     if (!response.ok) {
       if (response.status === 404) {
@@ -20,9 +20,9 @@ export async function GET(
     const data = await response.json();
     return NextResponse.json(data);
   } catch (error) {
-    console.error("Error fetching post:", error);
+    console.error("Error fetching user:", error);
     return NextResponse.json(
-      { error: "Failed to fetch post" },
+      { error: "Failed to fetch user" },
       { status: 500 }
     );
   }
@@ -34,17 +34,17 @@ export async function PUT(
 ) {
   try {
     const { id } = await params;
-    const body: UpdatePostRequest = await req.json();
-    const { title, summary, blocks, category, date } = body;
+    const body: UpdateUserRequest = await req.json();
+    const { email, first_name, last_name, password, date_of_birth } = body;
 
-    const response = await apiFetch(`/posts/${id}`, {
+    const response = await apiFetch(`/users/${id}`, {
       method: "PUT",
       json: {
-        title,
-        summary: summary || "",
-        blocks,
-        category,
-        date: date || new Date().toISOString(),
+        email,
+        first_name,
+        last_name,
+        password,
+        date_of_birth,
       },
     });
 
@@ -58,9 +58,9 @@ export async function PUT(
     const data = await response.json();
     return NextResponse.json(data);
   } catch (error) {
-    console.error("Error updating post:", error);
+    console.error("Error updating user:", error);
     return NextResponse.json(
-      { error: "Failed to update post" },
+      { error: "Failed to update user" },
       { status: 500 }
     );
   }
@@ -72,7 +72,7 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    const response = await apiFetch(`/posts/${id}`, {
+    const response = await apiFetch(`/users/${id}`, {
       method: "DELETE",
     });
 
@@ -85,9 +85,9 @@ export async function DELETE(
 
     return NextResponse.json({ ok: true });
   } catch (error) {
-    console.error("Error deleting post:", error);
+    console.error("Error deleting user:", error);
     return NextResponse.json(
-      { error: "Failed to delete post" },
+      { error: "Failed to delete user" },
       { status: 500 }
     );
   }
