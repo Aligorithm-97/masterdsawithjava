@@ -1,5 +1,5 @@
 package com.spring.temp.config;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.Properties;
 
 @Configuration
-@RequiredArgsConstructor
 public class BeansConfig {
 
     private final UserDetailsService userDetailService;
@@ -29,8 +28,12 @@ public class BeansConfig {
     @Value("${spring.mail.mailPassword}")
     private String passwordMail;
 
+    public BeansConfig(UserDetailsService userDetailService) {
+        this.userDetailService = userDetailService;
+    }
+
     @Bean
-    public AuthenticationProvider authenticationProvider(){
+    public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailService);
         authProvider.setPasswordEncoder(passwordEncoder());

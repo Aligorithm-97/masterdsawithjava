@@ -1,8 +1,8 @@
 package com.spring.temp.aop;
+
 import com.spring.temp.domain.model.UserActions;
 import com.spring.temp.domain.repository.UserActionsRepository;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -16,13 +16,17 @@ import java.util.Arrays;
 
 @Aspect
 @Component
-@RequiredArgsConstructor
 public class LoggingAspect {
 
     private final UserActionsRepository userActionsRepository;
 
+    public LoggingAspect(UserActionsRepository userActionsRepository) {
+        this.userActionsRepository = userActionsRepository;
+    }
+
     @Pointcut("within(@org.springframework.web.bind.annotation.RestController *)")
-    public void controllerMethods() {}
+    public void controllerMethods() {
+    }
 
     @AfterReturning(pointcut = "controllerMethods()", returning = "result")
     public void logAfter(JoinPoint joinPoint, Object result) {

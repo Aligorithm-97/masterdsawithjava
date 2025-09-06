@@ -1,8 +1,17 @@
-package com.spring.temp.domain.dto;
+package com.spring.temp.domain.model;
 
 
-public class PostDto {
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
+@Entity
+public class Post {
+
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
     private String summary;
@@ -10,8 +19,7 @@ public class PostDto {
     private String category;
     private String date;
 
-
-    public PostDto(Long id, String title, String summary, String blocks, String category, String date) {
+    public Post(Long id, String title, String summary, String blocks, String category, String date) {
         this.id = id;
         this.title = title;
         this.summary = summary;
@@ -20,11 +28,11 @@ public class PostDto {
         this.date = date;
     }
 
-    public PostDto() {
+    public Post() {
     }
 
-    public static PostDtoBuilder builder() {
-        return new PostDtoBuilder();
+    public static PostBuilder builder() {
+        return new PostBuilder();
     }
 
     public Long getId() {
@@ -75,7 +83,7 @@ public class PostDto {
         this.date = date;
     }
 
-    public static class PostDtoBuilder {
+    public static class PostBuilder {
         private Long id;
         private String title;
         private String summary;
@@ -83,45 +91,45 @@ public class PostDto {
         private String category;
         private String date;
 
-        PostDtoBuilder() {
+        PostBuilder() {
         }
 
-        public PostDtoBuilder id(Long id) {
+        public PostBuilder id(Long id) {
             this.id = id;
             return this;
         }
 
-        public PostDtoBuilder title(String title) {
+        public PostBuilder title(String title) {
             this.title = title;
             return this;
         }
 
-        public PostDtoBuilder summary(String summary) {
+        public PostBuilder summary(String summary) {
             this.summary = summary;
             return this;
         }
 
-        public PostDtoBuilder blocks(String blocks) {
+        public PostBuilder blocks(String blocks) {
             this.blocks = blocks;
             return this;
         }
 
-        public PostDtoBuilder category(String category) {
+        public PostBuilder category(String category) {
             this.category = category;
             return this;
         }
 
-        public PostDtoBuilder date(String date) {
+        public PostBuilder date(String date) {
             this.date = date;
             return this;
         }
 
-        public PostDto build() {
-            return new PostDto(this.id, this.title, this.summary, this.blocks, this.category, this.date);
+        public Post build() {
+            return new Post(this.id, this.title, this.summary, this.blocks, this.category, this.date);
         }
 
         public String toString() {
-            return "PostDto.PostDtoBuilder(id=" + this.id + ", title=" + this.title + ", summary=" + this.summary + ", blocks=" + this.blocks + ", category=" + this.category + ", date=" + this.date + ")";
+            return "Post.PostBuilder(id=" + this.id + ", title=" + this.title + ", summary=" + this.summary + ", blocks=" + this.blocks + ", category=" + this.category + ", date=" + this.date + ")";
         }
     }
 }

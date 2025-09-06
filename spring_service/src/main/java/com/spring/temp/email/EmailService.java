@@ -2,7 +2,6 @@ package com.spring.temp.email;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -13,15 +12,19 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.nio.charset.StandardCharsets.*;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.springframework.mail.javamail.MimeMessageHelper.MULTIPART_MODE_MIXED;
 
 @Service
-@RequiredArgsConstructor
 public class EmailService {
 
     private final JavaMailSender mailSender;
     private final SpringTemplateEngine templateEngine;
+
+    public EmailService(JavaMailSender mailSender, SpringTemplateEngine templateEngine) {
+        this.mailSender = mailSender;
+        this.templateEngine = templateEngine;
+    }
 
     @Async
     public void sendEmail(
@@ -33,7 +36,7 @@ public class EmailService {
             String subject
     ) throws MessagingException {
         String templateName;
-        if (emailTemplate == null){
+        if (emailTemplate == null) {
             templateName = "confirm-email";
         } else {
             templateName = emailTemplate.name();
@@ -56,7 +59,7 @@ public class EmailService {
 
         String template = templateEngine.process(templateName, context);
 
-        helper.setText(template,true);
+        helper.setText(template, true);
 
         mailSender.send(mimeMessage);
     }

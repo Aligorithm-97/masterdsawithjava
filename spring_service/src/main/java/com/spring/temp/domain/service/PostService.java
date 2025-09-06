@@ -6,6 +6,9 @@ import java.util.List;
 
 public interface PostService {
 
-    List<PostDto> getAllPosts();
+    PostDto createPost(PostDto postDto);
+    PostDto getPostById(Long id);
+    PostDto updatePost(Long id, PostDto postDto);
+    void deletePost(Long id);
 
 }

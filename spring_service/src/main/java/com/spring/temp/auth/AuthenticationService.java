@@ -1,20 +1,19 @@
 package com.spring.temp.auth;
 
+import com.spring.temp.domain.model.Token;
+import com.spring.temp.domain.model.User;
+import com.spring.temp.domain.repository.RoleRepository;
+import com.spring.temp.domain.repository.TokenRepository;
+import com.spring.temp.domain.repository.UserRepository;
 import com.spring.temp.email.EmailService;
 import com.spring.temp.email.EmailTemplateName;
-import com.spring.temp.domain.repository.RoleRepository;
 import com.spring.temp.exception.SomethingWentWrongException;
 import com.spring.temp.exception.UserNotFoundException;
 import com.spring.temp.security.JwtService;
-import com.spring.temp.domain.model.Token;
-import com.spring.temp.domain.repository.TokenRepository;
-import com.spring.temp.domain.model.User;
-import com.spring.temp.domain.repository.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -35,7 +34,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class AuthenticationService {
 
     private final RoleRepository roleRepository;
@@ -56,9 +54,21 @@ public class AuthenticationService {
 
     @Value("${application.mailing.frontend.activation-url}")
     private String activationUrl;
+
+    public AuthenticationService(RoleRepository roleRepository, PasswordEncoder passwordEncoder, UserRepository userRepository, TokenRepository tokenRepository, EmailService emailService, AuthenticationManager authenticationManager, JwtService jwtService, UserDetailsService userDetailsService) {
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
+        this.tokenRepository = tokenRepository;
+        this.emailService = emailService;
+        this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
+        this.userDetailsService = userDetailsService;
+    }
+
     public void register(RegistrationRequest request) throws MessagingException {
         var userRole = roleRepository.findByName("ROLE_ADMIN")
-                .orElseThrow(()-> new IllegalStateException("ROLE USER not found !"));
+                .orElseThrow(() -> new IllegalStateException("ROLE USER not found !"));
 
         var user = User.builder()
                 .firstName(request.getFirstName())
@@ -106,7 +116,7 @@ public class AuthenticationService {
         String characters = "0123456789";
         StringBuilder codeBuilder = new StringBuilder();
         SecureRandom secureRandom = new SecureRandom();
-        for (int i = 0; i< 6; i++ ){
+        for (int i = 0; i < 6; i++) {
             int randomIndex = secureRandom.nextInt(characters.length());
             codeBuilder.append(characters.charAt(randomIndex));
         }
@@ -147,14 +157,14 @@ public class AuthenticationService {
     }
 
     public void activateAccount(String token) throws MessagingException {
-        Token savedToken = tokenRepository.findByToken(token).orElseThrow(()->new RuntimeException("Invalid Token"));
+        Token savedToken = tokenRepository.findByToken(token).orElseThrow(() -> new RuntimeException("Invalid Token"));
 
-        if (LocalDateTime.now().isAfter(savedToken.getExpiresAt())){
+        if (LocalDateTime.now().isAfter(savedToken.getExpiresAt())) {
             sendValidationEmail((savedToken.getUser()));
             throw new RuntimeException("Activation Token has expired. A new token has been sent!");
         }
         var user = userRepository.findById(savedToken.getUser().getId())
-                .orElseThrow(()->new UsernameNotFoundException("User not found!"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
         user.setEnabled(true);
         userRepository.save(user);
         savedToken.setValidatedAt(LocalDateTime.now());
