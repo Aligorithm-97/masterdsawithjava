@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
     queryParams.append("page", page.toString());
     queryParams.append("size", pageSize.toString());
 
-    const response = await apiFetch(`/posts?${queryParams.toString()}`);
+    const response = await apiFetch(`/post?${queryParams.toString()}`);
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const response = await apiFetch("/posts", {
+    const response = await apiFetch("/post", {
       method: "POST",
       json: {
         title,

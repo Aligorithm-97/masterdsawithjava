@@ -8,7 +8,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const response = await apiFetch(`/posts/${id}`);
+    const response = await apiFetch(`/post/${id}`);
 
     if (!response.ok) {
       if (response.status === 404) {
@@ -37,7 +37,7 @@ export async function PUT(
     const body: UpdatePostRequest = await req.json();
     const { title, summary, blocks, category, date } = body;
 
-    const response = await apiFetch(`/posts/${id}`, {
+    const response = await apiFetch(`/post/${id}`, {
       method: "PUT",
       json: {
         title,
@@ -72,7 +72,7 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    const response = await apiFetch(`/posts/${id}`, {
+    const response = await apiFetch(`/post/${id}`, {
       method: "DELETE",
     });
 

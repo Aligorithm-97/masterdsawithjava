@@ -18,11 +18,22 @@ export default function PostDetailPage() {
       if (!params.id) return;
 
       try {
-        const response = await fetch(`/api/posts/${params.id}`);
+        const apiBaseUrl =
+          process.env.NEXT_PUBLIC_API_BASE_URL ||
+          "http://localhost:8080/api/v1/";
+        const response = await fetch(`${apiBaseUrl}post/${params.id}`);
 
         if (response.ok) {
           const data = await response.json();
-          setPost(data.data);
+          // Parse blocks from JSON string to array
+          const postWithParsedBlocks = {
+            ...data.data,
+            blocks:
+              typeof data.data.blocks === "string"
+                ? JSON.parse(data.data.blocks)
+                : data.data.blocks,
+          };
+          setPost(postWithParsedBlocks);
         } else {
           setError("Post not found");
         }

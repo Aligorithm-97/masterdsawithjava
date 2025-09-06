@@ -7,6 +7,9 @@ import com.spring.temp.domain.service.PostService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Service
 @Transactional(readOnly = true)
@@ -18,6 +21,7 @@ public class PostServiceImpl implements PostService {
         this.postRepository = postRepository;
     }
 
+    @Transactional
     @Override
     public PostDto createPost(PostDto postDto) {
         Post post = toEntity(postDto);
@@ -48,13 +52,20 @@ public class PostServiceImpl implements PostService {
         postRepository.deleteById(id);
     }
 
+    @Override
+    public List<PostDto> getPostsByCategory(String category) {
+        List<Post> posts = postRepository.findByCategory(category);
+        return posts.stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
     public PostDto toDto(Post post) {
         if (post == null) {
             return null;
         }
 
         PostDto dto = new PostDto();
-        dto.setId(post.getId());
         dto.setTitle(post.getTitle());
         dto.setSummary(post.getSummary());
         dto.setBlocks(post.getBlocks());
@@ -69,7 +80,6 @@ public class PostServiceImpl implements PostService {
         }
 
         Post post = new Post();
-        post.setId(postDto.getId());
         post.setTitle(postDto.getTitle());
         post.setSummary(postDto.getSummary());
         post.setBlocks(postDto.getBlocks());

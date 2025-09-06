@@ -1,6 +1,45 @@
+"use client";
 import Link from "next/link";
+import { useState, useEffect } from "react";
+import { Post } from "../lib/types";
 
 export default function Home() {
+  const [recentPosts, setRecentPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadRecentPosts = async () => {
+      try {
+        const apiBaseUrl =
+          process.env.NEXT_PUBLIC_API_BASE_URL ||
+          "http://localhost:8080/api/v1/";
+        const params = new URLSearchParams({
+          page: "1",
+          size: "3",
+        });
+        const response = await fetch(`${apiBaseUrl}post?${params}`);
+
+        if (response.ok) {
+          const data = await response.json();
+          // Parse blocks from JSON string to array
+          const postsWithParsedBlocks = (data.data || []).map((post: any) => ({
+            ...post,
+            blocks:
+              typeof post.blocks === "string"
+                ? JSON.parse(post.blocks)
+                : post.blocks,
+          }));
+          setRecentPosts(postsWithParsedBlocks);
+        }
+      } catch (error) {
+        console.error("Error loading recent posts:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadRecentPosts();
+  }, []);
   const features = [
     {
       title: "Java Core Concepts",
@@ -85,32 +124,6 @@ export default function Home() {
         </svg>
       ),
       href: "/algorithm-problems",
-    },
-  ];
-
-  const recentPosts = [
-    {
-      title: "Java Collections Framework In-Depth Guide",
-      category: "Advanced Java",
-      date: "2024-01-15",
-      readTime: "8 min",
-      excerpt:
-        "Explore all components of the Java Collections Framework in detail.",
-    },
-    {
-      title: "Two Sum Problem - Multiple Solution Approaches",
-      category: "DSA Solutions",
-      date: "2024-01-12",
-      readTime: "12 min",
-      excerpt:
-        "Different algorithmic approaches for one of LeetCode’s most popular problems.",
-    },
-    {
-      title: "Functional Programming with Java Stream API",
-      category: "Advanced Java",
-      date: "2024-01-10",
-      readTime: "10 min",
-      excerpt: "Modern Java programming techniques and using the Stream API.",
     },
   ];
 
@@ -274,18 +287,48 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {recentPosts.map((post, index) => (
-              <article
-                key={index}
-                className="card hover-lift animate-fade-in-up group cursor-pointer"
-                style={{ animationDelay: `${index * 150}ms` }}
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <span className="badge badge-success">{post.category}</span>
-                  <span className="text-sm text-gray-500 dark:text-gray-400 flex items-center">
+          {loading ? (
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+              <p className="text-gray-400 mt-4">Loading recent posts...</p>
+            </div>
+          ) : recentPosts.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {recentPosts.map((post, index) => (
+                <Link
+                  key={post.id}
+                  href={`/post/${post.id}`}
+                  className="card hover-lift animate-fade-in-up group cursor-pointer"
+                  style={{ animationDelay: `${index * 150}ms` }}
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="badge badge-success">{post.category}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400 flex items-center">
+                      <svg
+                        className="w-4 h-4 mr-1"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                      5 min
+                    </span>
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors duration-200">
+                    {post.title}
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-300 mb-4 leading-relaxed">
+                    {post.summary || "Read more about this topic..."}
+                  </p>
+                  <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                     <svg
-                      className="w-4 h-4 mr-1"
+                      className="w-4 h-4 mr-2"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -294,37 +337,24 @@ export default function Home() {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth={2}
-                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                       />
                     </svg>
-                    {post.readTime}
-                  </span>
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors duration-200">
-                  {post.title}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300 mb-4 leading-relaxed">
-                  {post.excerpt}
-                </p>
-                <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                  <svg
-                    className="w-4 h-4 mr-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
-                  {post.date}
-                </div>
-              </article>
-            ))}
-          </div>
+                    {new Date(post.date).toLocaleDateString()}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+                No Posts Yet
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                Posts will appear here once they are created.
+              </p>
+            </div>
+          )}
 
           <div
             className="text-center mt-12 animate-fade-in-up"

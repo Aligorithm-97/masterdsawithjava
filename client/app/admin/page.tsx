@@ -1,33 +1,11 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { apiFetch } from "../../lib/api";
 
 import PostRenderer from "../../components/PostRenderer";
+import { Post, Block } from "../../lib/types";
 
-const CATEGORIES = [
-  "Java Core",
-  "DSA Solutions",
-  "Advanced Java",
-  "Algorithm Problems",
-];
-
-type Block =
-  | { type: "paragraph"; content: string }
-  | { type: "heading"; content: string }
-  | { type: "image"; url: string; alt?: string }
-  | { type: "code"; code: string; language?: string }
-  | { type: "quote"; content: string };
-
-interface Post {
-  id?: string;
-  title: string;
-  summary: string;
-  blocks: Block[];
-  category: string;
-  date: string;
-  created_at?: string;
-}
+const CATEGORIES = ["Java", "DSA", "Advanced Java", "Algorithm Problems"];
 
 const BLOCK_TYPES = [
   { type: "paragraph", label: "Paragraph" },
@@ -44,11 +22,9 @@ export default function AdminPage() {
   const [category, setCategory] = useState(CATEGORIES[0]);
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [message, setMessage] = useState("");
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
-  const [user, setUser] = useState<any>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
@@ -57,38 +33,10 @@ export default function AdminPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [totalPosts, setTotalPosts] = useState(0);
 
-  // Check authentication on component mount
+  // Load posts from Spring backend (with pagination and search)
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const response = await apiFetch("/session");
-        const data = await response.json();
-
-        if (data.session) {
-          setIsAuthenticated(true);
-          setUser(data.session.user);
-          localStorage.setItem("isAuthenticated", "true");
-          localStorage.setItem("adminUser", data.session.user.email || "");
-        } else {
-          router.push("/login");
-        }
-      } catch (error) {
-        console.error("Auth check error:", error);
-        router.push("/login");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    checkAuth();
-  }, [router]);
-
-  // Load posts from PostgreSQL (with pagination and search)
-  useEffect(() => {
-    if (isAuthenticated) {
-      loadPosts(currentPage, searchTerm);
-    }
-  }, [isAuthenticated, currentPage, searchTerm]);
+    loadPosts(currentPage, searchTerm);
+  }, [currentPage, searchTerm]);
 
   // Arama inputu değişince
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,25 +48,38 @@ export default function AdminPage() {
   const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
 
   const loadPosts = async (page = 1, search = "") => {
+    setIsLoading(true);
     try {
       const params = new URLSearchParams({
         page: page.toString(),
-        pageSize: POSTS_PER_PAGE.toString(),
+        size: POSTS_PER_PAGE.toString(),
         search: search,
       });
 
-      const response = await apiFetch(`/posts?${params}`);
+      const apiBaseUrl =
+        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api/v1/";
+      const response = await fetch(`${apiBaseUrl}post?${params}`);
       const data = await response.json();
 
       if (response.ok) {
-        setPosts(data.data || []);
-        setTotalPosts(data.count || 0);
+        // Parse blocks from JSON string to array
+        const postsWithParsedBlocks = (data.data || []).map((post: any) => ({
+          ...post,
+          blocks:
+            typeof post.blocks === "string"
+              ? JSON.parse(post.blocks)
+              : post.blocks,
+        }));
+        setPosts(postsWithParsedBlocks);
+        setTotalPosts(data.totalElements || 0);
       } else {
         setMessage("Error loading posts: " + data.error);
       }
     } catch (error) {
       console.error("Error loading posts:", error);
       setMessage("Error loading posts");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -144,32 +105,13 @@ export default function AdminPage() {
     }
   };
 
-  // Logout function
-  const handleLogout = async () => {
-    try {
-      const response = await apiFetch("/logout", { method: "POST" });
-      if (response.ok) {
-        localStorage.removeItem("isAuthenticated");
-        localStorage.removeItem("adminUser");
-        router.push("/login");
-      }
-    } catch (error) {
-      console.error("Logout error:", error);
-    }
-  };
-
-  // Show loading while checking authentication
+  // Show loading while loading posts
   if (isLoading) {
     return (
       <div className="min-h-screen bg-[#18181b] flex items-center justify-center">
         <div className="text-white text-xl">Loading...</div>
       </div>
     );
-  }
-
-  // Don't render admin content if not authenticated
-  if (!isAuthenticated) {
-    return null;
   }
 
   // Blok ekle
@@ -225,7 +167,9 @@ export default function AdminPage() {
     if (!confirm("Are you sure you want to delete this post?")) return;
 
     try {
-      const response = await apiFetch(`/posts/${postId}`, {
+      const apiBaseUrl =
+        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api/v1/";
+      const response = await fetch(`${apiBaseUrl}post/${postId}`, {
         method: "DELETE",
       });
 
@@ -252,15 +196,20 @@ export default function AdminPage() {
 
     setIsSubmitting(true);
     try {
-      const response = await apiFetch("/posts", {
+      const apiBaseUrl =
+        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api/v1/";
+      const response = await fetch(`${apiBaseUrl}post`, {
         method: "POST",
-        json: {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
           title: title.trim(),
           summary: summary.trim(),
-          blocks: blocks,
+          blocks: JSON.stringify(blocks),
           category: category,
-          date: new Date().toLocaleString(),
-        },
+          date: new Date().toISOString(),
+        }),
       });
 
       const data = await response.json();
@@ -303,15 +252,20 @@ export default function AdminPage() {
     }
     setIsSubmitting(true);
     try {
-      const response = await apiFetch(`/posts/${editingPostId}`, {
+      const apiBaseUrl =
+        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api/v1/";
+      const response = await fetch(`${apiBaseUrl}post/${editingPostId}`, {
         method: "PUT",
-        json: {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
           title: title.trim(),
           summary: summary.trim(),
-          blocks: blocks,
+          blocks: JSON.stringify(blocks),
           category: category,
-          date: new Date().toLocaleString(),
-        },
+          date: new Date().toISOString(),
+        }),
       });
 
       const data = await response.json();
@@ -354,23 +308,11 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen bg-[#18181b] pt-16 px-4">
       <div className="max-w-2xl mx-auto py-8">
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-              Admin Panel
-            </h1>
-            {user && (
-              <p className="text-gray-400 text-sm mt-1">
-                Logged in as: {user.email}
-              </p>
-            )}
-          </div>
-          <button
-            onClick={handleLogout}
-            className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-lg shadow-md transition-colors duration-200"
-          >
-            Logout
-          </button>
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+            Admin Panel
+          </h1>
+          <p className="text-gray-400 text-sm mt-1">Manage posts and content</p>
         </div>
 
         <form

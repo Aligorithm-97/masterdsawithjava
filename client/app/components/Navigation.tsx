@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect, useRef } from "react";
-import { apiFetch } from "../../lib/api";
+import { useState, useRef } from "react";
 
 const LANGUAGES = [
   { code: "en", label: "EN" },
@@ -19,36 +18,6 @@ export default function Navigation() {
   const menuRef = useRef(null);
   const javaMenuRef = useRef(null);
   const [lang, setLang] = useState("en");
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<any>(null);
-
-  useEffect(() => {
-    // Check authentication status
-    const checkAuth = async () => {
-      try {
-        const response = await apiFetch("/session");
-        const data = await response.json();
-
-        if (data.session) {
-          setIsAuthenticated(true);
-          setUser(data.session.user);
-        } else {
-          setIsAuthenticated(false);
-          setUser(null);
-        }
-      } catch (error) {
-        console.error("Auth check error:", error);
-        setIsAuthenticated(false);
-        setUser(null);
-      }
-    };
-
-    checkAuth();
-
-    // Check auth every 30 seconds
-    const interval = setInterval(checkAuth, 30000);
-    return () => clearInterval(interval);
-  }, []);
 
   const handleJavaMenuEnter = () => {
     if (javaMenuTimeout) {
@@ -262,26 +231,22 @@ export default function Navigation() {
               <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-gray-500 to-gray-400 group-hover:w-full transition-all duration-300"></div>
             </Link>
 
-            {isAuthenticated && (
-              <>
-                <Link
-                  href="/users"
-                  className="relative px-4 py-3 text-sm font-semibold text-blue-400 hover:text-blue-300 rounded-lg transition-all duration-200 hover:bg-blue-600/20 group border border-blue-500/30 ml-2"
-                >
-                  <span className="relative z-10">Users</span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-cyan-600/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
-                  <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-cyan-500 group-hover:w-full transition-all duration-300"></div>
-                </Link>
-                <Link
-                  href="/admin"
-                  className="relative px-4 py-3 text-sm font-semibold text-green-400 hover:text-green-300 rounded-lg transition-all duration-200 hover:bg-green-600/20 group border border-green-500/30"
-                >
-                  <span className="relative z-10">Admin</span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-green-600/10 to-emerald-600/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
-                  <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-green-500 to-emerald-500 group-hover:w-full transition-all duration-300"></div>
-                </Link>
-              </>
-            )}
+            <Link
+              href="/users"
+              className="relative px-4 py-3 text-sm font-semibold text-blue-400 hover:text-blue-300 rounded-lg transition-all duration-200 hover:bg-blue-600/20 group border border-blue-500/30 ml-2"
+            >
+              <span className="relative z-10">Users</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-cyan-600/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-cyan-500 group-hover:w-full transition-all duration-300"></div>
+            </Link>
+            <Link
+              href="/admin"
+              className="relative px-4 py-3 text-sm font-semibold text-green-400 hover:text-green-300 rounded-lg transition-all duration-200 hover:bg-green-600/20 group border border-green-500/30"
+            >
+              <span className="relative z-10">Admin</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-green-600/10 to-emerald-600/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-green-500 to-emerald-500 group-hover:w-full transition-all duration-300"></div>
+            </Link>
 
             <div className="ml-4 flex items-center space-x-1 bg-gray-800/50 backdrop-blur-sm rounded-lg px-2 py-1 border border-gray-700">
               {LANGUAGES.map((lng) => (
@@ -377,24 +342,20 @@ export default function Navigation() {
                 About
               </Link>
 
-              {isAuthenticated && (
-                <>
-                  <Link
-                    href="/users"
-                    className="block px-3 py-3 text-base font-semibold text-blue-400 hover:text-blue-300 hover:bg-blue-600/20 rounded-lg transition-all duration-200 border-l-4 border-blue-500"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Users
-                  </Link>
-                  <Link
-                    href="/admin"
-                    className="block px-3 py-3 text-base font-semibold text-green-400 hover:text-green-300 hover:bg-green-600/20 rounded-lg transition-all duration-200 border-l-4 border-green-500"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Admin Panel
-                  </Link>
-                </>
-              )}
+              <Link
+                href="/users"
+                className="block px-3 py-3 text-base font-semibold text-blue-400 hover:text-blue-300 hover:bg-blue-600/20 rounded-lg transition-all duration-200 border-l-4 border-blue-500"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Users
+              </Link>
+              <Link
+                href="/admin"
+                className="block px-3 py-3 text-base font-semibold text-green-400 hover:text-green-300 hover:bg-green-600/20 rounded-lg transition-all duration-200 border-l-4 border-green-500"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Admin Panel
+              </Link>
             </div>
           </div>
         )}

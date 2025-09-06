@@ -10,7 +10,10 @@ export default function UsersPage() {
   useEffect(() => {
     const loadUsers = async () => {
       try {
-        const response = await fetch("/api/users");
+        const apiBaseUrl =
+          process.env.NEXT_PUBLIC_API_BASE_URL ||
+          "http://localhost:8080/api/v1/";
+        const response = await fetch(`${apiBaseUrl}user`);
         if (response.ok) {
           const data = await response.json();
           setUsers(data.data || []);

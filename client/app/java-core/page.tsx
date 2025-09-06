@@ -3,23 +3,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 
 import PostRenderer from "../../components/PostRenderer";
-
-type Block =
-  | { type: "paragraph"; content: string }
-  | { type: "heading"; content: string }
-  | { type: "image"; url: string; alt?: string }
-  | { type: "code"; code: string; language?: string }
-  | { type: "quote"; content: string };
-
-interface Post {
-  id: string;
-  title: string;
-  summary: string;
-  blocks: Block[];
-  category: string;
-  date: string;
-  created_at: string;
-}
+import { Post } from "../../lib/types";
 
 export default function JavaCorePage() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -37,17 +21,27 @@ export default function JavaCorePage() {
     try {
       const params = new URLSearchParams({
         page: page.toString(),
-        pageSize: POSTS_PER_PAGE.toString(),
+        size: POSTS_PER_PAGE.toString(),
         search: search,
-        category: "Java Core",
+        category: "Java",
       });
 
-      const response = await fetch(`/api/posts?${params}`);
+      const apiBaseUrl =
+        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api/v1/";
+      const response = await fetch(`${apiBaseUrl}post?${params}`);
       const data = await response.json();
 
       if (response.ok) {
-        setPosts(data.data || []);
-        setTotalPosts(data.count || 0);
+        // Parse blocks from JSON string to array
+        const postsWithParsedBlocks = (data.data || []).map((post: any) => ({
+          ...post,
+          blocks:
+            typeof post.blocks === "string"
+              ? JSON.parse(post.blocks)
+              : post.blocks,
+        }));
+        setPosts(postsWithParsedBlocks);
+        setTotalPosts(data.totalElements || 0);
       } else {
         console.error("Error loading posts:", data.error);
       }
@@ -291,7 +285,16 @@ export default function JavaCorePage() {
       </div>
 
       {/* Dynamic Posts Section */}
-      {posts.length > 0 && (
+      {loading ? (
+        <section className="py-16 bg-[#23272f]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+              <p className="text-gray-400 mt-4">Loading Java articles...</p>
+            </div>
+          </div>
+        </section>
+      ) : posts.length > 0 ? (
         <section className="py-16 bg-[#23272f]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
@@ -311,7 +314,7 @@ export default function JavaCorePage() {
                   <div className="p-6">
                     <div className="flex items-center justify-between mb-4">
                       <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                        Java Core
+                        {post.category}
                       </span>
                       <span className="text-xs text-gray-400">{post.date}</span>
                     </div>
@@ -341,6 +344,19 @@ export default function JavaCorePage() {
                   </div>
                 </article>
               ))}
+            </div>
+          </div>
+        </section>
+      ) : (
+        <section className="py-16 bg-[#23272f]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center">
+              <h2 className="text-3xl font-bold text-white mb-4">
+                No Java Articles Yet
+              </h2>
+              <p className="text-gray-400 mb-8">
+                Java articles will appear here once they are created.
+              </p>
             </div>
           </div>
         </section>

@@ -3,7 +3,6 @@ package com.spring.temp.domain.dto;
 
 public class PostDto {
 
-    private Long id;
     private String title;
     private String summary;
     private String blocks;
@@ -11,8 +10,7 @@ public class PostDto {
     private String date;
 
 
-    public PostDto(Long id, String title, String summary, String blocks, String category, String date) {
-        this.id = id;
+    public PostDto(String title, String summary, String blocks, String category, String date) {
         this.title = title;
         this.summary = summary;
         this.blocks = blocks;
@@ -27,48 +25,41 @@ public class PostDto {
         return new PostDtoBuilder();
     }
 
-    public Long getId() {
-        return this.id;
-    }
 
     public String getTitle() {
         return this.title;
-    }
-
-    public String getSummary() {
-        return this.summary;
-    }
-
-    public String getBlocks() {
-        return this.blocks;
-    }
-
-    public String getCategory() {
-        return this.category;
-    }
-
-    public String getDate() {
-        return this.date;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public void setTitle(String title) {
         this.title = title;
     }
 
+    public String getSummary() {
+        return this.summary;
+    }
+
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public String getBlocks() {
+        return this.blocks;
     }
 
     public void setBlocks(String blocks) {
         this.blocks = blocks;
     }
 
+    public String getCategory() {
+        return this.category;
+    }
+
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getDate() {
+        return this.date;
     }
 
     public void setDate(String date) {
@@ -76,7 +67,6 @@ public class PostDto {
     }
 
     public static class PostDtoBuilder {
-        private Long id;
         private String title;
         private String summary;
         private String blocks;
@@ -84,11 +74,6 @@ public class PostDto {
         private String date;
 
         PostDtoBuilder() {
-        }
-
-        public PostDtoBuilder id(Long id) {
-            this.id = id;
-            return this;
         }
 
         public PostDtoBuilder title(String title) {
@@ -117,11 +102,11 @@ public class PostDto {
         }
 
         public PostDto build() {
-            return new PostDto(this.id, this.title, this.summary, this.blocks, this.category, this.date);
+            return new PostDto(this.title, this.summary, this.blocks, this.category, this.date);
         }
 
         public String toString() {
-            return "PostDto.PostDtoBuilder(id=" + this.id + ", title=" + this.title + ", summary=" + this.summary + ", blocks=" + this.blocks + ", category=" + this.category + ", date=" + this.date + ")";
+            return "PostDto.PostDtoBuilder(title=" + this.title + ", summary=" + this.summary + ", blocks=" + this.blocks + ", category=" + this.category + ", date=" + this.date + ")";
         }
     }
 }

@@ -8,7 +8,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const response = await apiFetch(`/users/${id}`);
+    const response = await apiFetch(`/user/${id}`);
 
     if (!response.ok) {
       if (response.status === 404) {
@@ -37,7 +37,7 @@ export async function PUT(
     const body: UpdateUserRequest = await req.json();
     const { email, first_name, last_name, password, date_of_birth } = body;
 
-    const response = await apiFetch(`/users/${id}`, {
+    const response = await apiFetch(`/user/${id}`, {
       method: "PUT",
       json: {
         email,
@@ -72,7 +72,7 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    const response = await apiFetch(`/users/${id}`, {
+    const response = await apiFetch(`/user/${id}`, {
       method: "DELETE",
     });
 
