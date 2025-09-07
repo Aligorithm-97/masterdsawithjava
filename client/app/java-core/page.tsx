@@ -20,30 +20,39 @@ export default function JavaCorePage() {
   const loadPosts = async (page = 1, search = "") => {
     try {
       const params = new URLSearchParams({
-        page: page.toString(),
-        size: POSTS_PER_PAGE.toString(),
-        search: search,
         category: "Java",
       });
 
       const apiBaseUrl =
         process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api/v1/";
       const response = await fetch(`${apiBaseUrl}post?${params}`);
-      const data = await response.json();
+      const payload = await response.json();
 
       if (response.ok) {
+        // Normalize response to a common shape
+        const rawItems: any[] = Array.isArray(payload)
+          ? payload
+          : payload?.data || payload?.items || payload?.content || [];
+
+        const total: number = Array.isArray(payload)
+          ? rawItems.length
+          : payload?.totalElements ??
+            payload?.totalItems ??
+            payload?.total ??
+            rawItems.length;
+
         // Parse blocks from JSON string to array
-        const postsWithParsedBlocks = (data.data || []).map((post: any) => ({
+        const postsWithParsedBlocks = rawItems.map((post: any) => ({
           ...post,
           blocks:
-            typeof post.blocks === "string"
+            typeof post?.blocks === "string"
               ? JSON.parse(post.blocks)
-              : post.blocks,
+              : post?.blocks,
         }));
         setPosts(postsWithParsedBlocks);
-        setTotalPosts(data.totalElements || 0);
+        setTotalPosts(total);
       } else {
-        console.error("Error loading posts:", data.error);
+        console.error("Error loading posts:", payload?.error ?? payload);
       }
     } catch (error) {
       console.error("Error loading posts:", error);
