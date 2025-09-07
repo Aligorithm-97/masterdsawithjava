@@ -3,14 +3,15 @@ package com.spring.temp.domain.dto;
 
 public class PostDto {
 
+    private Long id;
     private String title;
     private String summary;
     private String blocks;
     private String category;
     private String date;
 
-
-    public PostDto(String title, String summary, String blocks, String category, String date) {
+    public PostDto(Long id, String title, String summary, String blocks, String category, String date) {
+        this.id = id;
         this.title = title;
         this.summary = summary;
         this.blocks = blocks;
@@ -25,6 +26,13 @@ public class PostDto {
         return new PostDtoBuilder();
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return this.title;
@@ -67,6 +75,7 @@ public class PostDto {
     }
 
     public static class PostDtoBuilder {
+        private Long id;
         private String title;
         private String summary;
         private String blocks;
@@ -74,6 +83,11 @@ public class PostDto {
         private String date;
 
         PostDtoBuilder() {
+        }
+
+        public PostDtoBuilder id(Long id) {
+            this.id = id;
+            return this;
         }
 
         public PostDtoBuilder title(String title) {
@@ -102,7 +116,7 @@ public class PostDto {
         }
 
         public PostDto build() {
-            return new PostDto(this.title, this.summary, this.blocks, this.category, this.date);
+            return new PostDto(this.id, this.title, this.summary, this.blocks, this.category, this.date);
         }
 
         public String toString() {

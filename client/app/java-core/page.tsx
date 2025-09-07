@@ -41,14 +41,18 @@ export default function JavaCorePage() {
             payload?.total ??
             rawItems.length;
 
-        // Parse blocks from JSON string to array
-        const postsWithParsedBlocks = rawItems.map((post: any) => ({
-          ...post,
-          blocks:
+        // Normalize and parse each post
+        const postsWithParsedBlocks = rawItems.map((post: any) => {
+          const id = post?.id ?? post?.postId ?? post?.uuid ?? post?.slug;
+          const category =
+            post?.category ?? post?.categoryName ?? post?.category?.name;
+          const date = post?.date ?? post?.createdAt ?? post?.created_date;
+          const blocks =
             typeof post?.blocks === "string"
               ? JSON.parse(post.blocks)
-              : post?.blocks,
-        }));
+              : post?.blocks;
+          return { ...post, id, category, date, blocks };
+        });
         setPosts(postsWithParsedBlocks);
         setTotalPosts(total);
       } else {
@@ -343,12 +347,27 @@ export default function JavaCorePage() {
                       />
                     </div>
                     <div className="mt-4 pt-4 border-t border-gray-700">
-                      <Link
-                        href={`/post/${post.id}`}
-                        className="text-blue-400 hover:text-blue-300 text-sm font-medium"
-                      >
-                        Read More →
-                      </Link>
+                      {(() => {
+                        const numericId = Number.parseInt(
+                          String(post.id ?? ""),
+                          10
+                        );
+                        if (Number.isFinite(numericId)) {
+                          return (
+                            <Link
+                              href={`/post/${numericId}`}
+                              className="text-blue-400 hover:text-blue-300 text-sm font-medium"
+                            >
+                              Read More →
+                            </Link>
+                          );
+                        }
+                        return (
+                          <span className="text-gray-500 text-sm">
+                            Details unavailable
+                          </span>
+                        );
+                      })()}
                     </div>
                   </div>
                 </article>

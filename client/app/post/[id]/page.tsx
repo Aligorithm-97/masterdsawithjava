@@ -24,14 +24,19 @@ export default function PostDetailPage() {
         const response = await fetch(`${apiBaseUrl}post/${params.id}`);
 
         if (response.ok) {
-          const data = await response.json();
+          const payload = await response.json();
+          const raw = payload?.data ?? payload?.item ?? payload;
+          if (!raw) {
+            setError("Post not found");
+            return;
+          }
           // Parse blocks from JSON string to array
-          const postWithParsedBlocks = {
-            ...data.data,
+          const postWithParsedBlocks: any = {
+            ...raw,
             blocks:
-              typeof data.data.blocks === "string"
-                ? JSON.parse(data.data.blocks)
-                : data.data.blocks,
+              typeof raw?.blocks === "string"
+                ? JSON.parse(raw.blocks)
+                : raw?.blocks,
           };
           setPost(postWithParsedBlocks);
         } else {
