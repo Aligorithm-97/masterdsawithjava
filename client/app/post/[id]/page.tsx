@@ -13,6 +13,16 @@ export default function PostDetailPage() {
   const params = useParams();
   const router = useRouter();
 
+  const formatDate = (value?: string) => {
+    if (!value) return "";
+    const d = new Date(value);
+    if (isNaN(d.getTime())) return value;
+    return new Intl.DateTimeFormat("tr-TR", {
+      dateStyle: "medium",
+      timeStyle: "short",
+    }).format(d);
+  };
+
   useEffect(() => {
     const loadPost = async () => {
       if (!params.id) return;
@@ -125,7 +135,9 @@ export default function PostDetailPage() {
             >
               {post.category}
             </span>
-            <span className="text-sm text-gray-400">{post.date}</span>
+            <span className="text-sm text-gray-400">
+              {formatDate(post.date)}
+            </span>
           </div>
 
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">

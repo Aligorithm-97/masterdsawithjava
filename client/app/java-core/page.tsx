@@ -13,6 +13,16 @@ export default function JavaCorePage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [totalPosts, setTotalPosts] = useState(0);
 
+  const formatDate = (value?: string) => {
+    if (!value) return "";
+    const d = new Date(value);
+    if (isNaN(d.getTime())) return value;
+    return new Intl.DateTimeFormat("tr-TR", {
+      dateStyle: "medium",
+      timeStyle: "short",
+    }).format(d);
+  };
+
   useEffect(() => {
     loadPosts(currentPage, searchTerm);
   }, [currentPage, searchTerm]);
@@ -344,7 +354,9 @@ export default function JavaCorePage() {
                       <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                         {post.category}
                       </span>
-                      <span className="text-xs text-gray-400">{post.date}</span>
+                      <span className="text-xs text-gray-400">
+                        {formatDate(post.date)}
+                      </span>
                     </div>
                     <h3 className="text-xl font-bold text-white mb-2 line-clamp-2">
                       {post.title}
