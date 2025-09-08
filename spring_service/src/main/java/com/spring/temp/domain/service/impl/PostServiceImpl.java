@@ -66,6 +66,7 @@ public class PostServiceImpl implements PostService {
         }
 
         PostDto dto = new PostDto();
+        dto.setId(post.getId());
         dto.setTitle(post.getTitle());
         dto.setSummary(post.getSummary());
         dto.setBlocks(post.getBlocks());
@@ -80,6 +81,7 @@ public class PostServiceImpl implements PostService {
         }
 
         Post post = new Post();
+        post.setId(postDto.getId());
         post.setTitle(postDto.getTitle());
         post.setSummary(postDto.getSummary());
         post.setBlocks(postDto.getBlocks());

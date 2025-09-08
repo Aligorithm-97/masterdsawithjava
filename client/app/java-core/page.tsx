@@ -43,7 +43,14 @@ export default function JavaCorePage() {
 
         // Normalize and parse each post
         const postsWithParsedBlocks = rawItems.map((post: any) => {
-          const id = post?.id ?? post?.postId ?? post?.uuid ?? post?.slug;
+          const idRaw =
+            post?.id ??
+            post?.postId ??
+            post?.post?.id ??
+            post?.uuid ??
+            post?.slug;
+          const parsedNumericId = Number.parseInt(String(idRaw ?? ""), 10);
+          const id = Number.isFinite(parsedNumericId) ? parsedNumericId : idRaw;
           const category =
             post?.category ?? post?.categoryName ?? post?.category?.name;
           const date = post?.date ?? post?.createdAt ?? post?.created_date;
@@ -51,6 +58,14 @@ export default function JavaCorePage() {
             typeof post?.blocks === "string"
               ? JSON.parse(post.blocks)
               : post?.blocks;
+          if (!Number.isFinite(parsedNumericId)) {
+            console.warn(
+              "Post missing numeric id, got:",
+              idRaw,
+              "post keys:",
+              Object.keys(post)
+            );
+          }
           return { ...post, id, category, date, blocks };
         });
         setPosts(postsWithParsedBlocks);
@@ -348,11 +363,29 @@ export default function JavaCorePage() {
                     </div>
                     <div className="mt-4 pt-4 border-t border-gray-700">
                       {(() => {
-                        const numericId = Number.parseInt(
-                          String(post.id ?? ""),
-                          10
-                        );
-                        if (Number.isFinite(numericId)) {
+                        const candidates = [
+                          (post as any)?.id,
+                          (post as any)?.postId,
+                          (post as any)?.post_id,
+                          (post as any)?.post?.id,
+                          (post as any)?.articleId,
+                          (post as any)?.article_id,
+                          (post as any)?.uuid,
+                          (post as any)?.slug,
+                        ].filter((v) => v != null);
+                        let numericId: number | null = null;
+                        for (const c of candidates) {
+                          const str = String(c);
+                          const match = str.match(/\d+/);
+                          if (match) {
+                            const n = Number.parseInt(match[0], 10);
+                            if (Number.isFinite(n)) {
+                              numericId = n;
+                              break;
+                            }
+                          }
+                        }
+                        if (numericId != null) {
                           return (
                             <Link
                               href={`/post/${numericId}`}
