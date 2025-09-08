@@ -2,11 +2,13 @@ import CategoryPosts from "../../components/CategoryPosts";
 
 export default function SystemDesignPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 pt-20">
+    <div className="min-h-screen bg-[#18181b] pt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold text-white mb-6">System Design</h1>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            System Design
+          </h1>
+          <p className="text-lg text-gray-400 max-w-3xl mx-auto">
             Learn how to design scalable, distributed systems and understand the
             principles behind building large-scale applications.
           </p>
@@ -21,7 +23,7 @@ export default function SystemDesignPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {/* Scalability */}
-          <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-8 border border-gray-700 hover:border-blue-500/50 transition-all duration-300 group">
+          <div className="bg-[#23272f] rounded-xl p-8 border border-gray-700">
             <div className="w-16 h-16 bg-blue-600/20 rounded-xl flex items-center justify-center mb-6 group-hover:bg-blue-600/30 transition-colors duration-300">
               <svg
                 className="w-8 h-8 text-blue-400"
@@ -50,7 +52,7 @@ export default function SystemDesignPage() {
           </div>
 
           {/* Distributed Systems */}
-          <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-8 border border-gray-700 hover:border-green-500/50 transition-all duration-300 group">
+          <div className="bg-[#23272f] rounded-xl p-8 border border-gray-700">
             <div className="w-16 h-16 bg-green-600/20 rounded-xl flex items-center justify-center mb-6 group-hover:bg-green-600/30 transition-colors duration-300">
               <svg
                 className="w-8 h-8 text-green-400"
@@ -83,7 +85,7 @@ export default function SystemDesignPage() {
           </div>
 
           {/* Database Design */}
-          <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-8 border border-gray-700 hover:border-purple-500/50 transition-all duration-300 group">
+          <div className="bg-[#23272f] rounded-xl p-8 border border-gray-700">
             <div className="w-16 h-16 bg-purple-600/20 rounded-xl flex items-center justify-center mb-6 group-hover:bg-purple-600/30 transition-colors duration-300">
               <svg
                 className="w-8 h-8 text-purple-400"
@@ -118,7 +120,7 @@ export default function SystemDesignPage() {
           </div>
 
           {/* Performance Optimization */}
-          <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-8 border border-gray-700 hover:border-yellow-500/50 transition-all duration-300 group">
+          <div className="bg-[#23272f] rounded-xl p-8 border border-gray-700">
             <div className="w-16 h-16 bg-yellow-600/20 rounded-xl flex items-center justify-center mb-6 group-hover:bg-yellow-600/30 transition-colors duration-300">
               <svg
                 className="w-8 h-8 text-yellow-400"
@@ -151,7 +153,7 @@ export default function SystemDesignPage() {
           </div>
 
           {/* Security */}
-          <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-8 border border-gray-700 hover:border-red-500/50 transition-all duration-300 group">
+          <div className="bg-[#23272f] rounded-xl p-8 border border-gray-700">
             <div className="w-16 h-16 bg-red-600/20 rounded-xl flex items-center justify-center mb-6 group-hover:bg-red-600/30 transition-colors duration-300">
               <svg
                 className="w-8 h-8 text-red-400"
@@ -182,7 +184,7 @@ export default function SystemDesignPage() {
           </div>
 
           {/* Real-world Examples */}
-          <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-8 border border-gray-700 hover:border-indigo-500/50 transition-all duration-300 group">
+          <div className="bg-[#23272f] rounded-xl p-8 border border-gray-700">
             <div className="w-16 h-16 bg-indigo-600/20 rounded-xl flex items-center justify-center mb-6 group-hover:bg-indigo-600/30 transition-colors duration-300">
               <svg
                 className="w-8 h-8 text-indigo-400"
@@ -218,15 +220,15 @@ export default function SystemDesignPage() {
         </div>
 
         <div className="mt-16 text-center">
-          <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-2xl p-8 border border-blue-500/30">
+          <div className="bg-[#23272f] rounded-2xl p-8 border border-gray-700">
             <h2 className="text-3xl font-bold text-white mb-4">
               Ready to Design Systems?
             </h2>
-            <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
+            <p className="text-gray-400 mb-6 max-w-2xl mx-auto">
               Start with the fundamentals and work your way up to designing
               complex, scalable systems that can handle millions of users.
             </p>
-            <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105">
+            <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200">
               Start Learning
             </button>
           </div>

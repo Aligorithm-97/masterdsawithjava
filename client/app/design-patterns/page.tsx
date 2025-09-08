@@ -2,13 +2,13 @@ import CategoryPosts from "../../components/CategoryPosts";
 
 export default function DesignPatternsPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 pt-20">
+    <div className="min-h-screen bg-[#18181b] pt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold text-white mb-6">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Design Patterns
           </h1>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+          <p className="text-lg text-gray-400 max-w-3xl mx-auto">
             Master proven solutions to common software design problems. Learn
             how to write maintainable, scalable, and reusable code.
           </p>
@@ -23,7 +23,7 @@ export default function DesignPatternsPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {/* Creational Patterns */}
-          <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-8 border border-gray-700 hover:border-blue-500/50 transition-all duration-300 group">
+          <div className="bg-[#23272f] rounded-xl p-8 border border-gray-700">
             <div className="w-16 h-16 bg-blue-600/20 rounded-xl flex items-center justify-center mb-6 group-hover:bg-blue-600/30 transition-colors duration-300">
               <svg
                 className="w-8 h-8 text-blue-400"
@@ -56,7 +56,7 @@ export default function DesignPatternsPage() {
           </div>
 
           {/* Structural Patterns */}
-          <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-8 border border-gray-700 hover:border-green-500/50 transition-all duration-300 group">
+          <div className="bg-[#23272f] rounded-xl p-8 border border-gray-700">
             <div className="w-16 h-16 bg-green-600/20 rounded-xl flex items-center justify-center mb-6 group-hover:bg-green-600/30 transition-colors duration-300">
               <svg
                 className="w-8 h-8 text-green-400"
@@ -89,7 +89,7 @@ export default function DesignPatternsPage() {
           </div>
 
           {/* Behavioral Patterns */}
-          <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-8 border border-gray-700 hover:border-purple-500/50 transition-all duration-300 group">
+          <div className="bg-[#23272f] rounded-xl p-8 border border-gray-700">
             <div className="w-16 h-16 bg-purple-600/20 rounded-xl flex items-center justify-center mb-6 group-hover:bg-purple-600/30 transition-colors duration-300">
               <svg
                 className="w-8 h-8 text-purple-400"
@@ -122,7 +122,7 @@ export default function DesignPatternsPage() {
           </div>
 
           {/* Java-Specific Patterns */}
-          <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-8 border border-gray-700 hover:border-yellow-500/50 transition-all duration-300 group">
+          <div className="bg-[#23272f] rounded-xl p-8 border border-gray-700">
             <div className="w-16 h-16 bg-yellow-600/20 rounded-xl flex items-center justify-center mb-6 group-hover:bg-yellow-600/30 transition-colors duration-300">
               <svg
                 className="w-8 h-8 text-yellow-400"
@@ -160,7 +160,7 @@ export default function DesignPatternsPage() {
           </div>
 
           {/* Anti-Patterns */}
-          <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-8 border border-gray-700 hover:border-red-500/50 transition-all duration-300 group">
+          <div className="bg-[#23272f] rounded-xl p-8 border border-gray-700">
             <div className="w-16 h-16 bg-red-600/20 rounded-xl flex items-center justify-center mb-6 group-hover:bg-red-600/30 transition-colors duration-300">
               <svg
                 className="w-8 h-8 text-red-400"
@@ -194,7 +194,7 @@ export default function DesignPatternsPage() {
           </div>
 
           {/* Modern Patterns */}
-          <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-8 border border-gray-700 hover:border-indigo-500/50 transition-all duration-300 group">
+          <div className="bg-[#23272f] rounded-xl p-8 border border-gray-700">
             <div className="w-16 h-16 bg-indigo-600/20 rounded-xl flex items-center justify-center mb-6 group-hover:bg-indigo-600/30 transition-colors duration-300">
               <svg
                 className="w-8 h-8 text-indigo-400"
@@ -229,7 +229,7 @@ export default function DesignPatternsPage() {
         </div>
 
         <div className="mt-16">
-          <div className="bg-gradient-to-r from-green-600/20 to-blue-600/20 rounded-2xl p-8 border border-green-500/30">
+          <div className="bg-[#23272f] rounded-2xl p-8 border border-gray-700">
             <h2 className="text-3xl font-bold text-white mb-4 text-center">
               Pattern Categories Overview
             </h2>
@@ -272,15 +272,15 @@ export default function DesignPatternsPage() {
         </div>
 
         <div className="mt-16 text-center">
-          <div className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-2xl p-8 border border-purple-500/30">
+          <div className="bg-[#23272f] rounded-2xl p-8 border border-gray-700">
             <h2 className="text-3xl font-bold text-white mb-4">
               Master Design Patterns
             </h2>
-            <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
+            <p className="text-gray-400 mb-6 max-w-2xl mx-auto">
               Learn to recognize when to apply each pattern and how to implement
               them effectively in your Java applications.
             </p>
-            <button className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105">
+            <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200">
               Start Learning Patterns
             </button>
           </div>
