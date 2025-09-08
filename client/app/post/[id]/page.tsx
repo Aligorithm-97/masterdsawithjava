@@ -95,7 +95,7 @@ export default function PostDetailPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="mb-6">
             <Link
-              href={`/${post.category.toLowerCase().replace(" ", "-")}`}
+              href="/java-core"
               className="inline-flex items-center text-blue-400 hover:text-blue-300 text-sm font-medium mb-4"
             >
               <svg
@@ -111,7 +111,7 @@ export default function PostDetailPage() {
                   d="M15 19l-7-7 7-7"
                 />
               </svg>
-              Back to {post.category}
+              Back to Java
             </Link>
           </div>
 
