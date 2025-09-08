@@ -1,3 +1,5 @@
+import CategoryPosts from "../../components/CategoryPosts";
+
 export default function SystemDesignPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 pt-20">
@@ -9,6 +11,13 @@ export default function SystemDesignPage() {
             principles behind building large-scale applications.
           </p>
         </div>
+
+        {/* Latest Posts for System Design */}
+        <CategoryPosts
+          category="System Design"
+          title="Latest System Design Articles"
+          accent="yellow"
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {/* Scalability */}

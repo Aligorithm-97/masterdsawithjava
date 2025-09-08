@@ -1,49 +1,8 @@
 "use client";
 import Link from "next/link";
-import { useState, useEffect } from "react";
-
-import PostRenderer from "../../components/PostRenderer";
-import { Post } from "../../lib/types";
+import CategoryPosts from "../../components/CategoryPosts";
 
 export default function DSASolutionsPage() {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    loadPosts();
-  }, []);
-
-  const loadPosts = async () => {
-    try {
-      const params = new URLSearchParams({
-        category: "DSA",
-      });
-
-      const apiBaseUrl =
-        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api/v1/";
-      const response = await fetch(`${apiBaseUrl}post?${params}`);
-      const data = await response.json();
-
-      if (response.ok) {
-        // Parse blocks from JSON string to array
-        const postsWithParsedBlocks = (data.data || []).map((post: any) => ({
-          ...post,
-          blocks:
-            typeof post.blocks === "string"
-              ? JSON.parse(post.blocks)
-              : post.blocks,
-        }));
-        setPosts(postsWithParsedBlocks);
-      } else {
-        console.error("Error loading posts:", data.error);
-      }
-    } catch (error) {
-      console.error("Error loading posts:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const categories = [
     {
       title: "Arrays",
@@ -249,82 +208,7 @@ export default function DSASolutionsPage() {
       </section>
 
       {/* Dynamic Posts Section */}
-      {loading ? (
-        <section className="py-16 bg-[#23272f]">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto"></div>
-              <p className="text-gray-400 mt-4">Loading DSA solutions...</p>
-            </div>
-          </div>
-        </section>
-      ) : posts.length > 0 ? (
-        <section className="py-16 bg-[#23272f]">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-white mb-4">
-                Latest Solutions
-              </h2>
-              <p className="text-gray-400">
-                Explore our latest DSA problem solutions and tutorials
-              </p>
-            </div>
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {posts.map((post) => (
-                <article
-                  key={post.id}
-                  className="bg-[#18181b] rounded-xl shadow-lg border border-gray-700 overflow-hidden hover:shadow-xl transition-shadow duration-300"
-                >
-                  <div className="p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                        {post.category}
-                      </span>
-                      <span className="text-xs text-gray-400">{post.date}</span>
-                    </div>
-                    <h3 className="text-xl font-bold text-white mb-2 line-clamp-2">
-                      {post.title}
-                    </h3>
-                    {post.summary && (
-                      <p className="text-gray-400 mb-4 line-clamp-3">
-                        {post.summary}
-                      </p>
-                    )}
-                    <div className="space-y-3">
-                      <PostRenderer
-                        blocks={post.blocks}
-                        maxBlocks={2}
-                        isPreview={true}
-                      />
-                    </div>
-                    <div className="mt-4 pt-4 border-t border-gray-700">
-                      <Link
-                        href={`/post/${post.id}`}
-                        className="text-green-400 hover:text-green-300 text-sm font-medium"
-                      >
-                        Read More →
-                      </Link>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-      ) : (
-        <section className="py-16 bg-[#23272f]">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center">
-              <h2 className="text-3xl font-bold text-white mb-4">
-                No DSA Solutions Yet
-              </h2>
-              <p className="text-gray-400 mb-8">
-                DSA solutions will appear here once they are created.
-              </p>
-            </div>
-          </div>
-        </section>
-      )}
+      <CategoryPosts category="DSA" title="Latest Solutions" accent="green" />
 
       {/* Categories Grid */}
       <section className="py-16">

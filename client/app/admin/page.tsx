@@ -5,7 +5,14 @@ import { useRouter } from "next/navigation";
 import PostRenderer from "../../components/PostRenderer";
 import { Post, Block } from "../../lib/types";
 
-const CATEGORIES = ["Java", "DSA", "Advanced Java", "Algorithm Problems"];
+const CATEGORIES = [
+  "Java",
+  "Advanced Java",
+  "DSA",
+  "System Design",
+  "Design Patterns",
+  "Algorithm Problems",
+];
 
 const BLOCK_TYPES = [
   { type: "paragraph", label: "Paragraph" },

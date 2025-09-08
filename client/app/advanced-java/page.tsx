@@ -1,4 +1,5 @@
 import Link from "next/link";
+import CategoryPosts from "../../components/CategoryPosts";
 
 export default function AdvancedJavaPage() {
   const topics = [
@@ -118,11 +119,19 @@ export default function AdvancedJavaPage() {
               Advanced Java
             </h1>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Learn advanced features of Java. Professional Java programming with Collections, Streams, Lambda expressions, Generics, and more.
+              Learn advanced features of Java. Professional Java programming
+              with Collections, Streams, Lambda expressions, Generics, and more.
             </p>
           </div>
         </div>
       </section>
+
+      {/* Latest Posts for Advanced Java */}
+      <CategoryPosts
+        category="Advanced Java"
+        title="Latest Advanced Java Articles"
+        accent="purple"
+      />
 
       {/* Topics Grid */}
       <section className="py-16 bg-[#18181b]">
@@ -313,7 +322,8 @@ export default function AdvancedJavaPage() {
             Ready to learn advanced Java?
           </h2>
           <p className="text-xl text-gray-100 mb-8 max-w-2xl mx-auto leading-relaxed">
-            Learn modern Java programming techniques and reach professional level
+            Learn modern Java programming techniques and reach professional
+            level
           </p>
           <Link
             href="/advanced-java/collections-framework"

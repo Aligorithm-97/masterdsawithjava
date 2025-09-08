@@ -1,3 +1,5 @@
+import CategoryPosts from "../../components/CategoryPosts";
+
 export default function DesignPatternsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 pt-20">
@@ -11,6 +13,13 @@ export default function DesignPatternsPage() {
             how to write maintainable, scalable, and reusable code.
           </p>
         </div>
+
+        {/* Latest Posts for Design Patterns */}
+        <CategoryPosts
+          category="Design Patterns"
+          title="Latest Design Patterns Articles"
+          accent="purple"
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {/* Creational Patterns */}
