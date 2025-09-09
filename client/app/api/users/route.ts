@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { apiFetch } from "../../../lib/api";
 import { User, CreateUserRequest } from "../../../lib/types";
 
 export async function GET(req: NextRequest) {
@@ -15,8 +14,9 @@ export async function GET(req: NextRequest) {
     queryParams.append("page", page.toString());
     queryParams.append("size", pageSize.toString());
 
-    const response = await apiFetch(`/user?${queryParams.toString()}`);
-
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/user?${queryParams.toString()}`
+    );
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -44,16 +44,22 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const response = await apiFetch("/user", {
-      method: "POST",
-      json: {
-        email,
-        first_name,
-        last_name,
-        password,
-        date_of_birth,
-      },
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/user`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          first_name,
+          last_name,
+          password,
+          date_of_birth,
+        }),
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);

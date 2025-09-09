@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { apiFetch } from "../../../lib/api";
 import { Post, CreatePostRequest } from "../../../lib/types";
 
 export async function GET(req: NextRequest) {
@@ -17,8 +16,9 @@ export async function GET(req: NextRequest) {
     queryParams.append("page", page.toString());
     queryParams.append("size", pageSize.toString());
 
-    const response = await apiFetch(`/post?${queryParams.toString()}`);
-
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/post?${queryParams.toString()}`
+    );
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -46,16 +46,16 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const response = await apiFetch("/post", {
-      method: "POST",
-      json: {
-        title,
-        summary: summary || "",
-        blocks,
-        category,
-        date: date || new Date().toISOString(),
-      },
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/post`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ title, summary, blocks, category, date }),
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
