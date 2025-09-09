@@ -11,7 +11,6 @@ const CATEGORIES = [
   "DSA",
   "System Design",
   "Design Patterns",
-  "Algorithm Problems",
 ];
 
 const BLOCK_TYPES = [
