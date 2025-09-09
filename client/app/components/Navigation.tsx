@@ -170,7 +170,7 @@ export default function Navigation() {
                   />
                 </svg>
                 <div
-                  className={`absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300 ${
+                  className={`absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-blue-800 transition-all duration-300 ${
                     showJavaMenu ? "w-full" : "group-hover:w-full"
                   }`}
                 ></div>
@@ -211,16 +211,16 @@ export default function Navigation() {
               className="relative px-4 py-3 text-sm font-semibold text-gray-300 hover:text-white rounded-lg transition-all duration-200 hover:bg-gray-800/50 group"
             >
               <span className="relative z-10">System Design</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-pink-600/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
-              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-emerald-700/20 to-teal-700/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-emerald-600 to-teal-600 group-hover:w-full transition-all duration-300"></div>
             </Link>
             <Link
               href="/design-patterns"
               className="relative px-4 py-3 text-sm font-semibold text-gray-300 hover:text-white rounded-lg transition-all duration-200 hover:bg-gray-800/50 group"
             >
               <span className="relative z-10">Design Patterns</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-pink-600/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
-              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-700/20 to-sky-700/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-sky-600 group-hover:w-full transition-all duration-300"></div>
             </Link>
             <Link
               href="/about"
