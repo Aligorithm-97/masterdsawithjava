@@ -82,7 +82,7 @@ public class AuthenticationService {
 
         userRepository.save(user);
 
-        sendValidationEmail(user);
+        //sendValidationEmail(user);
     }
 
     private void sendValidationEmail(User user) throws MessagingException {

@@ -68,3 +68,11 @@ export interface CreateUserRequest {
 export interface UpdateUserRequest extends CreateUserRequest {
   id: string;
 }
+
+// Auth
+export interface RegistrationRequest {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
