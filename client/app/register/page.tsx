@@ -1,16 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { RegistrationRequest } from "../../lib/types";
 
-interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-export default function LoginPage() {
-  const router = useRouter();
-  const [form, setForm] = useState<LoginRequest>({ email: "", password: "" });
+export default function RegisterPage() {
+  const [form, setForm] = useState<RegistrationRequest>({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState<string>("");
   const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
@@ -28,6 +27,11 @@ export default function LoginPage() {
     setMessage("");
     setIsSuccess(null);
 
+    if (!form.firstName.trim() || !form.lastName.trim()) {
+      setMessage("First and last name are required.");
+      setIsSuccess(false);
+      return;
+    }
     if (!form.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
       setMessage("Valid email is required.");
       setIsSuccess(false);
@@ -41,22 +45,25 @@ export default function LoginPage() {
 
     setIsSubmitting(true);
     try {
-      const response = await fetch(`${apiBaseUrl}auth/authenticate`, {
+      const response = await fetch(`${apiBaseUrl}auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
         body: JSON.stringify(form),
       });
 
-      if (response.ok) {
+      if (response.status === 202 || response.ok) {
         setIsSuccess(true);
-        setMessage("Login successful. Redirecting...");
-        router.replace("/");
+        setMessage(
+          "Registration successful. Please check your email to verify your account."
+        );
+        setForm({ firstName: "", lastName: "", email: "", password: "" });
       } else {
         const data = await response.json().catch(() => null);
         setIsSuccess(false);
         setMessage(
-          data?.message || data?.error || "Invalid email or password."
+          data?.message ||
+            data?.error ||
+            "Registration failed. Please try again."
         );
       }
     } catch (err) {
@@ -70,10 +77,8 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-[#18181b] pt-24 px-4">
       <div className="max-w-md mx-auto bg-[#23272f] border border-gray-700 rounded-2xl shadow-xl p-6">
-        <h1 className="text-2xl font-bold text-white mb-1">Login</h1>
-        <p className="text-gray-400 mb-6">
-          Enter your credentials to continue.
-        </p>
+        <h1 className="text-2xl font-bold text-white mb-1">Create Account</h1>
+        <p className="text-gray-400 mb-6">Register to access the platform.</p>
 
         {message && (
           <div
@@ -86,6 +91,32 @@ export default function LoginPage() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-gray-300 mb-1 font-semibold">
+              First Name
+            </label>
+            <input
+              name="firstName"
+              type="text"
+              value={form.firstName}
+              onChange={handleChange}
+              className="w-full px-3 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="John"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-300 mb-1 font-semibold">
+              Last Name
+            </label>
+            <input
+              name="lastName"
+              type="text"
+              value={form.lastName}
+              onChange={handleChange}
+              className="w-full px-3 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Doe"
+            />
+          </div>
           <div>
             <label className="block text-gray-300 mb-1 font-semibold">
               Email
@@ -111,6 +142,7 @@ export default function LoginPage() {
               className="w-full px-3 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="********"
             />
+            <p className="text-xs text-gray-500 mt-1">Minimum 8 characters.</p>
           </div>
 
           <button
@@ -118,16 +150,9 @@ export default function LoginPage() {
             disabled={isSubmitting}
             className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition-colors duration-200 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? "Signing in..." : "Sign In"}
+            {isSubmitting ? "Registering..." : "Register"}
           </button>
         </form>
-
-        <div className="text-sm text-gray-400 mt-4">
-          Don\'t have an account?{" "}
-          <a href="/register" className="text-blue-400 hover:text-blue-300">
-            Register
-          </a>
-        </div>
       </div>
     </div>
   );
