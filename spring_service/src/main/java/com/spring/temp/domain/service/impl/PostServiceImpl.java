@@ -54,7 +54,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<PostDto> getPostsByCategory(String category) {
-        List<Post> posts = postRepository.findByCategory(category);
+        List<Post> posts = postRepository.findByCategoryAndSubscriberOnly(category, 0);
         return posts.stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
