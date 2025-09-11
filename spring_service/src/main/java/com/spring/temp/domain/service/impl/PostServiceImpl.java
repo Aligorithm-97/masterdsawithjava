@@ -72,6 +72,7 @@ public class PostServiceImpl implements PostService {
         dto.setBlocks(post.getBlocks());
         dto.setCategory(post.getCategory());
         dto.setDate(post.getDate());
+        dto.setSubscriberOnly(post.getSubscriberOnly());
         return dto;
     }
 
@@ -87,6 +88,7 @@ public class PostServiceImpl implements PostService {
         post.setBlocks(postDto.getBlocks());
         post.setCategory(postDto.getCategory());
         post.setDate(postDto.getDate());
+        post.setSubscriberOnly(postDto.getSubscriberOnly());
         return post;
     }
 }

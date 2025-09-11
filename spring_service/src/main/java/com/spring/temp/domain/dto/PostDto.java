@@ -9,14 +9,16 @@ public class PostDto {
     private String blocks;
     private String category;
     private String date;
+    private Integer subscriberOnly;
 
-    public PostDto(Long id, String title, String summary, String blocks, String category, String date) {
+    public PostDto(Long id, String title, String summary, String blocks, String category, String date, Integer subscriberOnly) {
         this.id = id;
         this.title = title;
         this.summary = summary;
         this.blocks = blocks;
         this.category = category;
         this.date = date;
+        this.subscriberOnly = subscriberOnly;
     }
 
     public PostDto() {
@@ -74,6 +76,14 @@ public class PostDto {
         this.date = date;
     }
 
+    public Integer getSubscriberOnly() {
+        return subscriberOnly;
+    }
+
+    public void setSubscriberOnly(Integer subscriberOnly) {
+        this.subscriberOnly = subscriberOnly;
+    }
+
     public static class PostDtoBuilder {
         private Long id;
         private String title;
@@ -81,6 +91,7 @@ public class PostDto {
         private String blocks;
         private String category;
         private String date;
+        private Integer subscriberOnly;
 
         PostDtoBuilder() {
         }
@@ -115,8 +126,13 @@ public class PostDto {
             return this;
         }
 
+        public PostDtoBuilder subscriberOnly(Integer subscriberOnly) {
+            this.subscriberOnly = subscriberOnly;
+            return this;
+        }
+
         public PostDto build() {
-            return new PostDto(this.id, this.title, this.summary, this.blocks, this.category, this.date);
+            return new PostDto(this.id, this.title, this.summary, this.blocks, this.category, this.date, this.subscriberOnly);
         }
 
         public String toString() {

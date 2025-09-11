@@ -7,6 +7,7 @@ export interface Post {
   date: string;
   summary: string;
   title: string;
+  subscriberOnly?: number; // 0: public, 1: subscribers only
 }
 
 export interface User {
@@ -51,6 +52,7 @@ export interface CreatePostRequest {
   blocks: Block[];
   category: string;
   date: string;
+  subscriberOnly: number; // 0 | 1
 }
 
 export interface UpdatePostRequest extends CreatePostRequest {

@@ -38,6 +38,7 @@ export default function AdminPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [totalPosts, setTotalPosts] = useState(0);
+  const [subscriberOnly, setSubscriberOnly] = useState<number>(0);
 
   // Load posts from Spring backend (with pagination and search)
   useEffect(() => {
@@ -215,6 +216,7 @@ export default function AdminPage() {
           blocks: JSON.stringify(blocks),
           category: category,
           date: new Date().toISOString(),
+          subscriberOnly: Number(subscriberOnly) || 0,
         }),
       });
 
@@ -225,6 +227,7 @@ export default function AdminPage() {
         setSummary("");
         setBlocks([]);
         setCategory(CATEGORIES[0]);
+        setSubscriberOnly(0);
         setMessage("Post added successfully!");
         loadPosts(); // Reload posts
       } else {
@@ -245,6 +248,7 @@ export default function AdminPage() {
     setSummary(post.summary);
     setBlocks(post.blocks);
     setCategory(post.category);
+    setSubscriberOnly(post.subscriberOnly ?? 0);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -271,6 +275,7 @@ export default function AdminPage() {
           blocks: JSON.stringify(blocks),
           category: category,
           date: new Date().toISOString(),
+          subscriberOnly: Number(subscriberOnly) || 0,
         }),
       });
 
@@ -283,6 +288,7 @@ export default function AdminPage() {
         setSummary("");
         setBlocks([]);
         setCategory(CATEGORIES[0]);
+        setSubscriberOnly(0);
         loadPosts();
       } else {
         setMessage("Error updating post: " + data.error);
@@ -302,6 +308,7 @@ export default function AdminPage() {
     setSummary("");
     setBlocks([]);
     setCategory(CATEGORIES[0]);
+    setSubscriberOnly(0);
     setMessage("");
   };
 
@@ -364,6 +371,35 @@ export default function AdminPage() {
               className="w-full px-3 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Short summary (optional)"
             />
+          </div>
+          <div>
+            <label className="block text-gray-300 mb-1 font-semibold">
+              Visibility
+            </label>
+            <div className="flex items-center gap-4">
+              <label className="inline-flex items-center gap-2 text-gray-300">
+                <input
+                  type="radio"
+                  name="visibility"
+                  value="0"
+                  checked={subscriberOnly === 0}
+                  onChange={() => setSubscriberOnly(0)}
+                  className="accent-blue-600"
+                />
+                Public
+              </label>
+              <label className="inline-flex items-center gap-2 text-gray-300">
+                <input
+                  type="radio"
+                  name="visibility"
+                  value="1"
+                  checked={subscriberOnly === 1}
+                  onChange={() => setSubscriberOnly(1)}
+                  className="accent-blue-600"
+                />
+                Subscribers only
+              </label>
+            </div>
           </div>
           <div>
             <label className="block text-gray-300 mb-1 font-semibold">

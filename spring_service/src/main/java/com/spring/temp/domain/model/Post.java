@@ -18,14 +18,16 @@ public class Post {
     private String blocks;
     private String category;
     private String date;
+    private Integer subscriberOnly;
 
-    public Post(Long id, String title, String summary, String blocks, String category, String date) {
+    public Post(Long id, String title, String summary, String blocks, String category, String date, Integer subscriberOnly) {
         this.id = id;
         this.title = title;
         this.summary = summary;
         this.blocks = blocks;
         this.category = category;
         this.date = date;
+        this.subscriberOnly = subscriberOnly;
     }
 
     public Post() {
@@ -39,48 +41,56 @@ public class Post {
         return this.id;
     }
 
-    public String getTitle() {
-        return this.title;
-    }
-
-    public String getSummary() {
-        return this.summary;
-    }
-
-    public String getBlocks() {
-        return this.blocks;
-    }
-
-    public String getCategory() {
-        return this.category;
-    }
-
-    public String getDate() {
-        return this.date;
-    }
-
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getTitle() {
+        return this.title;
     }
 
     public void setTitle(String title) {
         this.title = title;
     }
 
+    public String getSummary() {
+        return this.summary;
+    }
+
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public String getBlocks() {
+        return this.blocks;
     }
 
     public void setBlocks(String blocks) {
         this.blocks = blocks;
     }
 
+    public String getCategory() {
+        return this.category;
+    }
+
     public void setCategory(String category) {
         this.category = category;
     }
 
+    public String getDate() {
+        return this.date;
+    }
+
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public Integer getSubscriberOnly() {
+        return subscriberOnly;
+    }
+
+    public void setSubscriberOnly(Integer subscriberOnly) {
+        this.subscriberOnly = subscriberOnly;
     }
 
     public static class PostBuilder {
@@ -90,6 +100,7 @@ public class Post {
         private String blocks;
         private String category;
         private String date;
+        private Integer subscriberOnly;
 
         PostBuilder() {
         }
@@ -124,8 +135,13 @@ public class Post {
             return this;
         }
 
+        public PostBuilder subscriberOnly(Integer subscriberOnly) {
+            this.subscriberOnly = subscriberOnly;
+            return this;
+        }
+
         public Post build() {
-            return new Post(this.id, this.title, this.summary, this.blocks, this.category, this.date);
+            return new Post(this.id, this.title, this.summary, this.blocks, this.category, this.date, this.subscriberOnly);
         }
 
         public String toString() {
