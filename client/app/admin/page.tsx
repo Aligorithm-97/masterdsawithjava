@@ -320,7 +320,7 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-[#18181b] pt-16 px-4">
-      <div className="max-w-2xl mx-auto py-8">
+      <div className="max-w-4xl mx-auto py-8">
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             Admin Panel
@@ -606,6 +606,35 @@ export default function AdminPage() {
             </button>
           )}
         </form>
+
+        <div className="bg-[#23272f] p-6 rounded-xl shadow-md mb-8 border border-gray-700">
+          <section className="bg-[#1f232a] border border-gray-700 rounded-lg mb-6">
+            <div className="px-4 sm:px-6 lg:px-8 py-6">
+              <div className="flex items-center justify-between mb-3">
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                  {category}
+                </span>
+                <span className="text-sm text-gray-400">
+                  {new Date().toLocaleString("tr-TR")}
+                </span>
+              </div>
+              <h1 className="text-3xl md:text-4xl font-bold text-white mb-3 leading-tight">
+                {title || "(Başlık)"}
+              </h1>
+              {summary && (
+                <p className="text-lg text-gray-400 leading-relaxed max-w-3xl">
+                  {summary}
+                </p>
+              )}
+            </div>
+          </section>
+          {/* Content preview */}
+          <section>
+            <article className="prose prose-lg max-w-none">
+              <PostRenderer blocks={blocks} />
+            </article>
+          </section>
+        </div>
 
         {/* Arama kutusu */}
         <div className="mb-6 flex items-center gap-2">
