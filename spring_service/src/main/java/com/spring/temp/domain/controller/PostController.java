@@ -17,10 +17,6 @@ public class PostController {
         this.postService = postService;
     }
 
-    @PostMapping
-    public PostDto createPost(@RequestBody PostDto postDto) {
-        return postService.createPost(postDto);
-    }
 
     @GetMapping("/{id}")
     public PostDto getPostById(@PathVariable Long id) {
@@ -32,14 +28,5 @@ public class PostController {
         return postService.getPostsByCategory(category);
     }
 
-    @PutMapping("/{id}")
-    public PostDto updatePost(@PathVariable Long id, @RequestBody PostDto postDto) {
-        return postService.updatePost(id, postDto);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deletePost(@PathVariable Long id) {
-        postService.deletePost(id);
-    }
 
 }

@@ -4,6 +4,7 @@ import com.spring.temp.domain.dto.PostDto;
 import com.spring.temp.domain.model.Post;
 import com.spring.temp.domain.repository.PostRepository;
 import com.spring.temp.domain.service.PostService;
+import com.spring.temp.domain.service.PostWriteService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,29 +13,37 @@ import java.util.stream.Collectors;
 
 
 @Service
-@Transactional(readOnly = true)
-public class PostServiceImpl implements PostService {
+@Transactional
+public class PostWriteServiceImpl implements PostWriteService {
 
     private final PostRepository postRepository;
 
-    public PostServiceImpl(PostRepository postRepository) {
+    public PostWriteServiceImpl(PostRepository postRepository) {
         this.postRepository = postRepository;
     }
 
+    @Override
+    public PostDto createPost(PostDto postDto) {
+        Post post = toEntity(postDto);
+        return toDto(postRepository.save(post));
+    }
+
 
     @Override
-    public PostDto getPostById(Long id) {
+    public PostDto updatePost(Long id, PostDto postDto) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Post not found with id " + id));
-        return toDto(post);
+        post.setTitle(postDto.getTitle());
+        post.setBlocks(postDto.getBlocks());
+        return toDto(postRepository.save(post));
     }
 
     @Override
-    public List<PostDto> getPostsByCategory(String category) {
-        List<Post> posts = postRepository.findByCategoryAndSubscriberOnly(category, 0);
-        return posts.stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
+    public void deletePost(Long id) {
+        if (!postRepository.existsById(id)) {
+            throw new RuntimeException("Post not found with id " + id);
+        }
+        postRepository.deleteById(id);
     }
 
     public PostDto toDto(Post post) {
