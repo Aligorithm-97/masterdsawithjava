@@ -59,7 +59,7 @@ export default function AdminPage() {
   const getTokenFromCookie = () => {
     const cookies = document.cookie.split(";");
     const tokenCookie = cookies.find((cookie) =>
-      cookie.trim().startsWith("token=")
+      cookie.trim().startsWith("accessToken=")
     );
     return tokenCookie ? tokenCookie.split("=")[1] : null;
   };
@@ -68,25 +68,14 @@ export default function AdminPage() {
   const checkAuthentication = async () => {
     try {
       const token = getTokenFromCookie();
+
       if (!token) {
         setIsAuthenticated(false);
         setAuthLoading(false);
         return;
       }
 
-      const apiBaseUrl =
-        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api/v1/";
-      const response = await fetch(`${apiBaseUrl}auth/authenticate`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        setIsAuthenticated(true);
-      } else {
-        setIsAuthenticated(false);
-      }
+      setIsAuthenticated(true);
     } catch (error) {
       console.error("Auth check failed:", error);
       setIsAuthenticated(false);
@@ -408,22 +397,10 @@ export default function AdminPage() {
 
   // Logout function
   const handleLogout = async () => {
-    try {
-      const token = getTokenFromCookie();
-      const apiBaseUrl =
-        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api/v1/";
-      await fetch(`${apiBaseUrl}auth/logout`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-    } catch (error) {
-      console.error("Logout error:", error);
-    } finally {
-      setIsAuthenticated(false);
-      router.push("/login");
-    }
+    document.cookie =
+      "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    setIsAuthenticated(false);
+    router.push("/login");
   };
 
   // Kategorilere göre gruplama
