@@ -39,6 +39,7 @@ export default function AdminPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [totalPosts, setTotalPosts] = useState(0);
   const [subscriberOnly, setSubscriberOnly] = useState<number>(0);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   // Load posts from Spring backend (with pagination and search)
   useEffect(() => {
@@ -596,6 +597,13 @@ export default function AdminPage() {
               ? "Güncelle"
               : "Add Post"}
           </button>
+          <button
+            type="button"
+            onClick={() => setIsPreviewOpen(true)}
+            className="ml-2 bg-gray-700 hover:bg-gray-600 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition-colors duration-200"
+          >
+            Önizle
+          </button>
           {editingPostId && (
             <button
               type="button"
@@ -607,34 +615,50 @@ export default function AdminPage() {
           )}
         </form>
 
-        <div className="bg-[#23272f] p-6 rounded-xl shadow-md mb-8 border border-gray-700">
-          <section className="bg-[#1f232a] border border-gray-700 rounded-lg mb-6">
-            <div className="px-4 sm:px-6 lg:px-8 py-6">
-              <div className="flex items-center justify-between mb-3">
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                  {category}
-                </span>
-                <span className="text-sm text-gray-400">
-                  {new Date().toLocaleString("tr-TR")}
-                </span>
+        {/* Preview Modal */}
+        {isPreviewOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center">
+            <div
+              className="absolute inset-0 bg-black/70"
+              onClick={() => setIsPreviewOpen(false)}
+            />
+            <div className="relative bg-[#23272f] border border-gray-700 rounded-xl shadow-2xl max-w-4xl w-full max-h-[85vh] overflow-y-auto mx-4">
+              <div className="sticky top-0 flex items-center justify-between px-4 py-3 bg-[#1f232a] border-b border-gray-700 rounded-t-xl">
+                <h2 className="text-white font-semibold">Önizleme</h2>
+                <button
+                  onClick={() => setIsPreviewOpen(false)}
+                  className="text-gray-300 hover:text-white"
+                >
+                  ✕
+                </button>
               </div>
-              <h1 className="text-3xl md:text-4xl font-bold text-white mb-3 leading-tight">
-                {title || "(Başlık)"}
-              </h1>
-              {summary && (
-                <p className="text-lg text-gray-400 leading-relaxed max-w-3xl">
-                  {summary}
-                </p>
-              )}
+              <div className="px-4 sm:px-6 lg:px-8 py-6">
+                {/* Header preview */}
+                <div className="flex items-center justify-between mb-3">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    {category}
+                  </span>
+                  <span className="text-sm text-gray-400">
+                    {new Date().toLocaleString("tr-TR")}
+                  </span>
+                </div>
+                <h1 className="text-3xl md:text-4xl font-bold text-white mb-3 leading-tight">
+                  {title || "(Başlık)"}
+                </h1>
+                {summary && (
+                  <p className="text-lg text-gray-400 leading-relaxed max-w-3xl">
+                    {summary}
+                  </p>
+                )}
+
+                {/* Content preview */}
+                <article className="prose prose-lg max-w-none mt-6">
+                  <PostRenderer blocks={blocks} />
+                </article>
+              </div>
             </div>
-          </section>
-          {/* Content preview */}
-          <section>
-            <article className="prose prose-lg max-w-none">
-              <PostRenderer blocks={blocks} />
-            </article>
-          </section>
-        </div>
+          </div>
+        )}
 
         {/* Arama kutusu */}
         <div className="mb-6 flex items-center gap-2">
