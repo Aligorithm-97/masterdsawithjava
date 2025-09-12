@@ -40,11 +40,60 @@ export default function AdminPage() {
   const [totalPosts, setTotalPosts] = useState(0);
   const [subscriberOnly, setSubscriberOnly] = useState<number>(0);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
+
+  // Check authentication on component mount
+  useEffect(() => {
+    checkAuthentication();
+  }, []);
 
   // Load posts from Spring backend (with pagination and search)
   useEffect(() => {
-    loadPosts(currentPage, searchTerm);
-  }, [currentPage, searchTerm]);
+    if (isAuthenticated) {
+      loadPosts(currentPage, searchTerm);
+    }
+  }, [currentPage, searchTerm, isAuthenticated]);
+
+  // Get token from cookie
+  const getTokenFromCookie = () => {
+    const cookies = document.cookie.split(";");
+    const tokenCookie = cookies.find((cookie) =>
+      cookie.trim().startsWith("token=")
+    );
+    return tokenCookie ? tokenCookie.split("=")[1] : null;
+  };
+
+  // Check if user is authenticated
+  const checkAuthentication = async () => {
+    try {
+      const token = getTokenFromCookie();
+      if (!token) {
+        setIsAuthenticated(false);
+        setAuthLoading(false);
+        return;
+      }
+
+      const apiBaseUrl =
+        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api/v1/";
+      const response = await fetch(`${apiBaseUrl}auth/authenticate`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+      }
+    } catch (error) {
+      console.error("Auth check failed:", error);
+      setIsAuthenticated(false);
+    } finally {
+      setAuthLoading(false);
+    }
+  };
 
   // Arama inputu değişince
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,9 +113,14 @@ export default function AdminPage() {
         search: search,
       });
 
+      const token = getTokenFromCookie();
       const apiBaseUrl =
         process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api/v1/";
-      const response = await fetch(`${apiBaseUrl}post?${params}`);
+      const response = await fetch(`${apiBaseUrl}post?${params}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const data = await response.json();
 
       if (response.ok) {
@@ -112,6 +166,37 @@ export default function AdminPage() {
       setUploadingImage(false);
     }
   };
+
+  // Show loading while checking authentication
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-[#18181b] flex items-center justify-center">
+        <div className="text-white text-xl">Checking authentication...</div>
+      </div>
+    );
+  }
+
+  // Show login prompt if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-[#18181b] flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-white mb-4">
+            Admin Access Required
+          </h1>
+          <p className="text-gray-400 mb-8">
+            You need to be logged in to access the admin panel.
+          </p>
+          <button
+            onClick={() => router.push("/login")}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition-colors duration-200"
+          >
+            Go to Login
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   // Show loading while loading posts
   if (isLoading) {
@@ -175,10 +260,14 @@ export default function AdminPage() {
     if (!confirm("Are you sure you want to delete this post?")) return;
 
     try {
+      const token = getTokenFromCookie();
       const apiBaseUrl =
         process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api/v1/";
       const response = await fetch(`${apiBaseUrl}post/${postId}`, {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (response.ok) {
@@ -204,12 +293,14 @@ export default function AdminPage() {
 
     setIsSubmitting(true);
     try {
+      const token = getTokenFromCookie();
       const apiBaseUrl =
         process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api/v1/";
-      const response = await fetch(`${apiBaseUrl}post`, {
+      const response = await fetch(`${apiBaseUrl}postWrite`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           title: title.trim(),
@@ -263,12 +354,14 @@ export default function AdminPage() {
     }
     setIsSubmitting(true);
     try {
+      const token = getTokenFromCookie();
       const apiBaseUrl =
         process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api/v1/";
       const response = await fetch(`${apiBaseUrl}post/${editingPostId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           title: title.trim(),
@@ -313,6 +406,26 @@ export default function AdminPage() {
     setMessage("");
   };
 
+  // Logout function
+  const handleLogout = async () => {
+    try {
+      const token = getTokenFromCookie();
+      const apiBaseUrl =
+        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api/v1/";
+      await fetch(`${apiBaseUrl}auth/logout`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      setIsAuthenticated(false);
+      router.push("/login");
+    }
+  };
+
   // Kategorilere göre gruplama
   const postsByCategory = CATEGORIES.map((cat) => ({
     category: cat,
@@ -322,11 +435,21 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen bg-[#18181b] pt-16 px-4">
       <div className="max-w-4xl mx-auto py-8">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Admin Panel
-          </h1>
-          <p className="text-gray-400 text-sm mt-1">Manage posts and content</p>
+        <div className="mb-6 flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              Admin Panel
+            </h1>
+            <p className="text-gray-400 text-sm mt-1">
+              Manage posts and content
+            </p>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-lg shadow-md transition-colors duration-200"
+          >
+            Logout
+          </button>
         </div>
 
         <form
