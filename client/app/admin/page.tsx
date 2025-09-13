@@ -797,7 +797,7 @@ export default function AdminPage() {
                   {posts.map((post, idx) => (
                     <div
                       key={post.id || idx}
-                      className="bg-[#23272f] p-4 rounded-xl shadow border border-gray-700"
+                      className="bg-[#23272f] p-4 rounded-xl shadow border border-gray-700 hover-lift"
                     >
                       <div className="flex flex-col gap-2">
                         <div className="flex justify-between items-center mb-1">

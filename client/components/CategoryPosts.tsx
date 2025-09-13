@@ -151,7 +151,7 @@ export default function CategoryPosts({
             return (
               <article
                 key={String(post.id)}
-                className="bg-[#18181b] rounded-xl shadow-lg border border-gray-700 overflow-hidden hover:shadow-xl transition-shadow duration-300"
+                className="bg-[#18181b] rounded-xl shadow-lg border border-gray-700 overflow-hidden hover-lift"
               >
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-4">
