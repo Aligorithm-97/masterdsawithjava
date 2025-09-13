@@ -75,7 +75,11 @@ export default function CategoryPosts({
               : post?.blocks;
           return { ...post, id, category: cat, date, blocks } as Post;
         });
-        setPosts(normalized);
+        // Tarihe göre sıralama (en yeni önce)
+        const sortedPosts = normalized.sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+        );
+        setPosts(sortedPosts);
       } catch (e) {
         console.error("Failed loading posts:", e);
       } finally {

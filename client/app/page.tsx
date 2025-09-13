@@ -29,7 +29,11 @@ export default function Home() {
                 ? JSON.parse(post.blocks)
                 : post.blocks,
           }));
-          setRecentPosts(postsWithParsedBlocks);
+          // Tarihe göre sıralama (en yeni önce)
+          const sortedPosts = postsWithParsedBlocks.sort(
+            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+          );
+          setRecentPosts(sortedPosts);
         }
       } catch (error) {
         console.error("Error loading recent posts:", error);

@@ -78,7 +78,11 @@ export default function JavaCorePage() {
           }
           return { ...post, id, category, date, blocks };
         });
-        setPosts(postsWithParsedBlocks);
+        // Tarihe göre sıralama (en yeni önce)
+        const sortedPosts = postsWithParsedBlocks.sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+        );
+        setPosts(sortedPosts);
         setTotalPosts(total);
       } else {
         console.error("Error loading posts:", payload?.error ?? payload);

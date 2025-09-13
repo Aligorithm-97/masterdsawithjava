@@ -403,10 +403,12 @@ export default function AdminPage() {
     router.push("/login");
   };
 
-  // Kategorilere göre gruplama
+  // Kategorilere göre gruplama ve tarihe göre sıralama (en yeni önce)
   const postsByCategory = CATEGORIES.map((cat) => ({
     category: cat,
-    posts: posts.filter((p) => p.category === cat),
+    posts: posts
+      .filter((p) => p.category === cat)
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
   }));
 
   return (
