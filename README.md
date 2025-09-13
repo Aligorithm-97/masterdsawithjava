@@ -1,10 +1,10 @@
 # MasterDSA with Java
 
-## 📚 About the Platform
+## About the Platform
 
 **MasterDSA with Java** is a comprehensive microservices-based educational platform developed during my professional growth journey in Java programming and Data Structures & Algorithms (DSA). This enterprise-grade platform is itself built using modern microservices architecture with Kubernetes, Kafka, and distributed systems technologies, serving as both a learning resource and a real-world example of production-ready microservices implementation. It represents my commitment to continuous learning and serves as a platform where I document, share, and teach the knowledge and experiences I've gained throughout my professional development journey.
 
-## 🎯 What You'll Master
+## What You'll Master
 
 - **Java Core Concepts**: Industry-standard Java programming, OOP principles, and enterprise best practices
 - **Advanced Java**: Professional-grade Collections, Streams, Lambda expressions, Generics, and performance optimization
@@ -13,7 +13,7 @@
 - **Microservices Architecture**: Container orchestration, service communication, and distributed systems
 - **Design Patterns**: Production-ready software design patterns and real-world implementations
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 ### Frontend
 
@@ -36,7 +36,7 @@
 - **RESTful API** - Microservices communication
 - **Service Mesh** - Advanced microservices networking
 
-## 📖 Comprehensive Curriculum
+## Comprehensive Curriculum
 
 ### Java Core Mastery
 
@@ -85,7 +85,7 @@
 - Structural Patterns (Adapter, Decorator, Facade)
 - Behavioral Patterns (Observer, Strategy, Command)
 
-## 🚀 Premium Features
+## Premium Features
 
 - **Professional-Grade Content** - Industry-tested solutions and methodologies
 - **Interactive Learning** - Hands-on coding exercises and real-world projects
@@ -98,7 +98,7 @@
 - **Progress Tracking** - Monitor your learning journey
 - **Community Access** - Connect with fellow developers
 
-## 🎓 Who This Platform Is For
+## Who This Platform Is For
 
 - **Software Developers** looking to master Java and DSA
 - **Computer Science Students** seeking practical, industry-relevant knowledge
@@ -107,7 +107,7 @@
 - **Technical Leads** seeking system design mastery
 - **Interview Candidates** preparing for technical assessments
 
-## 📈 Learning Outcomes
+## Learning Outcomes
 
 Upon completing this platform, you will:
 
@@ -121,7 +121,7 @@ Upon completing this platform, you will:
 8. **Prepare for technical interviews** with confidence
 9. **Build production-ready microservices** from scratch
 
-## 🏆 Why Choose This Platform
+## Why Choose This Platform
 
 - **Live Microservices Example** - The platform itself is a working microservices implementation
 - **Real-World Architecture** - Built with production-grade Kubernetes, Kafka, and distributed systems
@@ -132,7 +132,7 @@ Upon completing this platform, you will:
 - **Comprehensive Coverage** - Everything you need in one platform
 - **Professional Support** - Direct access to expert guidance
 
-## 📈 Platform Roadmap
+## Platform Roadmap
 
 - [ ] Microservices architecture documentation and code walkthroughs
 - [ ] Live Kubernetes cluster monitoring and management demos
@@ -144,7 +144,7 @@ Upon completing this platform, you will:
 - [ ] Job placement assistance
 - [ ] Enterprise training modules
 
-## 🤝 Get Started
+## Get Started
 
 Ready to advance your Java and DSA skills? Join thousands of developers who have transformed their careers through this comprehensive learning platform.
 
@@ -152,7 +152,7 @@ Ready to advance your Java and DSA skills? Join thousands of developers who have
 - **Team Licenses** - Corporate training solutions
 - **Custom Training** - Tailored enterprise programs
 
-## 📞 Contact & Support
+## Contact & Support
 
 For inquiries about platform access, custom training, or enterprise solutions:
 
