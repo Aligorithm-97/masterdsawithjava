@@ -13,11 +13,10 @@ type Response struct {
 	Message string `json:"message"`
 }
 
-// Kafka producer global değişken
 var producer sarama.SyncProducer
 
 func initKafka() {
-	brokers := []string{"localhost:9092"} // Kafka broker adresi
+	brokers := []string{"localhost:9092"}
 	config := sarama.NewConfig()
 	config.Producer.Return.Successes = true
 
@@ -33,7 +32,6 @@ func helloHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(Response{Message: "Merhaba, Go backend çalışıyor!"})
 }
 
-// /publish endpoint → Kafka'ya mesaj gönder
 func publishHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Sadece POST destekleniyor", http.StatusMethodNotAllowed)
@@ -53,7 +51,7 @@ func publishHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	msg := &sarama.ProducerMessage{
-		Topic: "test", // Kafka topic adı
+		Topic: "test", 
 		Value: sarama.StringEncoder(message),
 	}
 
@@ -67,11 +65,9 @@ func publishHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	// Kafka bağlantısını başlat
 	initKafka()
 	defer producer.Close()
 
-	// HTTP endpointler
 	http.HandleFunc("/hello", helloHandler)
 	http.HandleFunc("/publish", publishHandler)
 
