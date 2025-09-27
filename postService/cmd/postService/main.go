@@ -7,22 +7,21 @@ import (
 
 	"postService/internal/config"
 	"postService/internal/db"
-	"postService/internal/handlers"
 	"postService/internal/kafka"
+	"postService/internal/routes"
+
+	"github.com/go-chi/chi/v5"
 )
 
 func main() {
 	cfg := config.LoadConfig()
 
 	db.InitMongo()
-
+	r := chi.NewRouter()
 	kafka.InitKafka(cfg.KafkaBrokers)
 	defer kafka.Producer.Close()
 
-	http.HandleFunc("/health", handlers.HelloHandler)
-	http.HandleFunc("/posts", handlers.CreatePost)   // POST: yeni post
-	http.HandleFunc("/posts/all", handlers.GetPosts) // GET: tüm postlar
-
+	routes.PostRoutes(r)
 
 	fmt.Printf("Post Service %s portunda çalışıyor...\n", cfg.ServerPort)
 	err := http.ListenAndServe(":"+cfg.ServerPort, nil)
