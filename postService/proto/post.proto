@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package post;
+option go_package = "project/proto/postpb";
+
+message Block {
+  string type = 1;
+  string content = 2;
+  string url = 3;
+  string alt = 4;
+  string code = 5;
+  string language = 6;
+}
+
+message Post {
+  string id = 1;
+  repeated Block blocks = 2;
+  string category = 3;
+  string date = 4;
+  string summary = 5;
+  string title = 6;
+  int32 subscriberOnly = 7;
+}
+
+message CreatePostRequest {
+  Post post = 1;
+}
+
+message CreatePostResponse {
+  Post post = 1;
+}
+
+message ListPostsRequest {}
+
+message ListPostsResponse {
+  repeated Post posts = 1;
+}
+
+service PostService {
+  rpc CreatePost(CreatePostRequest) returns (CreatePostResponse);
+  rpc ListPosts(ListPostsRequest) returns (ListPostsResponse);
+}

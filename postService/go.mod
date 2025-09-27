@@ -5,6 +5,11 @@ go 1.25.1
 require github.com/joho/godotenv v1.5.1
 
 require (
+	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.5.1 // indirect
+	google.golang.org/protobuf v1.36.9 // indirect
+)
+
+require (
 	github.com/IBM/sarama v1.46.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/eapache/go-resiliency v1.7.0 // indirect
