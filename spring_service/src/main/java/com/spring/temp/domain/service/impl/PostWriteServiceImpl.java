@@ -3,13 +3,10 @@ package com.spring.temp.domain.service.impl;
 import com.spring.temp.domain.dto.PostDto;
 import com.spring.temp.domain.model.Post;
 import com.spring.temp.domain.repository.PostRepository;
-import com.spring.temp.domain.service.PostService;
 import com.spring.temp.domain.service.PostWriteService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Service

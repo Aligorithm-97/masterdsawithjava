@@ -1,7 +1,6 @@
 package com.spring.temp.domain.controller;
 
 import com.spring.temp.domain.dto.PostDto;
-import com.spring.temp.domain.service.PostService;
 import com.spring.temp.domain.service.PostWriteService;
 import org.springframework.web.bind.annotation.*;
 
