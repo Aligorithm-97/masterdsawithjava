@@ -1,7 +1,9 @@
 syntax = "proto3";
 
 package post;
-option go_package = "project/proto/postpb";
+option go_package = "postService/proto/postpb";
+
+import "google/protobuf/timestamp.proto";
 
 message Block {
   string type = 1;
@@ -16,27 +18,71 @@ message Post {
   string id = 1;
   repeated Block blocks = 2;
   string category = 3;
-  string date = 4;
+  google.protobuf.Timestamp date = 4;
   string summary = 5;
   string title = 6;
   int32 subscriberOnly = 7;
 }
 
 message CreatePostRequest {
-  Post post = 1;
+  repeated Block blocks = 1;
+  string category = 2;
+  string summary = 3;
+  string title = 4;
+  int32 subscriberOnly = 5;
 }
 
 message CreatePostResponse {
   Post post = 1;
+  string message = 2;
 }
 
-message ListPostsRequest {}
+message GetPostRequest {
+  string id = 1;
+}
+
+message GetPostResponse {
+  Post post = 1;
+}
+
+message ListPostsRequest {
+  int32 page = 1;
+  int32 limit = 2;
+}
 
 message ListPostsResponse {
   repeated Post posts = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message UpdatePostRequest {
+  string id = 1;
+  repeated Block blocks = 2;
+  string category = 3;
+  string summary = 4;
+  string title = 5;
+  int32 subscriberOnly = 6;
+}
+
+message UpdatePostResponse {
+  Post post = 1;
+  string message = 2;
+}
+
+message DeletePostRequest {
+  string id = 1;
+}
+
+message DeletePostResponse {
+  string message = 1;
 }
 
 service PostService {
   rpc CreatePost(CreatePostRequest) returns (CreatePostResponse);
+  rpc GetPost(GetPostRequest) returns (GetPostResponse);
   rpc ListPosts(ListPostsRequest) returns (ListPostsResponse);
+  rpc UpdatePost(UpdatePostRequest) returns (UpdatePostResponse);
+  rpc DeletePost(DeletePostRequest) returns (DeletePostResponse);
 }
