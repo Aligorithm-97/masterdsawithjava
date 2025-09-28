@@ -18,7 +18,7 @@ const packageDefinition = loadSync(PROTO_PATH, {
 // gRPC client oluştur
 const postProto = grpc.loadPackageDefinition(packageDefinition).post;
 const client = new postProto.PostService(
-  "localhost:8081",
+  "localhost:8090",
   grpc.credentials.createInsecure()
 );
 

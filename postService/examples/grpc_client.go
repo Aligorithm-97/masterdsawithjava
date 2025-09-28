@@ -14,7 +14,7 @@ import (
 
 func main() {
 	// gRPC bağlantısı oluştur
-	conn, err := grpc.Dial("localhost:8081", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial("localhost:8090", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("Bağlantı kurulamadı: %v", err)
 	}

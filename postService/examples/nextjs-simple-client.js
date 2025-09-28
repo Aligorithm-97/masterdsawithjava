@@ -2,7 +2,7 @@
 // Bu dosyayı Next.js projenizde kullanabilirsiniz
 
 // API Base URL
-const API_BASE = "http://localhost:8080/api";
+const API_BASE = "http://localhost:8090/api";
 
 // Post oluşturma
 export async function createPost(postData) {

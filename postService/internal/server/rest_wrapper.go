@@ -18,7 +18,7 @@ type RESTWrapper struct {
 
 func NewRESTWrapper() *RESTWrapper {
 	// gRPC client bağlantısı
-	conn, err := grpc.Dial("localhost:8081", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial("localhost:8090", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		panic("gRPC bağlantısı kurulamadı: " + err.Error())
 	}

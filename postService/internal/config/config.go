@@ -25,7 +25,7 @@ func LoadConfig() *Config {
 
 	port := os.Getenv("SERVER_PORT")
 	if port == "" {
-		port = "8081"
+		port = "8090"
 	}
 
 	return &Config{

@@ -13,8 +13,8 @@ go run cmd/postService/main.go
 
 Bu komut:
 
-- **gRPC Server**: `localhost:8081` portunda
-- **REST API**: `localhost:8080` portunda
+- **gRPC Server**: `localhost:8090` portunda
+- **REST API**: `localhost:8090/api` portunda
 
 ### 2. Next.js Projesinde Kullanın
 
@@ -24,7 +24,7 @@ Backend'iniz hem gRPC hem de REST API sağlar. Next.js'te REST API'yi kullanmak 
 
 ```javascript
 // lib/api.js
-const API_BASE = "http://localhost:8080/api";
+const API_BASE = "http://localhost:8090/api";
 
 export async function createPost(postData) {
   const response = await fetch(`${API_BASE}/posts`, {
@@ -65,7 +65,7 @@ protoc --js_out=import_style=commonjs:./src/proto \
 
 ## 📝 API Endpoints
 
-### REST API (Port 8080)
+### REST API (Port 8090)
 
 | Method | Endpoint          | Açıklama          |
 | ------ | ----------------- | ----------------- |
@@ -75,7 +75,7 @@ protoc --js_out=import_style=commonjs:./src/proto \
 | PUT    | `/api/posts/{id}` | Post güncelle     |
 | DELETE | `/api/posts/{id}` | Post sil          |
 
-### gRPC (Port 8081)
+### gRPC (Port 8090)
 
 - `CreatePost`
 - `GetPost`
