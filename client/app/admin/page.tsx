@@ -59,7 +59,7 @@ export default function AdminPage() {
   const getTokenFromCookie = () => {
     const cookies = document.cookie.split(";");
     const tokenCookie = cookies.find((cookie) =>
-      cookie.trim().startsWith("accessToken=")
+      cookie.trim().startsWith("accessToken="),
     );
     return tokenCookie ? tokenCookie.split("=")[1] : null;
   };
@@ -240,7 +240,7 @@ export default function AdminPage() {
   // Blok içeriğini güncelle
   const handleBlockChange = (idx: number, value: Partial<Block>) => {
     setBlocks((blocks) =>
-      blocks.map((b, i) => (i === idx ? ({ ...b, ...value } as Block) : b))
+      blocks.map((b, i) => (i === idx ? ({ ...b, ...value } as Block) : b)),
     );
   };
 
@@ -283,18 +283,17 @@ export default function AdminPage() {
     setIsSubmitting(true);
     try {
       const token = getTokenFromCookie();
-      const apiBaseUrl =
-        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api/v1/";
-      const response = await fetch(`${apiBaseUrl}postWrite`, {
+      const apiBaseUrl = process.env.GO_API || "http://localhost:8090";
+      const response = await fetch(`${apiBaseUrl}/posts`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        // headers: {
+        //   "Content-Type": "application/json",
+        //   Authorization: `Bearer ${token}`,
+        // },
         body: JSON.stringify({
           title: title.trim(),
           summary: summary.trim(),
-          blocks: JSON.stringify(blocks),
+          blocks: blocks,
           category: category,
           date: new Date().toISOString(),
           subscriberOnly: Number(subscriberOnly) || 0,
@@ -696,8 +695,8 @@ export default function AdminPage() {
                 ? "Updating..."
                 : "Adding Post..."
               : editingPostId
-              ? "Güncelle"
-              : "Add Post"}
+                ? "Güncelle"
+                : "Add Post"}
           </button>
           <button
             type="button"

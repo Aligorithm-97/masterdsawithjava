@@ -8,6 +8,7 @@ import (
 	"postService/internal/config"
 	"postService/internal/db"
 	"postService/internal/kafka"
+	"postService/internal/middleware"
 	"postService/internal/routes"
 
 	"github.com/go-chi/chi/v5"
@@ -20,6 +21,7 @@ func main() {
 	r := chi.NewRouter()
 	kafka.InitKafka(cfg.KafkaBrokers)
 	defer kafka.Producer.Close()
+	r.Use(middleware.CORSMiddleware())
 
 	routes.PostRoutes(r)
 
