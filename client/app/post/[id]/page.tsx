@@ -28,10 +28,8 @@ export default function PostDetailPage() {
       if (!params.id) return;
 
       try {
-        const apiBaseUrl =
-          process.env.NEXT_PUBLIC_API_BASE_URL ||
-          "http://localhost:8080/api/v1/";
-        const response = await fetch(`${apiBaseUrl}post/${params.id}`);
+        const apiBaseUrl = process.env.GO_API || "http://localhost:8090";
+        const response = await fetch(`${apiBaseUrl}/postsById/${params.id}`);
 
         if (response.ok) {
           const payload = await response.json();

@@ -12,4 +12,5 @@ func PostRoutes(r chi.Router) {
 	r.Post("/posts", handlers.CreatePost)
 	r.Get("/posts", handlers.GetPosts)
 	r.Get("/posts/{category}", handlers.GetPostbyCategory)
+	r.Get("/postsById/{id}", handlers.GetPostById)
 }

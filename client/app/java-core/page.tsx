@@ -34,7 +34,7 @@ export default function JavaCorePage() {
       });
 
       const apiBaseUrl = process.env.GO_API || "http://localhost:8090";
-      const response = await fetch(`${apiBaseUrl}/posts`);
+      const response = await fetch(`${apiBaseUrl}/posts/Java`);
       const payload = await response.json();
 
       if (response.ok) {
@@ -377,33 +377,19 @@ export default function JavaCorePage() {
                       />
                     </div>
                     <div className="mt-4 pt-4 border-t border-gray-700">
+                      {/*Yarın burdan devam postbyid falan*/}
+
                       {(() => {
-                        const candidates = [
-                          (post as any)?.id,
-                          (post as any)?.postId,
-                          (post as any)?.post_id,
-                          (post as any)?.post?.id,
-                          (post as any)?.articleId,
-                          (post as any)?.article_id,
-                          (post as any)?.uuid,
-                          (post as any)?.slug,
-                        ].filter((v) => v != null);
-                        let numericId: number | null = null;
-                        for (const c of candidates) {
-                          const str = String(c);
-                          const match = str.match(/\d+/);
-                          if (match) {
-                            const n = Number.parseInt(match[0], 10);
-                            if (Number.isFinite(n)) {
-                              numericId = n;
-                              break;
-                            }
-                          }
-                        }
-                        if (numericId != null) {
+                        const candidates = [(post as any)?.id].filter(
+                          (v) => v != null,
+                        );
+
+                        const postId = candidates[0];
+
+                        if (postId != null) {
                           return (
                             <Link
-                              href={`/post/${numericId}`}
+                              href={`/post/${postId}`}
                               className="text-blue-400 hover:text-blue-300 text-sm font-medium"
                             >
                               Read More →

@@ -26,6 +26,23 @@ func GetPosts(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(Response{Message: "Postlar alindi", Data: posts})
 }
 
+func GetPostById(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+
+	if id == "" {
+		http.Error(w, "Post ID belirtilmedi", http.StatusBadRequest)
+		return
+	}
+
+	post, err := services.PostService{}.GetPostById(r.Context(), id)
+	if err != nil {
+		http.Error(w, "Post alinamadi: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(Response{Message: "Post alindi", Data: post})
+}
+
 func GetPostbyCategory(w http.ResponseWriter, r *http.Request) {
 	category := chi.URLParam(r, "category")
 

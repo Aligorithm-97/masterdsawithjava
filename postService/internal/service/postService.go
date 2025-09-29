@@ -35,6 +35,22 @@ func (s PostService) GetPosts(ctx context.Context) ([]models.Post, error) {
 	return posts, nil
 }
 
+func (s PostService) GetPostById(ctx context.Context, id string) (models.Post, error) {
+	// Business logic
+	postID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return models.Post{}, err
+	}
+
+	var post models.Post
+	err = db.PostCollection.FindOne(ctx, bson.M{"_id": postID}).Decode(&post)
+	if err != nil {
+		return models.Post{}, err
+	}
+
+	return post, nil
+}
+
 func (s PostService) GetPostbyCategory(ctx context.Context, category string) ([]models.Post, error) {
 	// Business logic
 	cursor, err := db.PostCollection.Find(ctx, bson.M{"category": category})
