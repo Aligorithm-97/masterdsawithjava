@@ -7,11 +7,40 @@ import (
 
 	"postService/internal/models"
 	services "postService/internal/service"
+
+	"github.com/go-chi/chi/v5"
 )
 
 type Response struct {
 	Message string      `json:"message"`
 	Data    interface{} `json:"data,omitempty"`
+}
+
+func GetPosts(w http.ResponseWriter, r *http.Request) {
+	posts, err := services.PostService{}.GetPosts(r.Context())
+	if err != nil {
+		http.Error(w, "Postlar alinamadi: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(Response{Message: "Postlar alindi", Data: posts})
+}
+
+func GetPostbyCategory(w http.ResponseWriter, r *http.Request) {
+	category := chi.URLParam(r, "category")
+
+	if category == "" {
+		http.Error(w, "Kategori belirtilmedi", http.StatusBadRequest)
+		return
+	}
+
+	posts, err := services.PostService{}.GetPostbyCategory(r.Context(), category)
+	if err != nil {
+		http.Error(w, "Postlar alinamadi: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(Response{Message: "Postlar alindi", Data: posts})
 }
 
 // internal/handlers/postHandler.go

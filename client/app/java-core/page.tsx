@@ -33,9 +33,8 @@ export default function JavaCorePage() {
         category: "Java",
       });
 
-      const apiBaseUrl =
-        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api/v1/";
-      const response = await fetch(`${apiBaseUrl}post?${params}`);
+      const apiBaseUrl = process.env.GO_API || "http://localhost:8090";
+      const response = await fetch(`${apiBaseUrl}/posts`);
       const payload = await response.json();
 
       if (response.ok) {
@@ -46,10 +45,10 @@ export default function JavaCorePage() {
 
         const total: number = Array.isArray(payload)
           ? rawItems.length
-          : payload?.totalElements ??
+          : (payload?.totalElements ??
             payload?.totalItems ??
             payload?.total ??
-            rawItems.length;
+            rawItems.length);
 
         // Normalize and parse each post
         const postsWithParsedBlocks = rawItems.map((post: any) => {
@@ -73,14 +72,14 @@ export default function JavaCorePage() {
               "Post missing numeric id, got:",
               idRaw,
               "post keys:",
-              Object.keys(post)
+              Object.keys(post),
             );
           }
           return { ...post, id, category, date, blocks };
         });
         // Tarihe göre sıralama (en yeni önce)
         const sortedPosts = postsWithParsedBlocks.sort(
-          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
         );
         setPosts(sortedPosts);
         setTotalPosts(total);
