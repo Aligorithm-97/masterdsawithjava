@@ -51,12 +51,12 @@ export default function LoginPage() {
       if (response.ok) {
         setIsSuccess(true);
         setMessage("Login successful. Redirecting...");
-        router.replace("/");
+        router.replace("/admin");
       } else {
         const data = await response.json().catch(() => null);
         setIsSuccess(false);
         setMessage(
-          data?.message || data?.error || "Invalid email or password."
+          data?.message || data?.error || "Invalid email or password.",
         );
       }
     } catch (err) {
