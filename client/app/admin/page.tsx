@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 
 import PostRenderer from "../../components/PostRenderer";
 import { Post, Block } from "../../lib/types";
+import { getAccessToken } from "../../utils/GetTokenFromCookie";
 
 const CATEGORIES = [
   "Java",
@@ -42,7 +43,7 @@ export default function AdminPage() {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
-
+  const token = getAccessToken();
   // Check authentication on component mount
   useEffect(() => {
     checkAuthentication();
@@ -55,20 +56,9 @@ export default function AdminPage() {
     }
   }, [currentPage, searchTerm, isAuthenticated]);
 
-  // Get token from cookie
-  const getTokenFromCookie = () => {
-    const cookies = document.cookie.split(";");
-    const tokenCookie = cookies.find((cookie) =>
-      cookie.trim().startsWith("accessToken="),
-    );
-    return tokenCookie ? tokenCookie.split("=")[1] : null;
-  };
-
   // Check if user is authenticated
   const checkAuthentication = async () => {
     try {
-      const token = getTokenFromCookie();
-
       if (!token) {
         setIsAuthenticated(false);
         setAuthLoading(false);
@@ -102,7 +92,6 @@ export default function AdminPage() {
         search: search,
       });
 
-      const token = getTokenFromCookie();
       const apiBaseUrl = process.env.GO_API || "http://localhost:8090";
       const response = await fetch(`${apiBaseUrl}/posts`, {
         headers: {
@@ -242,7 +231,6 @@ export default function AdminPage() {
     if (!confirm("Are you sure you want to delete this post?")) return;
 
     try {
-      const token = getTokenFromCookie();
       const apiBaseUrl =
         process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api/v1/";
       const response = await fetch(`${apiBaseUrl}post/${postId}`, {
@@ -275,7 +263,6 @@ export default function AdminPage() {
 
     setIsSubmitting(true);
     try {
-      const token = getTokenFromCookie();
       const apiBaseUrl = process.env.GO_API || "http://localhost:8090";
       const response = await fetch(`${apiBaseUrl}/posts`, {
         method: "POST",
@@ -335,7 +322,6 @@ export default function AdminPage() {
     }
     setIsSubmitting(true);
     try {
-      const token = getTokenFromCookie();
       const apiBaseUrl =
         process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api/v1/";
       const response = await fetch(`${apiBaseUrl}post/${editingPostId}`, {

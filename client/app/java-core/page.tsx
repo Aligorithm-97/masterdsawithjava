@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 
 import PostRenderer from "../../components/PostRenderer";
 import { Post } from "../../lib/types";
+import { getAccessToken } from "../../utils/GetTokenFromCookie";
 
 export default function JavaCorePage() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -32,9 +33,13 @@ export default function JavaCorePage() {
       const params = new URLSearchParams({
         category: "Java",
       });
-
       const apiBaseUrl = process.env.GO_API || "http://localhost:8090";
-      const response = await fetch(`${apiBaseUrl}/posts/Java`);
+      const token = getAccessToken();
+      const response = await fetch(`${apiBaseUrl}/posts/Java`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const payload = await response.json();
 
       if (response.ok) {
