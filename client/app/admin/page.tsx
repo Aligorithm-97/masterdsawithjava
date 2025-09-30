@@ -103,25 +103,14 @@ export default function AdminPage() {
       });
 
       const token = getTokenFromCookie();
-      const apiBaseUrl =
-        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api/v1/";
-      const response = await fetch(`${apiBaseUrl}post?${params}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const apiBaseUrl = process.env.GO_API || "http://localhost:8090";
+      const response = await fetch(`${apiBaseUrl}/posts`);
       const data = await response.json();
 
       if (response.ok) {
         // Parse blocks from JSON string to array
-        const postsWithParsedBlocks = (data.data || []).map((post: any) => ({
-          ...post,
-          blocks:
-            typeof post.blocks === "string"
-              ? JSON.parse(post.blocks)
-              : post.blocks,
-        }));
-        setPosts(postsWithParsedBlocks);
+
+        setPosts(data.data);
         setTotalPosts(data.totalElements || 0);
       } else {
         setMessage("Error loading posts: " + data.error);
