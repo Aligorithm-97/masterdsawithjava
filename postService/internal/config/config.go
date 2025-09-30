@@ -10,6 +10,7 @@ import (
 type Config struct {
 	KafkaBrokers []string
 	ServerPort   string
+	JwtSecret    string
 }
 
 func LoadConfig() *Config {
@@ -28,8 +29,14 @@ func LoadConfig() *Config {
 		port = "8090"
 	}
 
+	jwtSecret := os.Getenv("JWT_SECRET")
+	if jwtSecret == "" {
+		jwtSecret = "default_jwt_secret"
+	}
+
 	return &Config{
 		KafkaBrokers: []string{brokers},
 		ServerPort:   port,
+		JwtSecret:    jwtSecret,
 	}
 }

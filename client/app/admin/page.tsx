@@ -104,7 +104,11 @@ export default function AdminPage() {
 
       const token = getTokenFromCookie();
       const apiBaseUrl = process.env.GO_API || "http://localhost:8090";
-      const response = await fetch(`${apiBaseUrl}/posts`);
+      const response = await fetch(`${apiBaseUrl}/posts`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const data = await response.json();
 
       if (response.ok) {
@@ -275,10 +279,10 @@ export default function AdminPage() {
       const apiBaseUrl = process.env.GO_API || "http://localhost:8090";
       const response = await fetch(`${apiBaseUrl}/posts`, {
         method: "POST",
-        // headers: {
-        //   "Content-Type": "application/json",
-        //   Authorization: `Bearer ${token}`,
-        // },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({
           title: title.trim(),
           summary: summary.trim(),

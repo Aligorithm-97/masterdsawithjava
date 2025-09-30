@@ -22,7 +22,7 @@ func main() {
 	kafka.InitKafka(cfg.KafkaBrokers)
 	defer kafka.Producer.Close()
 	r.Use(middleware.CORSMiddleware())
-
+	r.Use(middleware.AuthMiddleware)
 	routes.PostRoutes(r)
 
 	fmt.Printf("Post Service %s portunda çalışıyor...\n", cfg.ServerPort)
