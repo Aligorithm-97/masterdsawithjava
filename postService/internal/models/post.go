@@ -1,6 +1,10 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 type Block struct {
 	Type     string `bson:"type" json:"type"`
@@ -12,11 +16,11 @@ type Block struct {
 }
 
 type Post struct {
-	ID             string    `bson:"_id,omitempty" json:"id"`
-	Blocks         []Block   `bson:"blocks" json:"blocks"`
-	Category       string    `bson:"category" json:"category"`
-	Date           time.Time `bson:"date" json:"date"`
-	Summary        string    `bson:"summary" json:"summary"`
-	Title          string    `bson:"title" json:"title"`
-	SubscriberOnly int       `bson:"subscriberOnly,omitempty" json:"subscriberOnly,omitempty"`
+	ID             primitive.ObjectID `bson:"_id,omitempty" json:"id"`
+	Blocks         []Block            `bson:"blocks" json:"blocks"`
+	Category       string             `bson:"category" json:"category"`
+	Date           time.Time          `bson:"date" json:"date"`
+	Summary        string             `bson:"summary" json:"summary"`
+	Title          string             `bson:"title" json:"title"`
+	SubscriberOnly int                `bson:"subscriberOnly,omitempty" json:"subscriberOnly,omitempty"`
 }

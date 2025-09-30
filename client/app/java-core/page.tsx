@@ -52,14 +52,13 @@ export default function JavaCorePage() {
 
         // Normalize and parse each post
         const postsWithParsedBlocks = rawItems.map((post: any) => {
-          const idRaw =
+          const id =
             post?.id ??
             post?.postId ??
             post?.post?.id ??
             post?.uuid ??
-            post?.slug;
-          const parsedNumericId = Number.parseInt(String(idRaw ?? ""), 10);
-          const id = Number.isFinite(parsedNumericId) ? parsedNumericId : idRaw;
+            post?.slug; // AS IS, string olarak bırak
+
           const category =
             post?.category ?? post?.categoryName ?? post?.category?.name;
           const date = post?.date ?? post?.createdAt ?? post?.created_date;
@@ -67,16 +66,10 @@ export default function JavaCorePage() {
             typeof post?.blocks === "string"
               ? JSON.parse(post.blocks)
               : post?.blocks;
-          if (!Number.isFinite(parsedNumericId)) {
-            console.warn(
-              "Post missing numeric id, got:",
-              idRaw,
-              "post keys:",
-              Object.keys(post),
-            );
-          }
+
           return { ...post, id, category, date, blocks };
         });
+
         // Tarihe göre sıralama (en yeni önce)
         const sortedPosts = postsWithParsedBlocks.sort(
           (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
@@ -92,7 +85,7 @@ export default function JavaCorePage() {
       setLoading(false);
     }
   };
-
+  console.log("Posts loaded:", posts);
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
     setCurrentPage(1);
@@ -385,7 +378,7 @@ export default function JavaCorePage() {
                         );
 
                         const postId = candidates[0];
-
+                        console.log(postId);
                         if (postId != null) {
                           return (
                             <Link

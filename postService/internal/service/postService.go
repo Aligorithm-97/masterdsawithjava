@@ -52,7 +52,6 @@ func (s PostService) GetPostById(ctx context.Context, id string) (models.Post, e
 }
 
 func (s PostService) GetPostbyCategory(ctx context.Context, category string) ([]models.Post, error) {
-	// Business logic
 	cursor, err := db.PostCollection.Find(ctx, bson.M{"category": category})
 	if err != nil {
 		return nil, err
@@ -73,7 +72,7 @@ func (s PostService) GetPostbyCategory(ctx context.Context, category string) ([]
 
 func (s PostService) Create(ctx context.Context, post models.Post) (models.Post, error) {
 	// Business logic
-	post.ID = primitive.NewObjectID().Hex()
+	post.ID = primitive.NewObjectID()
 	if post.Date.IsZero() {
 		post.Date = time.Now()
 	}
