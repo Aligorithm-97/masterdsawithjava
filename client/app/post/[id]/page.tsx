@@ -31,11 +31,7 @@ export default function PostDetailPage() {
       try {
         const apiBaseUrl = process.env.GO_API || "http://localhost:8090";
         const token = getAccessToken();
-        const response = await fetch(`${apiBaseUrl}/postsById/${params.id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(`${apiBaseUrl}/postsById/${params.id}`);
 
         if (response.ok) {
           const payload = await response.json();

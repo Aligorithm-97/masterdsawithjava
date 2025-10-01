@@ -22,8 +22,11 @@ func main() {
 	kafka.InitKafka(cfg.KafkaBrokers)
 	defer kafka.Producer.Close()
 	r.Use(middleware.CORSMiddleware())
-	r.Use(middleware.AuthMiddleware)
-	routes.PostRoutes(r)
+	r.Group(func(pr chi.Router) {
+		pr.Use(middleware.AuthMiddleware)
+		routes.PostRoutes(pr)
+	})
+	routes.PostPublicRoutes(r)
 
 	fmt.Printf("Post Service %s portunda çalışıyor...\n", cfg.ServerPort)
 	err := http.ListenAndServe(":"+cfg.ServerPort, r)
