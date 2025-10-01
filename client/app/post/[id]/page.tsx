@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import PostRenderer from "../../../components/PostRenderer";
 import { Post } from "../../../lib/types";
+import { getAccessToken } from "../../../utils/GetTokenFromCookie";
 
 export default function PostDetailPage() {
   const [post, setPost] = useState<Post | null>(null);
@@ -26,10 +27,15 @@ export default function PostDetailPage() {
   useEffect(() => {
     const loadPost = async () => {
       if (!params.id) return;
-
+      console.log("Loading post with ID:", params.postId);
       try {
         const apiBaseUrl = process.env.GO_API || "http://localhost:8090";
-        const response = await fetch(`${apiBaseUrl}/postsById/${params.id}`);
+        const token = getAccessToken();
+        const response = await fetch(`${apiBaseUrl}/postsById/${params.id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (response.ok) {
           const payload = await response.json();

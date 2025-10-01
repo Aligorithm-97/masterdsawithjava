@@ -375,15 +375,12 @@ export default function JavaCorePage() {
                       />
                     </div>
                     <div className="mt-4 pt-4 border-t border-gray-700">
-                      {/*Yarın burdan devam postbyid falan*/}
-
                       {(() => {
                         const candidates = [(post as any)?.id].filter(
                           (v) => v != null,
                         );
 
                         const postId = candidates[0];
-                        console.log(postId);
                         if (postId != null) {
                           return (
                             <Link

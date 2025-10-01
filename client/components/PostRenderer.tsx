@@ -14,7 +14,6 @@ export default function PostRenderer({
 }: PostRendererProps) {
   const blocksToRender = maxBlocks ? blocks.slice(0, maxBlocks) : blocks;
 
-  // Kopyalama durumunu her kod bloğu için ayrı ayrı tutmak için state
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
   const handleCopy = (code: string, index: number) => {

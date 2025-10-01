@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import PostRenderer from "./PostRenderer";
 import { Post } from "../lib/types";
+import { getAccessToken } from "../utils/GetTokenFromCookie";
 
 interface CategoryPostsProps {
   category: string; // Backend category name
@@ -41,44 +42,49 @@ export default function CategoryPosts({
   useEffect(() => {
     const load = async () => {
       try {
-        const params = new URLSearchParams({ category });
-        const apiBaseUrl =
-          process.env.NEXT_PUBLIC_API_BASE_URL ||
-          "http://localhost:8080/api/v1/";
-        const res = await fetch(`${apiBaseUrl}post?${params}`);
+        const apiBaseUrl = process.env.GO_URL || "http://localhost:8090";
+        const token = getAccessToken();
+
+        const res = await fetch(`${apiBaseUrl}/posts/${category}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
         const payload = await res.json();
         if (!res.ok) {
           console.error("Failed to load posts:", payload?.error ?? payload);
           return;
         }
+
         const rawItems: any[] = Array.isArray(payload)
           ? payload
           : payload?.data || payload?.items || payload?.content || [];
-        const normalized: Post[] = rawItems.map((post: any) => {
-          const idRaw =
+
+        const postsWithParsedBlocks = rawItems.map((post: any) => {
+          const id =
             post?.id ??
             post?.postId ??
             post?.post?.id ??
             post?.uuid ??
-            post?.slug;
-          const parsed = Number.parseInt(String(idRaw ?? ""), 10);
-          const id = Number.isFinite(parsed) ? parsed : idRaw;
-          const cat =
-            post?.category ??
-            post?.categoryName ??
-            post?.category?.name ??
-            category;
+            post?.slug; // AS IS, string olarak bırak
+
+          const category =
+            post?.category ?? post?.categoryName ?? post?.category?.name;
           const date = post?.date ?? post?.createdAt ?? post?.created_date;
           const blocks =
             typeof post?.blocks === "string"
               ? JSON.parse(post.blocks)
               : post?.blocks;
-          return { ...post, id, category: cat, date, blocks } as Post;
+
+          return { ...post, id, category, date, blocks };
         });
+
         // Tarihe göre sıralama (en yeni önce)
-        const sortedPosts = normalized.sort(
-          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+        const sortedPosts = postsWithParsedBlocks.sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
         );
+
         setPosts(sortedPosts);
       } catch (e) {
         console.error("Failed loading posts:", e);
@@ -131,27 +137,9 @@ export default function CategoryPosts({
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {posts.map((post) => {
             const badgeClass = badgeClassByAccent[accent];
-            const candidates = [
-              (post as any)?.id,
-              (post as any)?.postId,
-              (post as any)?.post_id,
-              (post as any)?.post?.id,
-              (post as any)?.articleId,
-              (post as any)?.article_id,
-              (post as any)?.uuid,
-              (post as any)?.slug,
-            ].filter((v) => v != null);
-            let numericId: number | null = null;
-            for (const c of candidates) {
-              const match = String(c).match(/\d+/);
-              if (match) {
-                const n = Number.parseInt(match[0], 10);
-                if (Number.isFinite(n)) {
-                  numericId = n;
-                  break;
-                }
-              }
-            }
+            const candidates = [(post as any)?.id].filter((v) => v != null);
+
+            const postId = candidates[0];
             return (
               <article
                 key={String(post.id)}
@@ -184,9 +172,9 @@ export default function CategoryPosts({
                     />
                   </div>
                   <div className="mt-4 pt-4 border-t border-gray-700">
-                    {numericId != null ? (
+                    {postId != null ? (
                       <Link
-                        href={`/post/${numericId}`}
+                        href={`/post/${postId}`}
                         className="text-blue-400 hover:text-blue-300 text-sm font-medium"
                       >
                         Read More →
