@@ -276,7 +276,7 @@ export default function AdminPage() {
           blocks: blocks,
           category: category,
           date: new Date().toISOString(),
-          subscriberOnly: Number(subscriberOnly) || 0,
+          subscriberOnly: subscriberOnly == 1 ? 1 : 2,
         }),
       });
 
