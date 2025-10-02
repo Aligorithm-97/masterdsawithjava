@@ -28,7 +28,8 @@ export type Block =
   | { type: "heading"; content: string }
   | { type: "image"; url: string; alt?: string }
   | { type: "code"; code: string; language?: string }
-  | { type: "quote"; content: string };
+  | { type: "quote"; content: string }
+  | { type: "link"; url: string; dec: string };
 
 // API Response types
 export interface ApiResponse<T> {

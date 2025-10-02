@@ -20,6 +20,7 @@ const BLOCK_TYPES = [
   { type: "image", label: "Image" },
   { type: "code", label: "Code" },
   { type: "quote", label: "Quote" },
+  { type: "link", label: "Link" },
 ];
 
 export default function AdminPage() {
@@ -196,6 +197,9 @@ export default function AdminPage() {
         break;
       case "quote":
         newBlock = { type, content: "" };
+        break;
+      case "link":
+        newBlock = { type, url: "", dec: "" };
         break;
       default:
         return;
@@ -532,6 +536,28 @@ export default function AdminPage() {
                       rows={3}
                       placeholder="Paragraph text..."
                     />
+                  )}
+                  {block.type === "link" && (
+                    <div className="space-y-2">
+                      <textarea
+                        value={block.dec}
+                        onChange={(e) =>
+                          handleBlockChange(idx, { dec: e.target.value })
+                        }
+                        className="w-full px-3 py-2 rounded bg-gray-800 text-green-200 font-mono border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        rows={4}
+                        placeholder="Dec..."
+                      />
+                      <input
+                        type="text"
+                        value={block.url || ""}
+                        onChange={(e) =>
+                          handleBlockChange(idx, { url: e.target.value })
+                        }
+                        className="w-full px-3 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Language (e.g. js, java, py)"
+                      />
+                    </div>
                   )}
                   {block.type === "heading" && (
                     <input

@@ -13,6 +13,7 @@ type Block struct {
 	Alt      string `bson:"alt,omitempty" json:"alt,omitempty"`
 	Code     string `bson:"code,omitempty" json:"code,omitempty"`
 	Language string `bson:"language,omitempty" json:"language,omitempty"`
+	Dec      string `bson:"dec,omitempty" json:"dec,omitempty"`
 }
 
 type Post struct {

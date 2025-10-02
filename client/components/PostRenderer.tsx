@@ -139,6 +139,22 @@ export default function PostRenderer({
           </blockquote>
         );
 
+      case "link":
+        return (
+          <>
+            <span className="relative z-10">{block.dec} : </span>
+            <a
+              key={index}
+              href={block.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="relative px-4 py-3 text-sm font-semibold text-gray-300 hover:text-white rounded-lg transition-all duration-200 hover:bg-gray-800/50 group"
+            >
+              {block.url}
+            </a>
+          </>
+        );
+
       default:
         return null;
     }
