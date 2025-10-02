@@ -97,7 +97,7 @@ export default function CategoryPosts({
 
   if (loading) {
     return (
-      <section className="py-16 bg-[#23272f]">
+      <section className="py-16 bg-[#18181b]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
@@ -110,7 +110,7 @@ export default function CategoryPosts({
 
   if (posts.length === 0) {
     return (
-      <section className="py-16 bg-[#23272f]">
+      <section className="py-16 bg-[#18181b]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-3xl font-bold text-white mb-4">No Posts Yet</h2>
@@ -124,7 +124,7 @@ export default function CategoryPosts({
   }
 
   return (
-    <section className="py-16 bg-[#23272f]">
+    <section className="py-16 bg-[#18181b]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-white mb-4">

@@ -227,7 +227,7 @@ export default function DSASolutionsPage() {
               <Link
                 key={category.title}
                 href={category.href}
-                className="group block bg-[#23272f] rounded-xl shadow-lg border border-gray-700 overflow-hidden hover:shadow-xl transition-all duration-300 hover:scale-105"
+                className="group block bg-[#18181b] rounded-xl shadow-lg border border-gray-700 overflow-hidden hover:shadow-xl transition-all duration-300 hover:scale-105"
               >
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-4">
@@ -284,7 +284,7 @@ export default function DSASolutionsPage() {
       </section>
 
       {/* Call to Action */}
-      <section className="py-16 bg-[#23272f]">
+      <section className="py-16 bg-[#18181b]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">
             Ready to Master DSA?

@@ -294,7 +294,7 @@ export default function Home() {
               <p className="text-gray-400 mt-4">Loading recent posts...</p>
             </div>
           ) : recentPosts.length > 0 ? (
-            <section className="py-16 bg-[#23272f]">
+            <section className="py-16 bg-[#18181b]">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center mb-12">
                   <h2 className="text-3xl font-bold text-white mb-4">

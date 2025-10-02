@@ -101,7 +101,7 @@ export default function PostDetailPage() {
   return (
     <div className="min-h-screen bg-[#18181b] pt-16">
       {/* Header */}
-      <section className="bg-[#23272f] border-b border-gray-700">
+      <section className="bg-[#18181b] border-b border-gray-700">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="mb-6">
             <Link
@@ -162,7 +162,7 @@ export default function PostDetailPage() {
       </section>
 
       {/* Footer */}
-      <section className="bg-[#23272f] border-t border-gray-700">
+      <section className="bg-[#18181b] border-t border-gray-700">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-white mb-4">

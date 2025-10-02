@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import PostRenderer from "../../components/PostRenderer";
 import { Post } from "../../lib/types";
 import { getAccessToken } from "../../utils/GetTokenFromCookie";
+import { formatDate } from "@/utils/FormatDate";
 
 export default function JavaCorePage() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -13,16 +14,6 @@ export default function JavaCorePage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [totalPosts, setTotalPosts] = useState(0);
-
-  const formatDate = (value?: string) => {
-    if (!value) return "";
-    const d = new Date(value);
-    if (isNaN(d.getTime())) return value;
-    return new Intl.DateTimeFormat("tr-TR", {
-      dateStyle: "medium",
-      timeStyle: "short",
-    }).format(d);
-  };
 
   useEffect(() => {
     loadPosts(currentPage, searchTerm);
@@ -325,7 +316,7 @@ export default function JavaCorePage() {
 
       {/* Dynamic Posts Section */}
       {loading ? (
-        <section className="py-16 bg-[#23272f]">
+        <section className="py-16 bg-[#18181b]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
@@ -334,7 +325,7 @@ export default function JavaCorePage() {
           </div>
         </section>
       ) : posts.length > 0 ? (
-        <section className="py-16 bg-[#23272f]">
+        <section className="py-16 bg-[#18181b]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-white mb-4">
@@ -524,7 +515,7 @@ export default function JavaCorePage() {
       </section>
 
       {/* Call to Action */}
-      <section className="py-16 bg-[#23272f]">
+      <section className="py-16 bg-[#18181b]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">
             Ready to Master Java?
