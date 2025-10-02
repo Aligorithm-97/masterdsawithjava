@@ -13,7 +13,7 @@ export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showJavaMenu, setShowJavaMenu] = useState(false);
   const [javaMenuTimeout, setJavaMenuTimeout] = useState<NodeJS.Timeout | null>(
-    null
+    null,
   );
   const menuRef = useRef(null);
   const javaMenuRef = useRef(null);
@@ -149,14 +149,14 @@ export default function Navigation() {
               <button
                 className={`relative px-4 py-3 text-sm font-semibold rounded-lg transition-all duration-200 group flex items-center space-x-2 ${
                   showJavaMenu
-                    ? "text-blue-400 bg-blue-600/20 border border-blue-500/30"
-                    : "text-gray-300 hover:text-white hover:bg-gray-800/50"
+                    ? "text-white-400 bg-gray-600/20 border border-gray-500/30"
+                    : "text-white-300 hover:text-white hover:bg-gray-800/50"
                 }`}
               >
                 <span>Java</span>
                 <svg
                   className={`w-4 h-4 transition-transform duration-300 ${
-                    showJavaMenu ? "rotate-180 text-blue-400" : "text-gray-400"
+                    showJavaMenu ? "rotate-180 text-gray-400" : "text-gray-400"
                   }`}
                   fill="none"
                   stroke="currentColor"
@@ -170,7 +170,7 @@ export default function Navigation() {
                   />
                 </svg>
                 <div
-                  className={`absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-blue-800 transition-all duration-300 ${
+                  className={`absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-gray-500 to-gray-800 transition-all duration-300 ${
                     showJavaMenu ? "w-full" : "group-hover:w-full"
                   }`}
                 ></div>
@@ -183,11 +183,11 @@ export default function Navigation() {
                       <Link
                         key={item.name}
                         href={item.href}
-                        className="block px-4 py-3 text-sm font-medium text-gray-300 hover:text-white hover:bg-blue-600/20 rounded-lg transition-all duration-200 mx-1 group"
+                        className="block px-4 py-3 text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-600/20 rounded-lg transition-all duration-200 mx-1 group"
                         style={{ animationDelay: `${index * 50}ms` }}
                       >
                         <div className="flex items-center space-x-3">
-                          <div className="w-2 h-2 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+                          <div className="w-2 h-2 bg-gray-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
                           <span>{item.name}</span>
                         </div>
                       </Link>
@@ -202,8 +202,8 @@ export default function Navigation() {
               className="relative px-4 py-3 text-sm font-semibold text-gray-300 hover:text-white rounded-lg transition-all duration-200 hover:bg-gray-800/50 group"
             >
               <span className="relative z-10">DSA</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-green-600/10 to-blue-600/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
-              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-green-500 to-blue-500 group-hover:w-full transition-all duration-300"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-gray-600/10 to-gray-700/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-gray-500 to-gray-400 group-hover:w-full transition-all duration-300"></div>
             </Link>
 
             <Link
@@ -211,16 +211,16 @@ export default function Navigation() {
               className="relative px-4 py-3 text-sm font-semibold text-gray-300 hover:text-white rounded-lg transition-all duration-200 hover:bg-gray-800/50 group"
             >
               <span className="relative z-10">System Design</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-emerald-700/20 to-teal-700/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
-              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-emerald-600 to-teal-600 group-hover:w-full transition-all duration-300"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-gray-600/10 to-gray-700/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-gray-500 to-gray-400 group-hover:w-full transition-all duration-300"></div>
             </Link>
             <Link
               href="/design-patterns"
               className="relative px-4 py-3 text-sm font-semibold text-gray-300 hover:text-white rounded-lg transition-all duration-200 hover:bg-gray-800/50 group"
             >
               <span className="relative z-10">Design Patterns</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-700/20 to-sky-700/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
-              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-sky-600 group-hover:w-full transition-all duration-300"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-gray-600/10 to-gray-700/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-gray-500 to-gray-400 group-hover:w-full transition-all duration-300"></div>
             </Link>
             <Link
               href="/about"
