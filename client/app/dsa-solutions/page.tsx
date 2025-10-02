@@ -313,12 +313,6 @@ export default function DSASolutionsPage() {
                 />
               </svg>
             </Link>
-            <Link
-              href="/algorithm-problems"
-              className="inline-flex items-center px-6 py-3 border border-gray-600 text-base font-medium rounded-lg text-gray-300 hover:text-white hover:bg-gray-700 transition-colors duration-200"
-            >
-              Algorithm Problems
-            </Link>
           </div>
         </div>
       </section>
