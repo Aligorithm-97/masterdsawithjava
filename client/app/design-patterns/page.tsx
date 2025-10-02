@@ -55,7 +55,7 @@ export default function DesignPatternsPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Creational Patterns */}
-            <div className="bg-[#23272f] rounded-xl p-8 border border-gray-700">
+            <div className="bg-[#18181b] rounded-xl p-8 border border-gray-700">
               <div className="w-16 h-16 bg-blue-600/20 rounded-xl flex items-center justify-center mb-6 group-hover:bg-blue-600/30 transition-colors duration-300">
                 <svg
                   className="w-8 h-8 text-blue-400"
@@ -88,7 +88,7 @@ export default function DesignPatternsPage() {
             </div>
 
             {/* Structural Patterns */}
-            <div className="bg-[#23272f] rounded-xl p-8 border border-gray-700">
+            <div className="bg-[#18181b] rounded-xl p-8 border border-gray-700">
               <div className="w-16 h-16 bg-green-600/20 rounded-xl flex items-center justify-center mb-6 group-hover:bg-green-600/30 transition-colors duration-300">
                 <svg
                   className="w-8 h-8 text-green-400"
@@ -121,7 +121,7 @@ export default function DesignPatternsPage() {
             </div>
 
             {/* Behavioral Patterns */}
-            <div className="bg-[#23272f] rounded-xl p-8 border border-gray-700">
+            <div className="bg-[#18181b] rounded-xl p-8 border border-gray-700">
               <div className="w-16 h-16 bg-purple-600/20 rounded-xl flex items-center justify-center mb-6 group-hover:bg-purple-600/30 transition-colors duration-300">
                 <svg
                   className="w-8 h-8 text-purple-400"
@@ -154,7 +154,7 @@ export default function DesignPatternsPage() {
             </div>
 
             {/* Java-Specific Patterns */}
-            <div className="bg-[#23272f] rounded-xl p-8 border border-gray-700">
+            <div className="bg-[#18181b] rounded-xl p-8 border border-gray-700">
               <div className="w-16 h-16 bg-yellow-600/20 rounded-xl flex items-center justify-center mb-6 group-hover:bg-yellow-600/30 transition-colors duration-300">
                 <svg
                   className="w-8 h-8 text-yellow-400"
@@ -192,7 +192,7 @@ export default function DesignPatternsPage() {
             </div>
 
             {/* Anti-Patterns */}
-            <div className="bg-[#23272f] rounded-xl p-8 border border-gray-700">
+            <div className="bg-[#18181b] rounded-xl p-8 border border-gray-700">
               <div className="w-16 h-16 bg-red-600/20 rounded-xl flex items-center justify-center mb-6 group-hover:bg-red-600/30 transition-colors duration-300">
                 <svg
                   className="w-8 h-8 text-red-400"
@@ -226,7 +226,7 @@ export default function DesignPatternsPage() {
             </div>
 
             {/* Modern Patterns */}
-            <div className="bg-[#23272f] rounded-xl p-8 border border-gray-700">
+            <div className="bg-[#18181b] rounded-xl p-8 border border-gray-700">
               <div className="w-16 h-16 bg-indigo-600/20 rounded-xl flex items-center justify-center mb-6 group-hover:bg-indigo-600/30 transition-colors duration-300">
                 <svg
                   className="w-8 h-8 text-indigo-400"
@@ -265,7 +265,7 @@ export default function DesignPatternsPage() {
       </section>
 
       {/* Pattern Categories Overview */}
-      <section className="py-16 bg-[#23272f]">
+      <section className="py-16 bg-[#18181b]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-white mb-4">
