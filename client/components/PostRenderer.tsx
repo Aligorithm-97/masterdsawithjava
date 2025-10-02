@@ -155,6 +155,8 @@ export default function PostRenderer({
           </>
         );
 
+      // case maddeler tarzı bişey
+
       default:
         return null;
     }
