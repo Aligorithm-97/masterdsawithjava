@@ -148,7 +148,7 @@ export default function PostRenderer({
               href={block.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="relative px-4 py-3 text-sm font-semibold text-gray-300 hover:text-white rounded-lg transition-all duration-200 hover:bg-gray-800/50 group"
+              className="ml-2 relative text-blue-400 font-semibold transition-all duration-300 hover:text-blue-500 after:content-[''] after:absolute after:left-0 after:-bottom-0.5 after:w-0 after:h-[2px] after:bg-blue-500 after:transition-all after:duration-300 hover:after:w-full"
             >
               {block.url}
             </a>
