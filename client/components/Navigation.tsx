@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useRef } from "react";
+import { useState } from "react";
 
 const LANGUAGES = [
   { code: "en", label: "EN" },
@@ -11,28 +11,7 @@ const LANGUAGES = [
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [showJavaMenu, setShowJavaMenu] = useState(false);
-  const [javaMenuTimeout, setJavaMenuTimeout] = useState<NodeJS.Timeout | null>(
-    null,
-  );
-  const menuRef = useRef(null);
-  const javaMenuRef = useRef(null);
   const [lang, setLang] = useState("en");
-
-  const handleJavaMenuEnter = () => {
-    if (javaMenuTimeout) {
-      clearTimeout(javaMenuTimeout);
-      setJavaMenuTimeout(null);
-    }
-    setShowJavaMenu(true);
-  };
-
-  const handleJavaMenuLeave = () => {
-    const timeout = setTimeout(() => {
-      setShowJavaMenu(false);
-    }, 150); // 150ms delay before closing
-    setJavaMenuTimeout(timeout);
-  };
 
   const javaMenuItems = [
     { name: "Java Core", href: "/java-core" },
@@ -43,11 +22,6 @@ export default function Navigation() {
     { name: "DSA", href: "/dsa-solutions" },
     { name: "System Design", href: "/system-design" },
     { name: "Design Patterns", href: "/design-patterns" },
-  ];
-
-  const otherMenuItems = [
-    { name: "Home", href: "/" },
-    { name: "About", href: "/about" },
   ];
 
   return (
@@ -140,63 +114,22 @@ export default function Navigation() {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-1">
-            <div
-              className="relative"
-              ref={javaMenuRef}
-              onMouseEnter={handleJavaMenuEnter}
-              onMouseLeave={handleJavaMenuLeave}
+            <Link
+              href="/java-core"
+              className="relative px-4 py-3 text-sm font-semibold text-gray-300 hover:text-white rounded-lg transition-all duration-200 hover:bg-gray-800/50 group"
             >
-              <button
-                className={`relative px-4 py-3 text-sm font-semibold rounded-lg transition-all duration-200 group flex items-center space-x-2 ${
-                  showJavaMenu
-                    ? "text-white-400 bg-gray-600/20 border border-gray-500/30"
-                    : "text-white-300 hover:text-white hover:bg-gray-800/50"
-                }`}
-              >
-                <span>Java</span>
-                <svg
-                  className={`w-4 h-4 transition-transform duration-300 ${
-                    showJavaMenu ? "rotate-180 text-gray-400" : "text-gray-400"
-                  }`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-                <div
-                  className={`absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-gray-500 to-gray-800 transition-all duration-300 ${
-                    showJavaMenu ? "w-full" : "group-hover:w-full"
-                  }`}
-                ></div>
-              </button>
-
-              {showJavaMenu && (
-                <div className="absolute top-full left-0 mt-2 w-64 bg-gray-800/95 backdrop-blur-md rounded-xl shadow-2xl border border-gray-700 py-3 z-50">
-                  <div className="px-2">
-                    {javaMenuItems.map((item, index) => (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        className="block px-4 py-3 text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-600/20 rounded-lg transition-all duration-200 mx-1 group"
-                        style={{ animationDelay: `${index * 50}ms` }}
-                      >
-                        <div className="flex items-center space-x-3">
-                          <div className="w-2 h-2 bg-gray-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
-                          <span>{item.name}</span>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
+              <span className="relative z-10">Java Core</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-gray-600/10 to-gray-700/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-gray-500 to-gray-400 group-hover:w-full transition-all duration-300"></div>
+            </Link>{" "}
+            <Link
+              href="/advanced-java"
+              className="relative px-4 py-3 text-sm font-semibold text-gray-300 hover:text-white rounded-lg transition-all duration-200 hover:bg-gray-800/50 group"
+            >
+              <span className="relative z-10">Advanced Java</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-gray-600/10 to-gray-700/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-gray-500 to-gray-400 group-hover:w-full transition-all duration-300"></div>
+            </Link>
             <Link
               href="/dsa-solutions"
               className="relative px-4 py-3 text-sm font-semibold text-gray-300 hover:text-white rounded-lg transition-all duration-200 hover:bg-gray-800/50 group"
@@ -205,7 +138,6 @@ export default function Navigation() {
               <div className="absolute inset-0 bg-gradient-to-r from-gray-600/10 to-gray-700/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
               <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-gray-500 to-gray-400 group-hover:w-full transition-all duration-300"></div>
             </Link>
-
             <Link
               href="/system-design"
               className="relative px-4 py-3 text-sm font-semibold text-gray-300 hover:text-white rounded-lg transition-all duration-200 hover:bg-gray-800/50 group"
@@ -230,7 +162,6 @@ export default function Navigation() {
               <div className="absolute inset-0 bg-gradient-to-r from-gray-600/10 to-gray-700/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
               <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-gray-500 to-gray-400 group-hover:w-full transition-all duration-300"></div>
             </Link>
-
             <div className="ml-4 flex items-center space-x-1 bg-gray-800/50 backdrop-blur-sm rounded-lg px-2 py-1 border border-gray-700">
               {LANGUAGES.map((lng) => (
                 <button
