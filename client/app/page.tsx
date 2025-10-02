@@ -10,14 +10,9 @@ export default function Home() {
   useEffect(() => {
     const loadRecentPosts = async () => {
       try {
-        const apiBaseUrl =
-          process.env.NEXT_PUBLIC_API_BASE_URL ||
-          "http://localhost:8080/api/v1/";
-        const params = new URLSearchParams({
-          page: "1",
-          size: "3",
-        });
-        const response = await fetch(`${apiBaseUrl}post?${params}`);
+        const apiBaseUrl = process.env.GO_URL || "http://localhost:8090";
+
+        const response = await fetch(`${apiBaseUrl}/posts`);
 
         if (response.ok) {
           const data = await response.json();
@@ -31,7 +26,8 @@ export default function Home() {
           }));
           // Tarihe göre sıralama (en yeni önce)
           const sortedPosts = postsWithParsedBlocks.sort(
-            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+            (a: any, b: any) =>
+              new Date(b.date).getTime() - new Date(a.date).getTime(),
           );
           setRecentPosts(sortedPosts);
         }
