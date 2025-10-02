@@ -73,7 +73,7 @@ export default function AboutPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-[#23272f] p-8 rounded-xl text-center">
+            <div className="bg-[#18181b] p-8 rounded-xl text-center">
               <div className="text-6xl mb-4">☕</div>
               <h3 className="text-2xl font-bold text-white mb-4">Why Java?</h3>
               <ul className="space-y-3 text-gray-300">
@@ -84,7 +84,7 @@ export default function AboutPage() {
                 <li>• Large community support</li>
               </ul>
             </div>
-            <div className="bg-[#23272f] p-8 rounded-xl text-center">
+            <div className="bg-[#18181b] p-8 rounded-xl text-center">
               <div className="text-6xl mb-4">🚀</div>
               <h3 className="text-2xl font-bold text-white mb-4">
                 Learning Approach
@@ -102,7 +102,7 @@ export default function AboutPage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 bg-[#23272f]">
+      <section className="py-16 bg-[#18181b]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-white mb-4">
