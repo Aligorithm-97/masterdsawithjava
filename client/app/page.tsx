@@ -2,7 +2,8 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Post } from "../lib/types";
-
+import PostRenderer from "@/components/PostRenderer";
+import { formatDate } from "@/utils/FormatDate";
 export default function Home() {
   const [recentPosts, setRecentPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
@@ -293,58 +294,76 @@ export default function Home() {
               <p className="text-gray-400 mt-4">Loading recent posts...</p>
             </div>
           ) : recentPosts.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {recentPosts.map((post, index) => (
-                <Link
-                  key={post.id}
-                  href={`/post/${post.id}`}
-                  className="card hover-lift animate-fade-in-up group cursor-pointer"
-                  style={{ animationDelay: `${index * 150}ms` }}
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="badge badge-success">{post.category}</span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400 flex items-center">
-                      <svg
-                        className="w-4 h-4 mr-1"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                      5 min
-                    </span>
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors duration-200">
-                    {post.title}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-300 mb-4 leading-relaxed">
-                    {post.summary || "Read more about this topic..."}
+            <section className="py-16 bg-[#23272f]">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="text-center mb-12">
+                  <h2 className="text-3xl font-bold text-white mb-4">
+                    Latest Articles
+                  </h2>
+                  <p className="text-gray-400">
+                    Explore our latest Java Core articles and tutorials
                   </p>
-                  <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                    <svg
-                      className="w-4 h-4 mr-2"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                </div>
+                <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                  {recentPosts.map((post) => (
+                    <article
+                      key={post.id}
+                      className="bg-[#18181b] rounded-xl shadow-lg border border-gray-700 overflow-hidden hover-lift"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                      />
-                    </svg>
-                    {new Date(post.date).toLocaleDateString()}
-                  </div>
-                </Link>
-              ))}
-            </div>
+                      <div className="p-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                            {post.category}
+                          </span>
+                          <span className="text-xs text-gray-400">
+                            {formatDate(post.date)}
+                          </span>
+                        </div>
+                        <h3 className="text-xl font-bold text-white mb-2 line-clamp-2">
+                          {post.title}
+                        </h3>
+                        {post.summary && (
+                          <p className="text-gray-400 mb-4 line-clamp-3">
+                            {post.summary}
+                          </p>
+                        )}
+                        <div className="space-y-3">
+                          <PostRenderer
+                            blocks={post.blocks}
+                            maxBlocks={2}
+                            isPreview={true}
+                          />
+                        </div>
+                        <div className="mt-4 pt-4 border-t border-gray-700">
+                          {(() => {
+                            const candidates = [(post as any)?.id].filter(
+                              (v) => v != null,
+                            );
+
+                            const postId = candidates[0];
+                            if (postId != null) {
+                              return (
+                                <Link
+                                  href={`/post/${postId}`}
+                                  className="text-blue-400 hover:text-blue-300 text-sm font-medium"
+                                >
+                                  Read More →
+                                </Link>
+                              );
+                            }
+                            return (
+                              <span className="text-gray-500 text-sm">
+                                Details unavailable
+                              </span>
+                            );
+                          })()}
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            </section>
           ) : (
             <div className="text-center py-12">
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
