@@ -141,7 +141,7 @@ export default function PostRenderer({
 
       case "link":
         return (
-          <>
+          <React.Fragment key={index}>
             <span className="relative z-10">{block.dec} : </span>
             <a
               key={index}
@@ -152,10 +152,8 @@ export default function PostRenderer({
             >
               {block.url}
             </a>
-          </>
+          </React.Fragment>
         );
-
-      // case maddeler tarzı bişey
 
       default:
         return null;
