@@ -21,6 +21,7 @@ const BLOCK_TYPES = [
   { type: "code", label: "Code" },
   { type: "quote", label: "Quote" },
   { type: "link", label: "Link" },
+  { type: "list", label: "List" },
 ];
 
 export default function AdminPage() {
@@ -184,6 +185,9 @@ export default function AdminPage() {
     let newBlock: Block;
     switch (type) {
       case "paragraph":
+        newBlock = { type, content: "" };
+        break;
+      case "list":
         newBlock = { type, content: "" };
         break;
       case "heading":
@@ -535,6 +539,17 @@ export default function AdminPage() {
                       className="w-full px-3 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       rows={3}
                       placeholder="Paragraph text..."
+                    />
+                  )}
+                  {block.type === "list" && (
+                    <textarea
+                      value={block.content}
+                      onChange={(e) =>
+                        handleBlockChange(idx, { content: e.target.value })
+                      }
+                      className="w-full px-3 py-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      rows={3}
+                      placeholder="List text..."
                     />
                   )}
                   {block.type === "link" && (

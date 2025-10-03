@@ -7,13 +7,14 @@ import (
 )
 
 type Block struct {
-	Type     string `bson:"type" json:"type"`
-	Content  string `bson:"content,omitempty" json:"content,omitempty"`
-	URL      string `bson:"url,omitempty" json:"url,omitempty"`
-	Alt      string `bson:"alt,omitempty" json:"alt,omitempty"`
-	Code     string `bson:"code,omitempty" json:"code,omitempty"`
-	Language string `bson:"language,omitempty" json:"language,omitempty"`
-	Dec      string `bson:"dec,omitempty" json:"dec,omitempty"`
+	Type     string   `bson:"type" json:"type"`
+	Content  string   `bson:"content,omitempty" json:"content,omitempty"`
+	URL      string   `bson:"url,omitempty" json:"url,omitempty"`
+	Alt      string   `bson:"alt,omitempty" json:"alt,omitempty"`
+	Code     string   `bson:"code,omitempty" json:"code,omitempty"`
+	Language string   `bson:"language,omitempty" json:"language,omitempty"`
+	Dec      string   `bson:"dec,omitempty" json:"dec,omitempty"`
+	List     []string `bson:"list,omitempty" json:"list,omitempty"`
 }
 
 type Post struct {

@@ -155,6 +155,20 @@ export default function PostRenderer({
           </React.Fragment>
         );
 
+      case "list":
+        const parts = block.content.split("enter-");
+
+        return (
+          <React.Fragment key={index}>
+            {parts.map((part, i) => (
+              <React.Fragment key={i}>
+                {part}
+                {i < parts.length - 1 && <br />} {/* Her parçadan sonra <br> */}
+              </React.Fragment>
+            ))}
+          </React.Fragment>
+        );
+
       default:
         return null;
     }
