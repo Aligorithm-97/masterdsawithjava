@@ -67,7 +67,7 @@ public class AuthenticationService {
     }
 
     public void register(RegistrationRequest request) throws MessagingException {
-        var userRole = roleRepository.findByName("ROLE_ADMIN")
+        var userRole = roleRepository.findByName("ROLE_USER")
                 .orElseThrow(() -> new IllegalStateException("ROLE USER not found !"));
 
         var user = User.builder()
