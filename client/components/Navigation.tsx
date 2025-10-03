@@ -3,12 +3,6 @@
 import Link from "next/link";
 import { useState } from "react";
 
-const LANGUAGES = [
-  { code: "en", label: "EN" },
-  { code: "tr", label: "TR" },
-  { code: "de", label: "DE" },
-];
-
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [lang, setLang] = useState("en");
@@ -162,24 +156,6 @@ export default function Navigation() {
               <div className="absolute inset-0 bg-gradient-to-r from-gray-600/10 to-gray-700/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
               <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-gray-500 to-gray-400 group-hover:w-full transition-all duration-300"></div>
             </Link>
-            <div className="ml-4 flex items-center space-x-1 bg-gray-800/50 backdrop-blur-sm rounded-lg px-2 py-1 border border-gray-700">
-              {LANGUAGES.map((lng) => (
-                <button
-                  key={lng.code}
-                  className={`px-3 py-1 rounded-md text-xs font-semibold transition-all duration-200 ${
-                    lang === lng.code
-                      ? "bg-blue-600 text-white shadow-md"
-                      : "text-gray-300 hover:bg-gray-700 hover:text-white"
-                  }`}
-                  onClick={() => {
-                    setLang(lng.code);
-                    console.log("Language changed to", lng.code);
-                  }}
-                >
-                  {lng.label}
-                </button>
-              ))}
-            </div>
           </div>
 
           <div className="md:hidden flex items-center">
